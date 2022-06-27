@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": {
+      "item": "minecraft:end_crystal"
+    },
+    "C": {
+      "item": "minecraft:coal_block"
+    },
+    "I": {
+      "item": "minecraft:blue_ice"
+    }
+  },
+  "pattern": [
+    "I I",
+    "CEC",
+    " I "
+  ],
+  "result": {
+    "item": "thatchermod:heart_of_thatcher"
+  }
+}

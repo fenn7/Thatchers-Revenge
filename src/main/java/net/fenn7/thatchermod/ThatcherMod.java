@@ -1,6 +1,8 @@
 package net.fenn7.thatchermod;
 
 import net.fabricmc.api.ModInitializer;
+import net.fenn7.thatchermod.block.ModBlocks;
+import net.fenn7.thatchermod.item.ModItems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,8 @@ public class ThatcherMod implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("subscribe to bruno powroznik");
+		ModItems.registerModItems();
+		ModBlocks.registerModBlocks();
 	}
 }
