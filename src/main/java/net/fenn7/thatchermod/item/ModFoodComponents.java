@@ -9,11 +9,11 @@ public class ModFoodComponents {
     public static final FoodComponent HEART_OF_THATCHER =
             new FoodComponent.Builder().hunger(0).saturationModifier(0f).alwaysEdible().meat()
                     .statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 1, 0), 1.0F)
-                    .statusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 4800, 9), 1.0F)
-                    .statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 4800, 9), 1.0F)
-                    .statusEffect(new StatusEffectInstance(StatusEffects.POISON, 4800, 4), 1.0F)
-                    .statusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 4800, 4), 1.0F)
-                    .statusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 4800, 4), 1.0F)
+                    .statusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 3600, 9), 1.0F)
+                    .statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 3600, 9), 1.0F)
+                    .statusEffect(new StatusEffectInstance(StatusEffects.POISON, 3600, 4), 1.0F)
+                    .statusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 3600, 4), 1.0F)
+                    .statusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 3600, 4), 1.0F)
                     .build();
 
     public static final FoodComponent SOUL_OF_THATCHER =

@@ -1,21 +1,30 @@
 {
   "type": "minecraft:block",
-  "pools": [{
-    "rolls": 1,
-    "entries": [{
-      "type": "minecraft:item",
-      "conditions": [{
-        "condition": "minecraft:match_tool",
-        "predicate": {
-          "enchantments": [{
-            "enchantment": "minecraft:silk_touch",
-            "levels": {
-              "min": 1
-            }
-          }]
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "enchantments": [
+              {
+                "enchantment": "minecraft:silk_touch",
+                "levels": {
+                  "min": 1
+                }
+              }
+            ]
+          }
         }
-      }],
-      "name": "thatcherism:thatcherism_altar"
-    }]
-  }]
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thatchermod:thatcherism_altar"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
 }

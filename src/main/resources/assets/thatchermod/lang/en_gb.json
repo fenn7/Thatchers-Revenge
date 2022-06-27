@@ -4,5 +4,7 @@
 
   "block.thatchermod.thatcherism_altar": "Thatcherism Altar",
 
-  "itemGroup.thatchermod.thatcher": "ThatcherMod Items"
+  "thatchermod.thatcher_possession": "PAY THE COMMUNITY CHARGE",
+
+  "itemGroup.thatchermod.thatcher": "ThatcherMod"
 }

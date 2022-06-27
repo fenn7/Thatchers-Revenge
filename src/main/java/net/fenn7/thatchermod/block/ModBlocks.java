@@ -10,11 +10,12 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 
 public class ModBlocks {
     public static final Block THATCHERISM_ALTAR = registerBlock("thatcherism_altar",
-            new Block(FabricBlockSettings.of(Material.STONE).strength(69.0F,1337.0F)), ModItemGroup.THATCHER);
+            new Block(FabricBlockSettings.of(Material.STONE).strength(42.0F,1337.0F)), ModItemGroup.THATCHER);
 
     private static Block registerBlock(String name, Block block, ItemGroup group){
         registerBlockAsItem(name, block, group);
@@ -23,7 +24,7 @@ public class ModBlocks {
 
     private static Item registerBlockAsItem(String name, Block block, ItemGroup group){
         return Registry.register(Registry.ITEM, new Identifier(ThatcherMod.MOD_ID, name), new BlockItem(block,
-                new FabricItemSettings().group(group)));
+                new FabricItemSettings().group(group).fireproof().rarity(Rarity.EPIC)));
     }
 
     public static void registerModBlocks() {
