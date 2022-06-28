@@ -17,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -42,7 +43,10 @@ public class ThatcherSoulItem extends Item{
                     player.setOnFireFor(3);
                     player.playSound(new SoundEvent(new Identifier("minecraft:block.glass.break")), 4, 1f);
                     player.playSound(new SoundEvent(new Identifier("thatchermod:thatcher_possession")), 4, 0.75f);
-                    world.addParticle(ModParticles.THATCHER_JUMPSCARE, player.getX(), player.getY(), player.getZ(),1, 1, 1);
+
+                    for (int i = 0; i < 25; i++){
+                        world.addParticle(ModParticles.THATCHER_JUMPSCARE, player.getX(), player.getY() + 1.3f, player.getZ(),0, 0, 0);
+                    }
         }
         return itemStack;
     }
