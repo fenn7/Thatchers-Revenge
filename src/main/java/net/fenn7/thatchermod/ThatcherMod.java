@@ -1,11 +1,15 @@
 package net.fenn7.thatchermod;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fenn7.thatchermod.block.ModBlocks;
+import net.fenn7.thatchermod.block.entity.ModBlockEntities;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.item.custom.ThatcherSoulItem;
 import net.fenn7.thatchermod.particle.ModParticles;
+import net.fenn7.thatchermod.screen.ModScreenHandlers;
+import net.fenn7.thatchermod.screen.ThatcherismAltarScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
@@ -31,5 +35,8 @@ public class ThatcherMod implements ModInitializer {
 		ModBlocks.registerModBlocks();
 
 		ModParticles.registerParticles();
+
+		ModBlockEntities.registerModBlockEntities();
+		ModScreenHandlers.registerScreenHandlers();
 	}
 }

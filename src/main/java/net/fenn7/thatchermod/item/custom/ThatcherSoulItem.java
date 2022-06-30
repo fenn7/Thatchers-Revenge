@@ -45,7 +45,7 @@ public class ThatcherSoulItem extends Item{
                     player.playSound(new SoundEvent(new Identifier("thatchermod:thatcher_possession")), 4, 0.75f);
 
                     for (int i = 0; i < 25; i++){
-                        world.addParticle(ModParticles.THATCHER_JUMPSCARE, player.getX(), player.getY() + 1.3f, player.getZ(),0, 0, 0);
+                        world.addParticle(ModParticles.THATCHER_JUMPSCARE, player.getX(), player.getY() + 1.4f, player.getZ(),0, 0, 0);
                     }
         }
         return itemStack;
