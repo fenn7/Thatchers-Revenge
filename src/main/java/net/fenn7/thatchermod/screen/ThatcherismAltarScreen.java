@@ -10,7 +10,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ThatcherismAltarScreen extends HandledScreen<ThatcherismAltarScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier(ThatcherMod.MOD_ID, "textures/gui/thatcherism_altar_gui.png");
+    private static String imgPath = "textures/gui/thatcherism_altar_gui.png";
+    private static final Identifier TEXTURE = new Identifier(ThatcherMod.MOD_ID, imgPath);
 
     public ThatcherismAltarScreen(ThatcherismAltarScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -30,6 +31,10 @@ public class ThatcherismAltarScreen extends HandledScreen<ThatcherismAltarScreen
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+    }
+
+    public void setImgPath(String imagePath){
+        imgPath = imagePath;
     }
 
     @Override

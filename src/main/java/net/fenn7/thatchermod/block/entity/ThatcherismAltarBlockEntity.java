@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.block.entity;
 
+import net.fenn7.thatchermod.block.custom.ThatcherismAltarBlock;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.item.inventory.ImplementedInventory;
 import net.fenn7.thatchermod.screen.ThatcherismAltarScreenHandler;
@@ -18,6 +19,8 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import static net.fenn7.thatchermod.block.custom.ThatcherismAltarBlock.IS_PREPARED;
 
 public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
@@ -55,8 +58,12 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     }
 
         public static void tick(World world, BlockPos pos, BlockState state, ThatcherismAltarBlockEntity entity) {
-        if(hasRecipe(entity) && hasNotReachedStackLimit(entity)) {
+        if (hasRecipe(entity)) {
+            world.setBlockState(pos, state.with(IS_PREPARED, true));
             craftItem(entity);
+        }
+        else {
+            world.setBlockState(pos, state.with(IS_PREPARED, false), 3);
         }
     }
 
@@ -65,10 +72,15 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     }
 
     private static boolean hasRecipe(ThatcherismAltarBlockEntity entity) {
-        boolean hasItemInFirstSlot = entity.getStack(0).getItem() == ModItems.HEART_OF_THATCHER;
-        boolean hasItemInSecondSlot = entity.getStack(1).getItem() == ModItems.SOUL_OF_THATCHER;
+        boolean hasRecipe = false;
+        if ((entity.getStack(0).getItem() == ModItems.HEART_OF_THATCHER &&
+                entity.getStack(1).getItem() == ModItems.SOUL_OF_THATCHER) ||
+                (entity.getStack(0).getItem() == ModItems.SOUL_OF_THATCHER &&
+                entity.getStack(1).getItem() == ModItems.HEART_OF_THATCHER)) {
 
-        return hasItemInFirstSlot && hasItemInSecondSlot;
+            hasRecipe = true;
+        }
+        return hasRecipe;
     }
 
     private static boolean hasNotReachedStackLimit(ThatcherismAltarBlockEntity entity) {

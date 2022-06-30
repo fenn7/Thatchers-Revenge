@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "thatchermod:block/thatcherism_altar" }
+    "is_prepared=false": { "model": "thatchermod:block/thatcherism_altar" },
+    "is_prepared=true": { "model": "thatchermod:block/thatcherism_altar_prepared" }
   }
 }

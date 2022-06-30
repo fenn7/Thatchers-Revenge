@@ -2,27 +2,36 @@ package net.fenn7.thatchermod.block.custom;
 
 import net.fenn7.thatchermod.block.entity.ModBlockEntities;
 import net.fenn7.thatchermod.block.entity.ThatcherismAltarBlockEntity;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.stat.Stats;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+
 public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntityProvider {
+
+    public static BooleanProperty IS_PREPARED = BooleanProperty.of("is_prepared");
+
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(new Property[]{ IS_PREPARED });
+    }
+
     public ThatcherismAltarBlock(Settings settings) {
         super(settings);
+        setDefaultState(this.getDefaultState().with(IS_PREPARED, false));
     }
 
     /* Block Entity Stuff */
@@ -58,6 +67,8 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
 
             if (screenHandlerFactory != null) {
                 player.openHandledScreen(screenHandlerFactory);
+
+
             }
         }
 
