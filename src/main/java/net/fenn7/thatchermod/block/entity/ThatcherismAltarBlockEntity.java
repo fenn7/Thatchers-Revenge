@@ -104,9 +104,10 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         public static void tick(World world, BlockPos pos, BlockState state, ThatcherismAltarBlockEntity entity) {
 
         if (state.get(IS_PREPARED) && !state.get(IS_CHANNELING)) {
-            double diff = ThreadLocalRandom.current().nextDouble(-0.33D, 0.33D);
+            double diff1 = ThreadLocalRandom.current().nextDouble(-0.33D, 0.33D);
+            double diff2 = ThreadLocalRandom.current().nextDouble(-0.33D, 0.33D);
             world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.getX() + 0.5D, pos.getY() + 1.1D, pos.getZ() + 0.5D, 0, 0, 0);
-            world.addParticle(ParticleTypes.SOUL, pos.getX() + 0.5D + diff, pos.getY() + 1.5D, pos.getZ() + 0.5D + diff, 0, 0, 0);
+            world.addParticle(ParticleTypes.SOUL, pos.getX() + 0.5D + diff1, pos.getY() + 1.5D, pos.getZ() + 0.5D + diff2, 0, 0, 0);
         }
 
         if (state.get(IS_CHANNELING)) {

@@ -6,9 +6,13 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.sound.SoundCategory;
@@ -73,7 +77,7 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
         if (!world.isClient && !state.get(IS_CHANNELING)) {
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 
-            if (screenHandlerFactory != null) {
+            if (screenHandlerFactory != null && player.getMainHandStack().getItem() != (Items.DIAMOND)) {
                 player.openHandledScreen(screenHandlerFactory);
 
             }
