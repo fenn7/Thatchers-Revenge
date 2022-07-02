@@ -31,6 +31,12 @@ public class ThatcherismAltarScreen extends HandledScreen<ThatcherismAltarScreen
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+
+        if (handler.isPrepared()) {
+            drawTexture(matrices, x + 61, y + 37, 176, 0, handler.getScaledProgress(), 22);
+            drawTexture(matrices, x + 115 - handler.getScaledProgress(), y + 37, 256 - handler.getScaledProgress(),
+                    23, handler.getScaledProgress(), 22);
+        }
     }
 
     public void setImgPath(String imagePath){

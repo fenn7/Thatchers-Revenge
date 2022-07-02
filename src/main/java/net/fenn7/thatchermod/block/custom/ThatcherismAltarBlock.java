@@ -7,7 +7,12 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Property;
@@ -24,14 +29,17 @@ import org.jetbrains.annotations.Nullable;
 public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntityProvider {
 
     public static BooleanProperty IS_PREPARED = BooleanProperty.of("is_prepared");
+    public static BooleanProperty IS_CHANNELING = BooleanProperty.of("is_channeling");
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(new Property[]{ IS_PREPARED });
+        builder.add(new Property[]{ IS_CHANNELING });
     }
 
     public ThatcherismAltarBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getDefaultState().with(IS_PREPARED, false));
+        setDefaultState(this.getDefaultState().with(IS_CHANNELING, false));
     }
 
     /* Block Entity Stuff */
@@ -62,17 +70,36 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos,
                               PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
+        if (!world.isClient && !state.get(IS_CHANNELING)) {
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 
             if (screenHandlerFactory != null) {
                 player.openHandledScreen(screenHandlerFactory);
 
-
             }
+        }
+        if (state.get(IS_PREPARED) && player.getMainHandStack().getItem() == (Items.DIAMOND)) {
+            player.getMainHandStack().decrement(1);
+            world.setBlockState(pos, state.with(IS_CHANNELING, true));
         }
 
         return ActionResult.SUCCESS;
+    }
+
+    public static void setIsPreparedTrue(World world, BlockPos pos, BlockState state) {
+        world.setBlockState(pos, state.with(IS_PREPARED, true));
+    }
+
+    public static void setIsPreparedFalse(World world, BlockPos pos, BlockState state) {
+        world.setBlockState(pos, state.with(IS_PREPARED, false));
+    }
+
+    public boolean hasComparatorOutput(BlockState state) {
+        return true;
+    }
+
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        return (Boolean)state.get(IS_PREPARED) ? 15 : 0;
     }
 
     @Nullable

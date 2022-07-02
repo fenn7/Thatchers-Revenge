@@ -6,28 +6,47 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ArrayPropertyDelegate;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 public class ThatcherismAltarScreenHandler extends ScreenHandler {
 
     private final Inventory inventory;
+    private final PropertyDelegate propertyDelegate;
 
     public ThatcherismAltarScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(2));
+        this(syncId, playerInventory, new SimpleInventory(2), new ArrayPropertyDelegate(2));
     }
 
-    public ThatcherismAltarScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+    public ThatcherismAltarScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory,
+                                         PropertyDelegate pDelegate) {
         super(ModScreenHandlers.THATCHERISM_ALTAR_SCREEN_HANDLER, syncId);
         checkSize(inventory, 2);
         this.inventory = inventory;
         inventory.onOpen(playerInventory.player);
+        this.propertyDelegate = pDelegate;
 
         this.addSlot(new ModThatcherSlot(inventory, 0, 44, 40));
         this.addSlot(new ModThatcherSlot(inventory, 1, 116, 40));
 
         addPlayerHotbar(playerInventory);
         addPlayerInventory(playerInventory);
+
+        addProperties(pDelegate);
+    }
+
+    public boolean isPrepared(){
+        return propertyDelegate.get(0) > 0;
+    }
+
+    public int getScaledProgress() {
+        int progress = propertyDelegate.get(0);
+        int maxProgress = propertyDelegate.get(1); //should be 50
+        int pixelsDrawnSize = 27; //width of hellfire blood bar pixels
+
+        return maxProgress != 0 && progress != 0 ? progress + pixelsDrawnSize / maxProgress : 0;
     }
 
     @Override
