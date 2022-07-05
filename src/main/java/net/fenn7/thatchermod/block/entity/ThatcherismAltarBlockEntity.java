@@ -9,6 +9,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.Sound;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -19,6 +21,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -44,7 +47,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     private int progress = 0;
     private int maxProgress = 28;
     private int channelingProgress = 0;
-    private int maxChannelingProgress = 200;
+    private int maxChannelingProgress = 179;
 
     public ThatcherismAltarBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.THATCHERISM_ALTAR, pos, state);
@@ -105,7 +108,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         nbt.getInt("channeling.progress");
     }
 
-        public static void tick(World world, BlockPos pos, BlockState state, ThatcherismAltarBlockEntity entity) {
+    public static void tick(World world, BlockPos pos, BlockState state, ThatcherismAltarBlockEntity entity) {
 
         if (state.get(IS_PREPARED) && !state.get(IS_CHANNELING)) {
             double diff1 = ThreadLocalRandom.current().nextDouble(-0.33D, 0.33D);
@@ -118,15 +121,21 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
             emptyAltar(entity);
             world.setBlockState(pos, state.with(IS_PREPARED, false));
             if (entity.channelingProgress < entity.maxChannelingProgress) {
-                entity.channelingProgress++;
-                if (entity.channelingProgress % 20 == 0){
+                if (entity.channelingProgress % 20 == 0) { // at 20TPS this will occur every second
                     world.addParticle(ParticleTypes.SONIC_BOOM, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
                     world.addParticle(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
                 };
-                if (entity.channelingProgress == entity.maxChannelingProgress) {
+                if (entity.channelingProgress == 170) { //should do this on the final major beat of the song
+                    if (!world.isClient()) {
+                        EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null, pos,
+                                SpawnReason.TRIGGERED, true, true);
+                    }
+                }
+                if (entity.channelingProgress == entity.maxChannelingProgress) { //reset states
                     world.setBlockState(pos, state.with(IS_CHANNELING, false));
                     entity.channelingProgress = 0;
                 }
+                entity.channelingProgress++;
             }
         }
 

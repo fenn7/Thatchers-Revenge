@@ -88,13 +88,13 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
             }
         }
 
-        if (/*ThatcherismAltarBlockEntity.isChannelingZero() &&*/ state.get(IS_PREPARED)
-                && player.getMainHandStack().getItem() == (Items.DIAMOND)) {
+        if (state.get(IS_PREPARED) && player.getMainHandStack().getItem() == (Items.DIAMOND)) {
             player.getMainHandStack().decrement(1);
             world.setBlockState(pos, state.with(IS_CHANNELING, true));
             world.playSound(null, pos, new SoundEvent(new Identifier("thatchermod:thatcher_summoning")),
+                    SoundCategory.BLOCKS, 3.75F, 1F);
+            world.playSound(null, pos, SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,
                     SoundCategory.BLOCKS, 5F, 1F);
-            world.spawnEntity(new LightningEntity(EntityType.LIGHTNING_BOLT, world));
         }
 
         return ActionResult.SUCCESS;
