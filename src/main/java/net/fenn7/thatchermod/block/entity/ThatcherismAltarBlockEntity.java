@@ -131,11 +131,11 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
                                 SpawnReason.TRIGGERED, true, true);
                     }
                 }
+                entity.channelingProgress++;
                 if (entity.channelingProgress == entity.maxChannelingProgress) { //reset states
                     world.setBlockState(pos, state.with(IS_CHANNELING, false));
                     entity.channelingProgress = 0;
                 }
-                entity.channelingProgress++;
             }
         }
 
