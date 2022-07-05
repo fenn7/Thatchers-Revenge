@@ -9,6 +9,7 @@ import net.minecraft.util.registry.Registry;
 public class ModSounds {
 
     public static final SoundEvent THATCHER_POSSESSION = registerSound("thatcher_possession");
+    public static final SoundEvent THATCHER_SUMMONING = registerSound("thatcher_summoning");
 
     public static SoundEvent registerSound(String name) {
         Identifier id = new Identifier(ThatcherMod.MOD_ID, name);

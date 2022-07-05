@@ -4,5 +4,12 @@
     "sounds": [
       "thatchermod:thatcher_possession"
     ]
+  },
+
+  "thatcher_summoning": {
+    "subtitle": "thatchermod.thatcher_summoning",
+    "sounds": [
+      "thatchermod:thatcher_summoning"
+    ]
   }
 }

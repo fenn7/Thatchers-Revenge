@@ -43,6 +43,8 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     protected final PropertyDelegate propertyDelegate;
     private int progress = 0;
     private int maxProgress = 28;
+    private int channelingProgress = 0;
+    private int maxChannelingProgress = 200;
 
     public ThatcherismAltarBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.THATCHERISM_ALTAR, pos, state);
@@ -92,6 +94,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, inventory);
         nbt.putInt("altar.progress", progress);
+        nbt.putInt("channeling.progress", channelingProgress);
     }
 
     @Override
@@ -99,6 +102,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         Inventories.readNbt(nbt, inventory);
         super.readNbt(nbt);
         nbt.getInt("altar.progress");
+        nbt.getInt("channeling.progress");
     }
 
         public static void tick(World world, BlockPos pos, BlockState state, ThatcherismAltarBlockEntity entity) {
@@ -112,13 +116,25 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
 
         if (state.get(IS_CHANNELING)) {
             emptyAltar(entity);
-            world.addParticle(ParticleTypes.SONIC_BOOM, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
+            world.setBlockState(pos, state.with(IS_PREPARED, false));
+            if (entity.channelingProgress < entity.maxChannelingProgress) {
+                entity.channelingProgress++;
+                if (entity.channelingProgress % 20 == 0){
+                    world.addParticle(ParticleTypes.SONIC_BOOM, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
+                    world.addParticle(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
+                };
+                if (entity.channelingProgress == entity.maxChannelingProgress) {
+                    world.setBlockState(pos, state.with(IS_CHANNELING, false));
+                    entity.channelingProgress = 0;
+                }
+            }
         }
 
         if (hasRecipe(entity)) {
             if (entity.progress < entity.maxProgress) {
                 entity.progress++;
                 if (entity.progress == entity.maxProgress) {
+                    world.playSound(null, pos, SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.BLOCKS, 5F, 1F);
                     ThatcherismAltarBlock.setIsPreparedTrue(world, pos, state);
                 }
             }

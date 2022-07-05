@@ -2,12 +2,14 @@ package net.fenn7.thatchermod.block.custom;
 
 import net.fenn7.thatchermod.block.entity.ModBlockEntities;
 import net.fenn7.thatchermod.block.entity.ThatcherismAltarBlockEntity;
+import net.fenn7.thatchermod.sound.ModSounds;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -16,12 +18,14 @@ import net.minecraft.network.Packet;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -77,14 +81,20 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
         if (!world.isClient && !state.get(IS_CHANNELING)) {
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 
-            if (screenHandlerFactory != null && player.getMainHandStack().getItem() != (Items.DIAMOND)) {
+            if (screenHandlerFactory != null && player.getMainHandStack().getItem() != (Items.DIAMOND)
+                    || screenHandlerFactory != null && !state.get(IS_PREPARED)) {
                 player.openHandledScreen(screenHandlerFactory);
 
             }
         }
-        if (state.get(IS_PREPARED) && player.getMainHandStack().getItem() == (Items.DIAMOND)) {
+
+        if (/*ThatcherismAltarBlockEntity.isChannelingZero() &&*/ state.get(IS_PREPARED)
+                && player.getMainHandStack().getItem() == (Items.DIAMOND)) {
             player.getMainHandStack().decrement(1);
             world.setBlockState(pos, state.with(IS_CHANNELING, true));
+            world.playSound(null, pos, new SoundEvent(new Identifier("thatchermod:thatcher_summoning")),
+                    SoundCategory.BLOCKS, 5F, 1F);
+            world.spawnEntity(new LightningEntity(EntityType.LIGHTNING_BOLT, world));
         }
 
         return ActionResult.SUCCESS;
