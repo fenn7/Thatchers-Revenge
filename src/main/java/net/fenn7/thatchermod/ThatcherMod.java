@@ -10,6 +10,7 @@ import net.fenn7.thatchermod.item.custom.ThatcherSoulItem;
 import net.fenn7.thatchermod.particle.ModParticles;
 import net.fenn7.thatchermod.screen.ModScreenHandlers;
 import net.fenn7.thatchermod.screen.ThatcherismAltarScreen;
+import net.fenn7.thatchermod.util.ModRegistries;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
@@ -17,6 +18,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.bernie.geckolib3.GeckoLib;
 
 import java.rmi.registry.Registry;
 
@@ -30,7 +32,9 @@ public class ThatcherMod implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+		GeckoLib.initialize();
 		LOGGER.info("subscribe to bruno powroznik");
+
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
 
@@ -38,5 +42,7 @@ public class ThatcherMod implements ModInitializer {
 
 		ModBlockEntities.registerModBlockEntities();
 		ModScreenHandlers.registerScreenHandlers();
+
+		ModRegistries.registerAll();
 	}
 }

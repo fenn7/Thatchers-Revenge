@@ -129,6 +129,8 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
                     if (!world.isClient()) {
                         EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null, pos,
                                 SpawnReason.TRIGGERED, true, true);
+                        ModEntities.THATCHER.spawn((ServerWorld) world, null, null, null, pos,
+                                SpawnReason.MOB_SUMMONED, true, true);
                     }
                 }
                 entity.channelingProgress++;
