@@ -90,6 +90,7 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
 
         if (state.get(IS_PREPARED) && player.getMainHandStack().getItem() == (Items.DIAMOND)) {
             player.getMainHandStack().decrement(1);
+            ThatcherismAltarBlockEntity.buildCircleStrikeList(pos, player);
             world.setBlockState(pos, state.with(IS_CHANNELING, true));
             world.playSound(null, pos, new SoundEvent(new Identifier("thatchermod:thatcher_summoning")),
                     SoundCategory.BLOCKS, 3.75F, 1F);
