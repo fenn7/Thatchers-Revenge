@@ -4,9 +4,10 @@
   "package": "net.fenn7.thatchermod.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ModEntityDataSaver"
   ],
   "client": [
-    "ExampleMixin"
+    "ModEntityDataSaver"
   ],
   "injectors": {
     "defaultRequire": 1

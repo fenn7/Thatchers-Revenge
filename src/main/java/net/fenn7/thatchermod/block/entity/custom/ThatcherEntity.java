@@ -1,7 +1,5 @@
 package net.fenn7.thatchermod.block.entity.custom;
 
-import net.fenn7.thatchermod.sound.ModSounds;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -13,50 +11,33 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.*;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;
-import net.minecraft.entity.projectile.thrown.PotionEntity;
-import net.minecraft.entity.raid.RaiderEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.LingeringPotionItem;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.explosion.Explosion;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
     private final ServerBossBar bossBar;
-    private double spawnX;
-    private double spawnY;
-    private double spawnZ;
     private boolean hasSetStartPos;
     private boolean hasReturnedStartPos;
     private boolean isbelow75;
@@ -83,6 +64,39 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.bossBar = (ServerBossBar)(new ServerBossBar(this.getDisplayName(), BossBar.Color.BLUE, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
 
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        nbt.putBoolean("isbelow75", this.isbelow75);
+        nbt.putBoolean("isbelow50", this.isbelow50);
+        nbt.putBoolean("isbelow25", this.isbelow25);
+        nbt.putBoolean("summoned", this.hasSummonedSquad);
+        nbt.putBoolean("setStartPos", this.hasSetStartPos);
+        nbt.putBoolean("returned", this.hasReturnedStartPos);
+        nbt.putInt("since.tracked", this.ticksSinceTracked);
+        nbt.putInt("since.death", this.ticksSinceDeath);
+        nbt.putDouble("startX", this.serverX);
+        nbt.putDouble("startY", this.serverY);
+        nbt.putDouble("startZ", this.serverZ);
+        return nbt;
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.isbelow75 = nbt.getBoolean("isbelow75");
+        this.isbelow50 = nbt.getBoolean("isbelow50");
+        this.isbelow25 = nbt.getBoolean("isbelow25");
+        this.hasSummonedSquad = nbt.getBoolean("summoned");
+        this.hasSetStartPos = nbt.getBoolean("setStartPos");
+        this.hasReturnedStartPos = nbt.getBoolean("returned");
+        this.ticksSinceTracked = nbt.getInt("since.tracked");
+        this.ticksSinceDeath = nbt.getInt("since.death");
+        this.serverX = nbt.getDouble("startX");
+        this.serverY = nbt.getDouble("startY");
+        this.serverZ = nbt.getDouble("startZ");
+    }
+
     public static DefaultAttributeContainer.Builder setAttributes() {
         return HostileEntity.createHostileAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 400.0D)
@@ -99,6 +113,8 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     public boolean isImmuneToExplosion() { return true; }
     public boolean isUndead() { return true; }
     public boolean cannotDespawn() { return true; }
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) { return false; }
+    public EntityGroup getGroup() { return EntityGroup.UNDEAD; }
 
     protected void initGoals() { // right now has basic AI of a vindicator minus raid mechanics
         this.goalSelector.add(0, new SwimGoal(this));
@@ -112,17 +128,9 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     protected void mobTick() {
-            this.world.addParticle(ParticleTypes.LAVA,
-                    this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
-            this.world.addParticle(ParticleTypes.LARGE_SMOKE,
-                    this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
-
-
         this.bossBar.setPercent(this.getHealth() / this.getMaxHealth());
+
         if (!this.hasSetStartPos) {
-            this.spawnX = this.getX();
-            this.spawnY = this.getY();
-            this.spawnZ = this.getZ();
             this.serverX = this.getX();
             this.serverY = this.getY();
             this.serverZ = this.getZ();
@@ -149,25 +157,24 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
                     this.ticksSinceTracked = 0;
                 }
             }
-
             // does a jumpscare attack every interval of 25% health (guaranteed) or randomly per tick
-            // different modes should occur as well.
             if (this.getHealth() / this.getMaxHealth() <= 0.75 && !this.isbelow75) {
                 jumpScareAttack(target);
                 this.isbelow75 = true;
             } else if (this.getHealth() / this.getMaxHealth() <= 0.5 && !this.isbelow50) {
                 jumpScareAttack(target);
-                isbelow50 = true;
+                this.isbelow50 = true;
             } else if (this.getHealth() / this.getMaxHealth() <= 0.25 && !this.isbelow25) {
                 jumpScareAttack(target);
-                isbelow25 = true;
+                this.isbelow25 = true;
             } else {
-                int random = ThreadLocalRandom.current().nextInt(0, 180 + 1);
-                if (random == 180) {
+                int random = ThreadLocalRandom.current().nextInt(0, 200 + 1);
+                if (random == 200) {
                     jumpScareAttack(target);
                 }
             }
         }
+        // different modes should occur based on health.
         if (this.getHealth() / this.getMaxHealth() <= 0.75) {
             this.activateRageMode();
         }
@@ -247,38 +254,42 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 100, 2));
         this.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 100, 1));
         this.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 100, 1));
-
-        AreaEffectCloudEntity aura = new AreaEffectCloudEntity(this.world, this.getX(), this.getY() + 1, this.getZ());
-        aura.setColor(25500); aura.setRadius(0); aura.setDuration(1);
-        this.world.spawnEntity(aura);
+        this.world.sendEntityStatus(this, (byte) 63);
     }
 
     public boolean damage(DamageSource source, float amount) {
-        if (this.isbelow75 && !(source.getAttacker() instanceof PlayerEntity) && source != DamageSource.OUT_OF_WORLD) {
+        if (this.getHealth() / this.getMaxHealth() <= 0.75 && !(source.getAttacker() instanceof PlayerEntity)
+                && source != DamageSource.OUT_OF_WORLD) {
             // below 75% health, can only be damaged by players OR falling out of the world
             amount = 0.0F;
         }
-        else if (this.isbelow25 && source.getAttacker() != null) { //below 25% health, apply a burn effect to attackers
+        else if (this.getHealth() / this.getMaxHealth() <= 0.25 && source.getAttacker() != null) {
+            //below 25% health, apply a burn effect to attackers
             source.getAttacker().setOnFireFromLava();
         }
         return super.damage(source, amount);
     }
 
-    protected void updatePostDeath() {
+    public void handleStatus(byte status) { // required to handle particles
+        if (status == 63) {
+            this.world.addParticle(ParticleTypes.LAVA,
+                    this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
+            this.world.addParticle(ParticleTypes.LARGE_SMOKE,
+                    this.getX(), this.getY(), this.getZ(), 0.0D, 0.33D, 0.0D);
+        }
+        else {
+            super.handleStatus(status);
+        }
+    }
 
+    protected void updatePostDeath() {
         if (!this.hasReturnedStartPos) {
-            this.setPosition(this.spawnX, this.spawnY, this.spawnZ);
             this.setPosition(this.serverX, this.serverY, this.serverZ);
-            world.playSound(null, this.spawnX, this.spawnY, this.spawnZ, new SoundEvent(new Identifier("thatchermod:thatcher_possession")), SoundCategory.BLOCKS, 7.5F, 0.75F);
+            world.playSound(null, this.serverX, this.serverY, this.serverZ, new SoundEvent(new Identifier("thatchermod:thatcher_possession")), SoundCategory.BLOCKS, 5F, 0.75F);
             this.hasReturnedStartPos = true;
         }
-
         this.world.addParticle(ParticleTypes.EXPLOSION,
                 this.getX(), this.getY() + 2.0D, this.getZ(), 0.0D, 0.0D, 0.0D);
-        this.world.addParticle(ParticleTypes.LAVA,
-                this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
-        this.world.addParticle(ParticleTypes.LARGE_SMOKE,
-                this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
         if (this.ticksSinceDeath < 101) {
             this.ticksSinceDeath++;
             if (this.ticksSinceDeath == 100) {
@@ -318,11 +329,6 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             }
         }
         return true;
-    }
-
-
-    public EntityGroup getGroup() {
-        return EntityGroup.UNDEAD;
     }
 
     // animations (TBA)

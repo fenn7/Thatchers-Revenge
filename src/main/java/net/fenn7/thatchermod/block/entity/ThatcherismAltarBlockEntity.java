@@ -5,6 +5,7 @@ import net.fenn7.thatchermod.block.entity.custom.ThatcherEntity;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.item.inventory.ImplementedInventory;
 import net.fenn7.thatchermod.screen.ThatcherismAltarScreenHandler;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -63,24 +64,17 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
             @Override
             public int get(int index) {
                 switch (index) {
-                    case 0:
-                        return progress;
-                    case 1:
-                        return maxProgress;
-                    default:
-                        return 0;
+                    case 0: return progress;
+                    case 1: return maxProgress;
+                    default: return 0;
                 }
             }
 
             @Override
             public void set(int index, int value) {
                 switch (index) {
-                    case 0:
-                        ThatcherismAltarBlockEntity.this.progress = value;
-                        break;
-                    case 1:
-                        ThatcherismAltarBlockEntity.this.maxProgress = value;
-                        break;
+                    case 0: ThatcherismAltarBlockEntity.this.progress = value; break;
+                    case 1: ThatcherismAltarBlockEntity.this.maxProgress = value; break;
                 }
             }
 
@@ -183,7 +177,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
 
     public static void buildCircleStrikeList(BlockPos pos, PlayerEntity player) {
         Direction direction = player.getMovementDirection();
-
+        
         //get 8 block positions in a circle around the altar's position.
         BlockPos N = new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ() - 4);
         BlockPos NE = new BlockPos(pos.getX() + 3, pos.getY() - 1, pos.getZ() - 3);
