@@ -59,17 +59,23 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private double spawnZ;
     private boolean hasSetStartPos;
     private boolean hasReturnedStartPos;
-    private boolean isbelow75 = false;
-    private boolean isbelow50 = false;
-    private boolean isbelow25 = false;
-    private boolean hasSummonedSquad = false;
-    private int ticksSinceTracked = 0;
-    private int ticksSinceDeath = 0;
+    private boolean isbelow75;
+    private boolean isbelow50;
+    private boolean isbelow25;
+    private boolean hasSummonedSquad;
+    private int ticksSinceTracked;
+    private int ticksSinceDeath;
 
     public ThatcherEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.hasSetStartPos = false;
         this.hasReturnedStartPos = false;
+        this.isbelow75 = false;
+        this.isbelow50 = false;
+        this.isbelow25 = false;
+        this.hasSummonedSquad = false;
+        this.ticksSinceTracked = 0;
+        this.ticksSinceDeath = 0;
         this.setPathfindingPenalty(PathNodeType.LAVA, 0.0F);
         this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, 0.0F);
         this.setPathfindingPenalty(PathNodeType.DAMAGE_FIRE, 0.0F);
@@ -106,11 +112,20 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     protected void mobTick() {
+            this.world.addParticle(ParticleTypes.LAVA,
+                    this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
+            this.world.addParticle(ParticleTypes.LARGE_SMOKE,
+                    this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
+
+
         this.bossBar.setPercent(this.getHealth() / this.getMaxHealth());
         if (!this.hasSetStartPos) {
             this.spawnX = this.getX();
             this.spawnY = this.getY();
             this.spawnZ = this.getZ();
+            this.serverX = this.getX();
+            this.serverY = this.getY();
+            this.serverZ = this.getZ();
             this.hasSetStartPos = true;
         }
 
@@ -119,7 +134,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             target = getAttacker();
         }
         else if (this.isAlive()) {
-            // implements one of 6 special attacks that occurs every 5 seconds on 20TPS against current target
+            // implements one of 6 special attacks that occurs every 5 seconds on 20TPS against current targets.
             if (this.ticksSinceTracked < 100) {
                 this.ticksSinceTracked++;
                 if (this.ticksSinceTracked == 100) {
@@ -137,13 +152,13 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
             // does a jumpscare attack every interval of 25% health (guaranteed) or randomly per tick
             // different modes should occur as well.
-            if (this.getHealth() / this.getMaxHealth() <= 0.75 && !isbelow75) {
+            if (this.getHealth() / this.getMaxHealth() <= 0.75 && !this.isbelow75) {
                 jumpScareAttack(target);
-                isbelow75 = true;
-            } else if (this.getHealth() / this.getMaxHealth() <= 0.5 && !isbelow50) {
+                this.isbelow75 = true;
+            } else if (this.getHealth() / this.getMaxHealth() <= 0.5 && !this.isbelow50) {
                 jumpScareAttack(target);
                 isbelow50 = true;
-            } else if (this.getHealth() / this.getMaxHealth() <= 0.25 && !isbelow25) {
+            } else if (this.getHealth() / this.getMaxHealth() <= 0.25 && !this.isbelow25) {
                 jumpScareAttack(target);
                 isbelow25 = true;
             } else {
@@ -213,7 +228,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     private void activateDeathSquad() {
-        if (!hasSummonedSquad) {
+        if (!this.hasSummonedSquad) {
             for (int i = 0; i < 4; i++) {
                 BlazeEntity blaze = new BlazeEntity(EntityType.BLAZE, this.world);
                 switch (i) {
@@ -224,7 +239,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
                 }
                 world.spawnEntity(blaze);
             }
-            hasSummonedSquad = true;
+            this.hasSummonedSquad = true;
         }
     }
 
@@ -239,11 +254,11 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     public boolean damage(DamageSource source, float amount) {
-        if (isbelow75 && !(source.getAttacker() instanceof PlayerEntity) && source != DamageSource.OUT_OF_WORLD) {
+        if (this.isbelow75 && !(source.getAttacker() instanceof PlayerEntity) && source != DamageSource.OUT_OF_WORLD) {
             // below 75% health, can only be damaged by players OR falling out of the world
             amount = 0.0F;
         }
-        else if (isbelow25 && source.getAttacker() != null) { //below 25% health, apply a burn effect to attackers
+        else if (this.isbelow25 && source.getAttacker() != null) { //below 25% health, apply a burn effect to attackers
             source.getAttacker().setOnFireFromLava();
         }
         return super.damage(source, amount);
@@ -253,12 +268,17 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
         if (!this.hasReturnedStartPos) {
             this.setPosition(this.spawnX, this.spawnY, this.spawnZ);
+            this.setPosition(this.serverX, this.serverY, this.serverZ);
             world.playSound(null, this.spawnX, this.spawnY, this.spawnZ, new SoundEvent(new Identifier("thatchermod:thatcher_possession")), SoundCategory.BLOCKS, 7.5F, 0.75F);
             this.hasReturnedStartPos = true;
         }
 
         this.world.addParticle(ParticleTypes.EXPLOSION,
                 this.getX(), this.getY() + 2.0D, this.getZ(), 0.0D, 0.0D, 0.0D);
+        this.world.addParticle(ParticleTypes.LAVA,
+                this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
+        this.world.addParticle(ParticleTypes.LARGE_SMOKE,
+                this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
         if (this.ticksSinceDeath < 101) {
             this.ticksSinceDeath++;
             if (this.ticksSinceDeath == 100) {
