@@ -16,4 +16,9 @@ public class ThatcherModelRenderer extends GeoEntityRenderer<ThatcherEntity> {
     public Identifier getTextureResource(ThatcherEntity instance) {
         return new Identifier(ThatcherMod.MOD_ID, "textures/entity/thatcher/thatcher.png");
     }
+
+    @Override
+    public Identifier getTexture(ThatcherEntity instance) {
+        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/thatcher/thatcher.png");
+    }
 }

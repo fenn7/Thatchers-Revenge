@@ -1,6 +1,5 @@
 package net.fenn7.thatchermod.block.entity.custom;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -38,6 +37,8 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ThatcherEntity extends HostileEntity implements IAnimatable {
@@ -49,6 +50,8 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private boolean isbelow50;
     private boolean isbelow25;
     private boolean hasSummonedSquad;
+    private boolean isShootingFire;
+    private List<SmallFireballEntity> fireballList;
     private int ticksSinceTracked;
     private int ticksSinceDeath;
 
@@ -105,10 +108,11 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     public static DefaultAttributeContainer.Builder setAttributes() {
         return HostileEntity.createHostileAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 400.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0f)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0f)
                 .add(EntityAttributes.GENERIC_ATTACK_SPEED, 1.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3f)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.6D);
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.6D)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0D);
     }
 
     public boolean canBreatheInWater() { return true;}
@@ -151,13 +155,14 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             if (this.ticksSinceTracked < 100) {
                 this.ticksSinceTracked++;
                 if (this.ticksSinceTracked == 100) {
-                    int randomNum = ThreadLocalRandom.current().nextInt(0, 4 + 1);
+                    int randomNum = ThreadLocalRandom.current().nextInt(1, 1 + 1);
                     switch (randomNum) {
                         case 0: chainLightningAttack(target); break;
                         case 1: rapidFireAttack(target); break;
                         case 2: explosionAttack(target); break;
                         case 3: disorientAttack(target); break;
                         case 4: gasAttack(target); break;
+                        case 5: meteorAttack(target); break;
                     }
                     this.ticksSinceTracked = 0;
                 }
@@ -203,10 +208,10 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private void rapidFireAttack(Entity target) {
         for (int i = 0; i < 6; i++) {
             double e = target.getX() - this.getX();
-            double f = target.getBodyY(0.5D) - this.getBodyY(0.5D);
+            double f = target.getBodyY(0.25D) - this.getBodyY(0.5D);
             double g = target.getZ() - this.getZ();
 
-            SmallFireballEntity fireBall = new SmallFireballEntity(this.world, this, this.getRandom().nextTriangular(e, 5.0D), f, this.getRandom().nextTriangular(g, 5.0D));
+            CursedMissileEntity fireBall = new CursedMissileEntity(this.world, this, this.getRandom().nextTriangular(e, 2.5D), f, this.getRandom().nextTriangular(g, 2.5D));
             fireBall.setPosition(fireBall.getX(), this.getBodyY(0.5D) + 0.5D, fireBall.getZ());
             this.world.spawnEntity(fireBall);
         }
@@ -223,8 +228,14 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     private void gasAttack(Entity target) {
         AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(this.world, target.getX(), target.getY() + 1, target.getZ());
-        cloud.setPotion(Potions.STRONG_POISON); cloud.setDuration(100); cloud.setColor(0); cloud.setRadius(3);
+        cloud.setPotion(Potions.STRONG_POISON); cloud.setDuration(200); cloud.setColor(0); cloud.setRadius(4);
         this.world.spawnEntity(cloud);
+    }
+
+    private void meteorAttack(Entity target) {
+        CursedMeteorEntity meteor = new CursedMeteorEntity(this.world, this, 0, -1, 0);
+        meteor.setPosition(target.getX(), target.getY() + 15, target.getZ());
+        world.spawnEntity(meteor);
     }
 
     private void jumpScareAttack(Entity target) {
@@ -263,9 +274,9 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     public boolean damage(DamageSource source, float amount) {
-        if (this.getHealth() / this.getMaxHealth() <= 0.75 && !(source.getAttacker() instanceof PlayerEntity)
-                && source != DamageSource.OUT_OF_WORLD) {
-            // below 75% health, can only be damaged by players OR falling out of the world
+        if ((this.getHealth() / this.getMaxHealth() <= 0.75 && !(source.getAttacker() instanceof PlayerEntity)
+                && source != DamageSource.OUT_OF_WORLD) || (source == DamageSource.LIGHTNING_BOLT)) {
+            // below 75% health, can only be damaged by players OR falling out of the world. Immune to lightning.
             amount = 0.0F;
         }
         else if (this.getHealth() / this.getMaxHealth() <= 0.25 && source.getAttacker() != null) {
@@ -309,10 +320,6 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
                 this.ticksSinceTracked = 0;
             }
         }
-    }
-
-    public void onSummoned() {
-        this.bossBar.setPercent(0.0F);
     }
 
     public void onStartedTrackingBy(ServerPlayerEntity player) {

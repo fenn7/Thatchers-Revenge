@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fenn7.thatchermod.block.entity.ModEntities;
 import net.fenn7.thatchermod.block.entity.client.CursedMeteorRenderer;
+import net.fenn7.thatchermod.block.entity.client.CursedMissileRenderer;
 import net.fenn7.thatchermod.block.entity.client.ThatcherModelRenderer;
 import net.fenn7.thatchermod.particle.ModParticles;
 import net.fenn7.thatchermod.particle.custom.ThatcherJumpParticle;
@@ -26,5 +27,6 @@ public class ThatcherModClient implements ClientModInitializer {
         ScreenRegistry.register(ModScreenHandlers.THATCHERISM_ALTAR_SCREEN_HANDLER, ThatcherismAltarScreen::new);
         EntityRendererRegistry.register(ModEntities.THATCHER, ThatcherModelRenderer::new);
         EntityRendererRegistry.register(ModEntities.CURSED_METEOR, CursedMeteorRenderer::new);
+        EntityRendererRegistry.register(ModEntities.CURSED_MISSILE, CursedMissileRenderer::new);
     }
 }
