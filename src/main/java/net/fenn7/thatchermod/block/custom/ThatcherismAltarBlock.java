@@ -84,7 +84,6 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
             if (screenHandlerFactory != null && player.getMainHandStack().getItem() != (Items.DIAMOND)
                     || screenHandlerFactory != null && !state.get(IS_PREPARED)) {
                 player.openHandledScreen(screenHandlerFactory);
-
             }
         }
 

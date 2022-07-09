@@ -2,6 +2,7 @@ package net.fenn7.thatchermod.block.entity;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fenn7.thatchermod.ThatcherMod;
+import net.fenn7.thatchermod.block.entity.custom.CursedMeteorEntity;
 import net.fenn7.thatchermod.block.entity.custom.ThatcherEntity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -14,4 +15,10 @@ public class ModEntities {
             Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "thatcher"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, ThatcherEntity::new)
                     .dimensions(EntityDimensions.fixed(1.0f, 2.0f)).build());
+
+    public static final EntityType<CursedMeteorEntity> CURSED_METEOR = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "cursed_meteor"),
+            FabricEntityTypeBuilder.<CursedMeteorEntity>create(SpawnGroup.MISC, CursedMeteorEntity::new)
+					.dimensions(EntityDimensions.fixed(0.75F, 0.75F))
+                    .trackRangeBlocks(4).trackedUpdateRate(10).build());
 }

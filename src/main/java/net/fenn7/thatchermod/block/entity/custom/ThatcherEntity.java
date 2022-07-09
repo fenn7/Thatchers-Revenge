@@ -1,5 +1,7 @@
 package net.fenn7.thatchermod.block.entity.custom;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -22,7 +24,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.explosion.Explosion;
@@ -208,11 +213,11 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     private void explosionAttack(Entity target) {
-        this.world.createExplosion(target, target.getX(), target.getY(), target.getZ(), 5, Explosion.DestructionType.NONE);
+        this.world.createExplosion(target, target.getX(), target.getY() + 1, target.getZ(), 6, Explosion.DestructionType.NONE);
     }
 
     private void disorientAttack(Entity target) {
-        ((LivingEntity) target).addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100), this);
+        ((LivingEntity) target).addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), this);
         ((LivingEntity) target).addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100), this);
     }
 
@@ -275,7 +280,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             this.world.addParticle(ParticleTypes.LAVA,
                     this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
             this.world.addParticle(ParticleTypes.LARGE_SMOKE,
-                    this.getX(), this.getY(), this.getZ(), 0.0D, 0.33D, 0.0D);
+                    this.getX(), this.getY(), this.getZ(), 0.0D, 0.1D, 0.0D);
         }
         else {
             super.handleStatus(status);
@@ -284,8 +289,13 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     protected void updatePostDeath() {
         if (!this.hasReturnedStartPos) {
-            this.setPosition(this.serverX, this.serverY, this.serverZ);
-            world.playSound(null, this.serverX, this.serverY, this.serverZ, new SoundEvent(new Identifier("thatchermod:thatcher_possession")), SoundCategory.BLOCKS, 5F, 0.75F);
+            BlockPos pos = new BlockPos(this.serverX, this.serverY, this.serverZ);
+            this.setPosition(Vec3d.ofCenter(pos));
+            world.playSound(null, pos, new SoundEvent(new Identifier("thatchermod:thatcher_possession")), SoundCategory.BLOCKS, 5F, 0.75F);
+            BlockState blockState = world.getBlockState(pos);
+            if (blockState.isIn(BlockTags.FIRE)) {
+                world.removeBlock(pos, false);
+            }
             this.hasReturnedStartPos = true;
         }
         this.world.addParticle(ParticleTypes.EXPLOSION,
@@ -325,7 +335,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             }
             if (this.getHealth() / this.getMaxHealth() <= 0.25) {
                 damageShield(10);
-                target.setPosition(target.getX(), target.getY() + 5, target.getZ());
+                target.setPosition(target.getX(), target.getY() + 8, target.getZ());
             }
         }
         return true;
