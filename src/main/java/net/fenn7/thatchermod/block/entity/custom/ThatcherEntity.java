@@ -14,7 +14,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.potion.Potions;
@@ -50,8 +49,6 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private boolean isbelow50;
     private boolean isbelow25;
     private boolean hasSummonedSquad;
-    private boolean isShootingFire;
-    private List<SmallFireballEntity> fireballList;
     private int ticksSinceTracked;
     private int ticksSinceDeath;
 
@@ -138,7 +135,6 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     protected void mobTick() {
         this.bossBar.setPercent(this.getHealth() / this.getMaxHealth());
-
         if (!this.hasSetStartPos) {
             this.serverX = this.getX();
             this.serverY = this.getY();
@@ -155,7 +151,8 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             if (this.ticksSinceTracked < 100) {
                 this.ticksSinceTracked++;
                 if (this.ticksSinceTracked == 100) {
-                    int randomNum = ThreadLocalRandom.current().nextInt(1, 1 + 1);
+                    this.world.sendEntityStatus(this, (byte) 60); // adds "poof" indication of attack used
+                    int randomNum = ThreadLocalRandom.current().nextInt(0, 5 + 1);
                     switch (randomNum) {
                         case 0: chainLightningAttack(target); break;
                         case 1: rapidFireAttack(target); break;
@@ -229,6 +226,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private void gasAttack(Entity target) {
         AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(this.world, target.getX(), target.getY() + 1, target.getZ());
         cloud.setPotion(Potions.STRONG_POISON); cloud.setDuration(200); cloud.setColor(0); cloud.setRadius(4);
+        ((LivingEntity) target).addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 50, 1), this);
         this.world.spawnEntity(cloud);
     }
 
@@ -292,6 +290,8 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
                     this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
             this.world.addParticle(ParticleTypes.LARGE_SMOKE,
                     this.getX(), this.getY(), this.getZ(), 0.0D, 0.1D, 0.0D);
+            this.world.playSound(null, this.getBlockPos(), SoundEvents.ENTITY_BLAZE_BURN, SoundCategory.BLOCKS,
+                    5F, 0.5F);
         }
         else {
             super.handleStatus(status);

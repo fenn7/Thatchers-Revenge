@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fenn7.thatchermod.block.ModBlocks;
 import net.fenn7.thatchermod.block.entity.ModBlockEntities;
+import net.fenn7.thatchermod.callback.ModCallbacks;
+import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.item.custom.ThatcherSoulItem;
 import net.fenn7.thatchermod.particle.ModParticles;
@@ -37,6 +39,7 @@ public class ThatcherMod implements ModInitializer {
 
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
+		ModEffects.registerModEffects();
 
 		ModParticles.registerParticles();
 
@@ -44,5 +47,8 @@ public class ThatcherMod implements ModInitializer {
 		ModScreenHandlers.registerScreenHandlers();
 
 		ModRegistries.registerAll();
+		ModCallbacks.registerAllEvents();
+		ModCommands.registerAllCommands();
+		ModEvents.registerAllEvents();
 	}
 }

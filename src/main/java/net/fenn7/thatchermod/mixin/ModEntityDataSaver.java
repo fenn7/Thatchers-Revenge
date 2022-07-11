@@ -1,14 +1,13 @@
 package net.fenn7.thatchermod.mixin;
 
 import net.fenn7.thatchermod.util.IEntityDataSaver;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import javax.swing.text.html.parser.Entity;
 
 @Mixin(Entity.class)
 public abstract class ModEntityDataSaver implements IEntityDataSaver {

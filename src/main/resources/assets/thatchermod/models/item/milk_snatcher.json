@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "thatchermod:item/union_buster_alt"
+    "layer0": "thatchermod:item/milk_snatcher_alt"
   }
 }
