@@ -14,6 +14,7 @@ import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
@@ -52,6 +53,7 @@ public class UnionBusterItem extends ModAxeItem {
     private void launchEntitiesUpwards(World world, PlayerEntity user, Hand hand) {
         BlockPos pos1 = new BlockPos(user.getX() - 4, user.getY(), user.getZ() - 4);
         BlockPos pos2 = new BlockPos(user.getX() + 4, user.getY() + 4, user.getZ() + 4);
+        boolean success = false;
 
         Box box = new Box(pos1, pos2);
         List<Entity> nearbyEntities = world.getOtherEntities(null, box);
@@ -83,14 +85,15 @@ public class UnionBusterItem extends ModAxeItem {
 
                 ((LivingEntity) entity).setAttacker(user); ((LivingEntity) entity).setAttacking(user); // aggros mobs
                 user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability
+                success = true;
                 user.heal(2);
             }
         }
-        user.getItemCooldownManager().set(this, DURATION);
+        if (success) { user.getItemCooldownManager().set(this, DURATION); }
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        return super.useOnBlock(context);
     }
 }

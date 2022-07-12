@@ -10,7 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.Text;
 
-public class PlayConnectionEvents implements ServerPlayConnectionEvents.Join, ServerPlayConnectionEvents.Disconnect{
+public class PlayConnectionEvents implements ServerPlayConnectionEvents.Join, ServerPlayConnectionEvents.Disconnect {
 
     @Override
     public void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {

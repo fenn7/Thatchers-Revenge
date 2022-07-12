@@ -32,16 +32,20 @@ public class ModCallbacks {
         UseItemCallback.EVENT.register((player, world, hand) -> {
             if (!player.isSpectator() && player.getMainHandStack().getItem() == (ModItems.UNION_BUSTER)
                     && !player.getItemCooldownManager().isCoolingDown(ModItems.UNION_BUSTER)) {
-                summonDustParticles(world, 3, 1.0f, 0.6f, 0.3f, 3,
-                        player.getX(), player.getY() + 2, player.getZ(), 0, 0, 0);
-                world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_GRASS_PLACE,
-                        SoundCategory.BLOCKS, 15F, 0.33F);
 
                 BlockPos pos1 = new BlockPos(player.getX() - 4, player.getY(), player.getZ() - 4);
                 BlockPos pos2 = new BlockPos(player.getX() + 4, player.getY() + 4, player.getZ() + 4);
                 Box box = new Box(pos1, pos2);
 
                 List<Entity> nearbyEntities = world.getOtherEntities(null, box);
+
+                if (!nearbyEntities.isEmpty()) {
+                    summonDustParticles(world, 3, 1.0f, 0.6f, 0.3f, 3,
+                            player.getX(), player.getY() + 2, player.getZ(), 0, 0, 0);
+                    world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_GRASS_PLACE,
+                            SoundCategory.BLOCKS, 15F, 0.33F);
+                }
+
                 for (Entity entity : nearbyEntities) {
                     if (entity instanceof LivingEntity && entity != player) {
                         summonDustParticles(world, 1, 1.0f, 0.6f, 0.3f, 2,
