@@ -88,8 +88,8 @@ public class UnionBusterItem extends ModAxeItem {
 
                 ((LivingEntity) entity).setAttacker(user); ((LivingEntity) entity).setAttacking(user); // aggros mobs
                 user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability
-                success = true;
                 user.heal(2);
+                success = true;
             }
         }
         if (success) {

@@ -17,6 +17,7 @@ import net.fenn7.thatchermod.screen.ModScreenHandlers;
 import net.fenn7.thatchermod.screen.ThatcherismAltarScreen;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 

@@ -26,7 +26,6 @@ public class ModItems {
     public static final Item MILK_SNATCHER = registerItem("milk_snatcher",
             new MilkSnatcherItem(ModToolMaterials.THATCHERITE, 3, -2.0F, new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).rarity(Rarity.RARE)));
-
     public static final Item COLLIERY_CLOSER = registerItem("colliery_closer",
             new CollieryCloserItem(ModToolMaterials.THATCHERITE, 1, -2.4F, new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).rarity(Rarity.RARE)));

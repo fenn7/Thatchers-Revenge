@@ -1,0 +1,6 @@
+{
+  "parent": "thatchermod:item/colliery_closer",
+  "textures": {
+    "layer0": "thatchermod:item/colliery_closer"
+  }
+}

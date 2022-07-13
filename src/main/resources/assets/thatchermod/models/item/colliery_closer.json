@@ -1,6 +1,14 @@
 {
-  "parent": "item/generated",
+  "parent": "item/handheld",
   "textures": {
-    "layer0": "thatchermod:item/colliery_closer"
-  }
+      "layer0": "thatchermod:item/colliery_closer_alt"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "pulling": 1
+      },
+      "model": "thatchermod:item/colliery_closer_3x3"
+    }
+  ]
 }
