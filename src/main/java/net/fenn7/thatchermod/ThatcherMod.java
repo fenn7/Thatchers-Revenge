@@ -1,28 +1,17 @@
 package net.fenn7.thatchermod;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fenn7.thatchermod.block.ModBlocks;
 import net.fenn7.thatchermod.block.entity.ModBlockEntities;
 import net.fenn7.thatchermod.callback.ModCallbacks;
 import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.item.ModItems;
-import net.fenn7.thatchermod.item.custom.ThatcherSoulItem;
 import net.fenn7.thatchermod.particle.ModParticles;
 import net.fenn7.thatchermod.screen.ModScreenHandlers;
-import net.fenn7.thatchermod.screen.ThatcherismAltarScreen;
 import net.fenn7.thatchermod.util.ModRegistries;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.TypedActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.bernie.geckolib3.GeckoLib;
-
-import java.rmi.registry.Registry;
 
 public class ThatcherMod implements ModInitializer {
 	public static final String MOD_ID = "thatchermod";

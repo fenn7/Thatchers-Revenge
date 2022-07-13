@@ -2,15 +2,15 @@ package net.fenn7.thatchermod.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.item.custom.MilkSnatcherItem;
-import net.fenn7.thatchermod.item.custom.ThatcherSoulItem;
-import net.fenn7.thatchermod.item.custom.ModAxeItem;
-import net.fenn7.thatchermod.item.custom.UnionBusterItem;
+import net.fenn7.thatchermod.item.custom.*;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.SwordItem;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 
 public class ModItems {
 
@@ -25,6 +25,10 @@ public class ModItems {
                     .fireproof().maxCount(1).rarity(Rarity.RARE)));
     public static final Item MILK_SNATCHER = registerItem("milk_snatcher",
             new MilkSnatcherItem(ModToolMaterials.THATCHERITE, 3, -2.0F, new FabricItemSettings().group(ModItemGroup.THATCHER)
+                    .fireproof().maxCount(1).rarity(Rarity.RARE)));
+
+    public static final Item COLLIERY_CLOSER = registerItem("colliery_closer",
+            new CollieryCloserItem(ModToolMaterials.THATCHERITE, 1, -2.4F, new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).rarity(Rarity.RARE)));
 
     public static void registerModItems(){

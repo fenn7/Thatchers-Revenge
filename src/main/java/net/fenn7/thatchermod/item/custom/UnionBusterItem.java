@@ -1,5 +1,7 @@
 package net.fenn7.thatchermod.item.custom;
 
+import net.fenn7.thatchermod.particle.ModParticles;
+import net.fenn7.thatchermod.util.CommonMethods;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -17,8 +19,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -51,15 +56,13 @@ public class UnionBusterItem extends ModAxeItem {
     }
 
     private void launchEntitiesUpwards(World world, PlayerEntity user, Hand hand) {
-        BlockPos pos1 = new BlockPos(user.getX() - 4, user.getY(), user.getZ() - 4);
-        BlockPos pos2 = new BlockPos(user.getX() + 4, user.getY() + 4, user.getZ() + 4);
+        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(user, -4, 0, -4, 4, 4, 4, world);
         boolean success = false;
-
-        Box box = new Box(pos1, pos2);
-        List<Entity> nearbyEntities = world.getOtherEntities(null, box);
 
         for (Entity entity : nearbyEntities) {
             if (entity instanceof LivingEntity && entity != user) {
+                spawnHitEffects(entity, world);
+
                 double length = entity.getX() - user.getX();
                 double width = entity.getZ() - user.getZ();
                 double distanceFromUser = (Math.sqrt((length * length) + (width * width))); //pythagoras theorem
@@ -89,7 +92,19 @@ public class UnionBusterItem extends ModAxeItem {
                 user.heal(2);
             }
         }
-        if (success) { user.getItemCooldownManager().set(this, DURATION); }
+        if (success) {
+            CommonMethods.summonDustParticles(world, 3, 1.0f, 0.6f, 0.3f, 3,
+                    user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
+            world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GRASS_PLACE, SoundCategory.BLOCKS, 15F, 0.33F);
+            user.getItemCooldownManager().set(this, DURATION);
+        }
+    }
+
+    private void spawnHitEffects(Entity entity, World world) {
+        if(!entity.world.isClient) {
+            CommonMethods.summonDustParticles(world, 1, 1.0f, 0.6f, 0.3f, 2,
+                    entity.getX(), entity.getY() + 0.5D, entity.getZ(), 0, 0, 0);
+        }
     }
 
     @Override

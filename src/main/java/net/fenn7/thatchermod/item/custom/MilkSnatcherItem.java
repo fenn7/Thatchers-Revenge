@@ -11,6 +11,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ModStatus;
 import net.minecraft.util.TypedActionResult;
@@ -18,7 +20,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class MilkSnatcherItem extends SwordItem implements CommonMethods {
+public class MilkSnatcherItem extends SwordItem {
     public static final int DURATION = 1200;
 
     public MilkSnatcherItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
@@ -36,21 +38,38 @@ public class MilkSnatcherItem extends SwordItem implements CommonMethods {
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (target.hasStatusEffect(ModEffects.CALCIUM_DEFICIENCY)) {
-            target.damage(DamageSource.MAGIC, 999999.0F);
-            target.pushAwayFrom(attacker);
+            target.damage(DamageSource.MAGIC, this.getAttackDamage()/3);
         }
         return super.postHit(stack, target, attacker);
     }
 
     private void drainCalciumFromEntities(World world, PlayerEntity user, Hand hand) {
-        List<Entity> nearbyEntities = getEntitiesNearPlayer(user, -4, 0, -4, 4, 4, 4, world);
+        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(user, -4, 0, -4, 4, 4, 4, world);
+        boolean success = false;
 
         for (Entity entity: nearbyEntities) {
             if (entity instanceof LivingEntity && entity != user) {
-                ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(ModEffects.CALCIUM_DEFICIENCY, 200), user);
+                spawnHitEffects(entity, world);
+
+                ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(ModEffects.CALCIUM_DEFICIENCY, 300), user);
+
                 ((LivingEntity) entity).setAttacker(user); ((LivingEntity) entity).setAttacking(user); // aggros mobs
-                user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability
+                user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability for each
+                user.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 150,
+                        (int) (nearbyEntities.size()/4)), user); // every 4 entities hit grants +1 level of strength
+                success = true;
             }
         }
+
+        if (success) {
+            CommonMethods.summonDustParticles(world, 3, 1.0f, 1.0f, 1.0f, 3,
+                    user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
+            world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_STRAY_DEATH, SoundCategory.BLOCKS, 15F, 0.33F);
+        }
+    }
+
+    private void spawnHitEffects(Entity entity, World world) {
+        CommonMethods.summonDustParticles(world, 1, 1.0f, 1.0f, 1.0f, 2,
+                entity.getX(), entity.getY() + 0.5D, entity.getZ(), 0, 0, 0);
     }
 }

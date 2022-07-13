@@ -11,6 +11,7 @@ import net.fenn7.thatchermod.block.entity.client.CursedMeteorRenderer;
 import net.fenn7.thatchermod.block.entity.client.CursedMissileRenderer;
 import net.fenn7.thatchermod.block.entity.client.ThatcherModelRenderer;
 import net.fenn7.thatchermod.particle.ModParticles;
+import net.fenn7.thatchermod.particle.custom.DeficiencyIndicatorParticle;
 import net.fenn7.thatchermod.particle.custom.ThatcherJumpParticle;
 import net.fenn7.thatchermod.screen.ModScreenHandlers;
 import net.fenn7.thatchermod.screen.ThatcherismAltarScreen;
@@ -24,6 +25,7 @@ public class ThatcherModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ParticleFactoryRegistry.getInstance().register(ModParticles.THATCHER_JUMPSCARE, ThatcherJumpParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.DEFICIENCY_INDICATOR, DeficiencyIndicatorParticle.Factory::new);
         ScreenRegistry.register(ModScreenHandlers.THATCHERISM_ALTAR_SCREEN_HANDLER, ThatcherismAltarScreen::new);
         EntityRendererRegistry.register(ModEntities.THATCHER, ThatcherModelRenderer::new);
         EntityRendererRegistry.register(ModEntities.CURSED_METEOR, CursedMeteorRenderer::new);
