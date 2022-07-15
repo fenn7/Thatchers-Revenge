@@ -29,6 +29,11 @@ public class ModItems {
     public static final Item COLLIERY_CLOSER = registerItem("colliery_closer",
             new CollieryCloserItem(ModToolMaterials.THATCHERITE, 1, -2.4F, new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).rarity(Rarity.RARE)));
+    public static final Item COMMAND_SCEPTRE = registerItem("command_sceptre",
+            new CommandSceptreItem(new FabricItemSettings().group(ModItemGroup.THATCHER)
+                    .fireproof().maxCount(1).rarity(Rarity.RARE)));
+    public static final Item COMMUNITY_CROSSBOW = registerItem("community_crossbow",
+            new CommunityCrossbowItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxDamage(999)));
 
     public static void registerModItems(){
         ThatcherMod.LOGGER.debug("Registering Items for " + ThatcherMod.MOD_ID + " ...");

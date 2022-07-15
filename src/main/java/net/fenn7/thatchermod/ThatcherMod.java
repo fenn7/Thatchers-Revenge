@@ -8,7 +8,10 @@ import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.particle.ModParticles;
 import net.fenn7.thatchermod.screen.ModScreenHandlers;
+import net.fenn7.thatchermod.util.ModPredicates;
 import net.fenn7.thatchermod.util.ModRegistries;
+import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.bernie.geckolib3.GeckoLib;
@@ -29,6 +32,7 @@ public class ThatcherMod implements ModInitializer {
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
 		ModEffects.registerModEffects();
+		ModPredicates.registerAllPredicates();
 
 		ModParticles.registerParticles();
 

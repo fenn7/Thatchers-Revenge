@@ -37,10 +37,10 @@ public class CursedMissileRenderer extends EntityRenderer<CursedMissileEntity> {
         Matrix4f matrix4f = entry.getPositionMatrix();
         Matrix3f matrix3f = entry.getNormalMatrix();
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
-        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 0.0F, 0, 0, 1);
-        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 1.0F, 0, 1, 1);
-        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 1.0F, 1, 1, 0);
-        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 0.0F, 1, 0, 0);
+        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 0.0F, 1, 0, 1);
+        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 1.0F, 1, 1, 1);
+        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 1.0F, 2, 1, 0);
+        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 0.0F, 2, 0, 0);
         matrixStack.pop();
         super.render(missileEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }

@@ -32,7 +32,7 @@ public class CursedMeteorRenderer extends EntityRenderer<CursedMeteorEntity> {
 
     public void render(CursedMeteorEntity meteorEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         matrixStack.push();
-        matrixStack.scale(2.0F, 2.0F, 2.0F);
+        matrixStack.scale(0.75F, 0.75F, 0.75F);
         matrixStack.multiply(this.dispatcher.getRotation());
         matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
         MatrixStack.Entry entry = matrixStack.peek();

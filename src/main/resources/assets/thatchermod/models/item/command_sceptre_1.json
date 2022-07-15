@@ -1,0 +1,6 @@
+{
+  "parent": "thatchermod:item/command_sceptre",
+  "textures": {
+    "layer0": "thatchermod:item/command_sceptre_1"
+  }
+}

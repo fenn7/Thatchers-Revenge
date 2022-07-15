@@ -30,6 +30,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -67,24 +68,24 @@ public class UnionBusterItem extends ModAxeItem {
                 double width = entity.getZ() - user.getZ();
                 double distanceFromUser = (Math.sqrt((length * length) + (width * width))); //pythagoras theorem
                 if (distanceFromUser < 1) { distanceFromUser = 1; }
-                double displacement = (1 / distanceFromUser * 15 + 4); // maximum displacement is 19 blocks
+                double displacement = (2 / distanceFromUser * 15 + 6); // maximum displacement is 21 blocks
 
                 boolean blockFound = false;
                 BlockPos pos = new BlockPos(entity.getX(), entity.getY(), entity.getZ());
                 for (int i = 0; i < displacement; i++) {
-                    pos = new BlockPos(entity.getX(), entity.getY() + i, entity.getZ());
+                    pos = pos.offset(Direction.UP, 1);
                     if (!world.getBlockState(pos).isAir()) { // stop on the first NON-AIR block
+                        if (pos.getY()%2 == 1) { // correction needed for odd Y values otherwise they will shoot through block
+                            pos = pos.offset(Direction.DOWN, 1);
+                        }
                         blockFound = true;
                         break;
                     }
                     i++;
                 }
 
-                if (blockFound) {
-                    entity.setPosition(entity.getX(), pos.getY() - entity.getHeight(), entity.getZ());
-                } else {
-                    entity.setPosition(entity.getX(), pos.getY(), entity.getZ());
-                }
+                if (blockFound) { entity.setPosition(entity.getX(), pos.getY() - entity.getHeight(), entity.getZ()); }
+                else { entity.setPosition(entity.getX(), pos.getY(), entity.getZ()); }
 
                 ((LivingEntity) entity).setAttacker(user); ((LivingEntity) entity).setAttacking(user); // aggros mobs
                 user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability
@@ -93,10 +94,10 @@ public class UnionBusterItem extends ModAxeItem {
             }
         }
         if (success) {
-            CommonMethods.summonDustParticles(world, 3, 1.0f, 0.6f, 0.3f, 3,
+            CommonMethods.summonDustParticles(world, 1, 1.0f, 0.6f, 0.3f, 3,
                     user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
-            world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GRASS_PLACE, SoundCategory.BLOCKS, 15F, 0.33F);
-            user.getItemCooldownManager().set(this, DURATION);
+            world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GRASS_PLACE, SoundCategory.HOSTILE, 15F, 0.33F);
+            user.getItemCooldownManager().set(this, 0); //DURATION);
         }
     }
 

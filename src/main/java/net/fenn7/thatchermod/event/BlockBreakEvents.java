@@ -17,6 +17,5 @@ import java.util.concurrent.ThreadLocalRandom;
 public class BlockBreakEvents implements PlayerBlockBreakEvents.After{
     @Override
     public void afterBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-
     }
 }

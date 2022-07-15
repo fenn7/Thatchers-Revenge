@@ -53,13 +53,15 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
         super.onEntityHit(entityHitResult);
     }
 
-    protected ParticleEffect getParticleType() {
-        return ParticleTypes.SCULK_SOUL;
+    @Override
+    public void tick() {
+        this.powerY -= 0.03;
+        if (this.age >= 300) { this.discard(); }
+        super.tick();
     }
 
+    protected ParticleEffect getParticleType() { return ParticleTypes.SCULK_SOUL; }
     protected boolean isBurning() { return false; }
-    public boolean collides() {
-        return true;
-    }
-
+    public boolean collides() { return true; }
+    public boolean hasNoGravity() { return false; }
 }

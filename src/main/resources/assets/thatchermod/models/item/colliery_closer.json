@@ -6,7 +6,7 @@
   "overrides": [
     {
       "predicate": {
-        "pulling": 1
+        "minecraft:isbreaking3x3": 1
       },
       "model": "thatchermod:item/colliery_closer_3x3"
     }

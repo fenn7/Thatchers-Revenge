@@ -62,9 +62,9 @@ public class MilkSnatcherItem extends SwordItem {
         }
 
         if (success) {
-            CommonMethods.summonDustParticles(world, 3, 1.0f, 1.0f, 1.0f, 3,
+            CommonMethods.summonDustParticles(world, 1, 1.0f, 1.0f, 1.0f, 3,
                     user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
-            world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_STRAY_DEATH, SoundCategory.BLOCKS, 15F, 0.33F);
+            world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_STRAY_DEATH, SoundCategory.HOSTILE, 15F, 0.66F);
         }
     }
 

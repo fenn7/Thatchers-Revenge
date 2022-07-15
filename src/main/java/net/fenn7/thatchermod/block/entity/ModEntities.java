@@ -26,6 +26,6 @@ public class ModEntities {
     public static final EntityType<CursedMissileEntity> CURSED_MISSILE = Registry.register(
             Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "cursed_missile"),
             FabricEntityTypeBuilder.<CursedMissileEntity>create(SpawnGroup.MISC, CursedMissileEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.5F, 0.5F))
+                    .dimensions(EntityDimensions.fixed(0.375F, 0.375F))
                     .trackRangeBlocks(32).trackedUpdateRate(10).build());
 }

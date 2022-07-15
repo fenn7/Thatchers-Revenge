@@ -33,17 +33,19 @@ public class CursedMissileEntity extends ExplosiveProjectileEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         entityHitResult.getEntity().setOnFireFromLava();
-        entityHitResult.getEntity().pushAwayFrom(this.getOwner());
+        if (this.getOwner() != null) { entityHitResult.getEntity().pushAwayFrom(this.getOwner()); }
         super.onEntityHit(entityHitResult);
     }
 
-    protected ParticleEffect getParticleType() {
-        return ParticleTypes.SOUL_FIRE_FLAME;
+    @Override
+    public void tick() {
+        if (this.age >= 200) { this.discard(); }
+        super.tick();
     }
 
+    protected ParticleEffect getParticleType() { return ParticleTypes.SOUL_FIRE_FLAME; }
     protected boolean isBurning() { return false; }
-    public boolean collides() {
-        return false;
-    }
+    public boolean collides() { return false; }
+    public boolean hasNoGravity() { return true; }
 }
 

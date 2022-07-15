@@ -231,7 +231,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     private void meteorAttack(Entity target) {
-        CursedMeteorEntity meteor = new CursedMeteorEntity(this.world, this, 0, -1, 0);
+        CursedMeteorEntity meteor = new CursedMeteorEntity(this.world, this, 0, 0, 0);
         meteor.setPosition(target.getX(), target.getY() + 15, target.getZ());
         world.spawnEntity(meteor);
     }
