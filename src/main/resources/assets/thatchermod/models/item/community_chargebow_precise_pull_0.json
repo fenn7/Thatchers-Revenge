@@ -1,0 +1,6 @@
+{
+  "parent": "thatchermod:item/community_chargebow",
+  "textures": {
+    "layer0": "thatchermod:item/community_chargebow_precise_pull_0"
+    }
+}

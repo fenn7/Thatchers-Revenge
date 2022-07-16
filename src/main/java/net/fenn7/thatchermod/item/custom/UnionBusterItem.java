@@ -57,7 +57,7 @@ public class UnionBusterItem extends ModAxeItem {
     }
 
     private void launchEntitiesUpwards(World world, PlayerEntity user, Hand hand) {
-        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(user, -4, 0, -4, 4, 4, 4, world);
+        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(user, -4, -4, -4, 4, 4, 4, world);
         boolean success = false;
 
         for (Entity entity : nearbyEntities) {
@@ -89,6 +89,8 @@ public class UnionBusterItem extends ModAxeItem {
 
                 ((LivingEntity) entity).setAttacker(user); ((LivingEntity) entity).setAttacking(user); // aggros mobs
                 user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability
+                user.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 150,
+                        (int) (nearbyEntities.size()/4)), user); // every 4 entities hit grants +1 level of resistance
                 user.heal(2);
                 success = true;
             }

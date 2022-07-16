@@ -1,0 +1,31 @@
+{
+  "parent": "thatchermod:item/community_chargebow",
+  "textures": {
+    "layer0": "thatchermod:item/community_chargebow_rapid"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minecraft:rapid.fire": 1,
+        "minecraft:pulling": 1
+      },
+      "model": "thatchermod:item/community_chargebow_rapid_pull"
+    },
+    {
+      "predicate": {
+        "minecraft:rapid.fire": 1,
+        "minecraft:pulling": 1,
+        "minecraft:pull": 0.65
+      },
+      "model": "thatchermod:item/community_chargebow_rapid_pull_0"
+    },
+    {
+      "predicate": {
+        "minecraft:rapid.fire": 1,
+        "minecraft:pulling": 1,
+        "minecraft:pull": 0.9
+      },
+      "model": "thatchermod:item/community_chargebow_rapid_pull_1"
+    }
+  ]
+}

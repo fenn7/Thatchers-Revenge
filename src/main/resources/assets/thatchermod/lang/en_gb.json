@@ -4,7 +4,11 @@
   "item.thatchermod.union_buster": "Union Buster",
   "item.thatchermod.milk_snatcher": "Milk Snatcher",
   "item.thatchermod.colliery_closer": "Colliery Closer",
+  "item.thatchermod.command_sceptre": "Imperial Sceptre",
+  "item.thatchermod.community_chargebow": "Community Chargebow",
+
   "effect.thatchermod.calcium_deficiency": "Hypocalcemia",
+  "effect.thatchermod.static_buildup": "Static Buildup",
 
   "block.thatchermod.thatcherism_altar": "Thatcherism Altar",
 

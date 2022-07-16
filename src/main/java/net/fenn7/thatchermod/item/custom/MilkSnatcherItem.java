@@ -44,15 +44,13 @@ public class MilkSnatcherItem extends SwordItem {
     }
 
     private void drainCalciumFromEntities(World world, PlayerEntity user, Hand hand) {
-        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(user, -4, 0, -4, 4, 4, 4, world);
+        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(user, -4, -4, -4, 4, 4, 4, world);
         boolean success = false;
 
         for (Entity entity: nearbyEntities) {
             if (entity instanceof LivingEntity && entity != user) {
                 spawnHitEffects(entity, world);
-
                 ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(ModEffects.CALCIUM_DEFICIENCY, 300), user);
-
                 ((LivingEntity) entity).setAttacker(user); ((LivingEntity) entity).setAttacking(user); // aggros mobs
                 user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability for each
                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 150,

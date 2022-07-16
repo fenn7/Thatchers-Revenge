@@ -19,6 +19,9 @@ public class ModEffects {
                     -0.15D, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
             .addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, "a311afcd-a357-4ce6-b725-f4ffdd6624ad",
                     -0.2D, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+    public static final StatusEffect STATIC_BUILDUP = Registry.register(Registry.STATUS_EFFECT,
+            new Identifier(ThatcherMod.MOD_ID, "static_buildup"),
+            new StaticBuildupEffect(StatusEffectCategory.NEUTRAL, 0));
 
     public static void registerModEffects(){
         ThatcherMod.LOGGER.debug("Registering Effects for " + ThatcherMod.MOD_ID + " ...");

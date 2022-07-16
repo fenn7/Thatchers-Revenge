@@ -47,6 +47,7 @@ public class CommandSceptreItem extends Item {
             if (!user.isSneaking()) {
                 launchMissileEntity(world, user);
                 user.getItemCooldownManager().set(ModItems.COMMAND_SCEPTRE, 10);
+                user.getMainHandStack().damage(1, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
             else {
                 CommonMethods.summonDustParticles(world, 1, 0.0F, 0.0F, 0.33F, 3,
@@ -54,6 +55,7 @@ public class CommandSceptreItem extends Item {
                 world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_SKELETON_HORSE_DEATH, SoundCategory.HOSTILE, 8F, 0.75F);
                 summonMeteorEntity(world, user);
                 user.getItemCooldownManager().set(ModItems.COMMAND_SCEPTRE, 1);
+                user.getMainHandStack().damage(3, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
         }
         return super.use(world, user, hand);
@@ -68,6 +70,8 @@ public class CommandSceptreItem extends Item {
 
     private void summonMeteorEntity(World world, PlayerEntity user) {
         CursedMeteorEntity meteorEntity = new CursedMeteorEntity(ModEntities.CURSED_METEOR, world);
+        meteorEntity.setFalling(true);
+
         HitResult hitResult = user.raycast(24, 0, true);
         BlockPos pos;
         switch (hitResult.getType()) {
@@ -107,23 +111,28 @@ public class CommandSceptreItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof PlayerEntity player && player.getOffHandStack().getItem() == this) {
-            List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(player, 6, 2, 6, -6, -2, -6, world);
+            List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(player, 6, 3, 6, -6, -3, -6, world);
             for (Entity mobs: nearbyEntities) {
                 if (mobs instanceof PassiveEntity passive) {
-                    passive.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 20));
-                    passive.getLookControl().lookAt(player, (float)(passive.getMaxHeadRotation() + 20), (float)passive.getMaxLookPitchChange());
-                    Path pathToPlayer = passive.getNavigation().findPathTo(player, 6);
-                    if (passive.squaredDistanceTo(player) > 1.5F) {
-                        passive.getNavigation().startMovingAlong(pathToPlayer, 0.5);
-                        passive.getMoveControl().moveTo(player.getX(), player.getY(), player.getZ(), 0.5);
-                    }
-                    ticks++;
-                    if (ticks%10 == 0) {
+                    lurePassiveEntity(passive, player); ticks++;
+                    if (ticks%10 == 0) { ticks = 0;
                         world.addParticle(new ShriekParticleEffect(0), passive.getX(), passive.getY()+passive.getHeight(),
                                 passive.getZ(), 0, 1, 0);
-                        ticks = 0;
                     }
                 }
+            }
+        }
+    }
+
+    private void lurePassiveEntity(PassiveEntity passive, PlayerEntity player) {
+        passive.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 20));
+        passive.getLookControl().lookAt(player, (float)(passive.getMaxHeadRotation() + 20), (float)passive.getMaxLookPitchChange());
+        Path pathToPlayer = passive.getNavigation().findPathTo(player, 6);
+        if (passive.squaredDistanceTo(player) > 1.5F) {
+            if (passive instanceof TameableEntity tameable && tameable.isInSittingPose()) {}
+            else {
+                passive.getNavigation().startMovingAlong(pathToPlayer, 0.5);
+                passive.getMoveControl().moveTo(player.getX(), player.getY(), player.getZ(), 0.5);
             }
         }
     }
@@ -131,8 +140,10 @@ public class CommandSceptreItem extends Item {
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         if (entity instanceof TameableEntity tameable) {
-            tameable.setTamed(true);
-            stack.damage(3, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+            if (!tameable.isTamed()) {
+                tameable.setTamed(true); tameable.setOwner(user);
+                stack.damage(3, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+            }
         }
         return super.useOnEntity(stack, user, entity, hand);
     }

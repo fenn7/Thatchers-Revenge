@@ -1,16 +1,17 @@
 package net.fenn7.thatchermod.item;
 
+import net.fabricmc.fabric.api.item.v1.CustomDamageHandler;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.item.custom.*;
-import net.minecraft.block.Block;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.SwordItem;
-import net.minecraft.tag.TagKey;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+
+import java.util.function.Consumer;
 
 public class ModItems {
 
@@ -29,11 +30,12 @@ public class ModItems {
     public static final Item COLLIERY_CLOSER = registerItem("colliery_closer",
             new CollieryCloserItem(ModToolMaterials.THATCHERITE, 1, -2.4F, new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).rarity(Rarity.RARE)));
+    public static final Item COMMUNITY_CHARGEBOW = registerItem("community_chargebow",
+            new CommunityChargebowItem(new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof()
+                    .maxCount(1).maxDamage(805).maxDamageIfAbsent(805).rarity(Rarity.RARE)));
     public static final Item COMMAND_SCEPTRE = registerItem("command_sceptre",
             new CommandSceptreItem(new FabricItemSettings().group(ModItemGroup.THATCHER)
-                    .fireproof().maxCount(1).rarity(Rarity.RARE)));
-    public static final Item COMMUNITY_CROSSBOW = registerItem("community_crossbow",
-            new CommunityCrossbowItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxDamage(999)));
+                    .fireproof().maxCount(1).maxDamage(405).maxDamageIfAbsent(405).rarity(Rarity.RARE)));
 
     public static void registerModItems(){
         ThatcherMod.LOGGER.debug("Registering Items for " + ThatcherMod.MOD_ID + " ...");

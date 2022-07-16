@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredica
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.item.custom.CollieryCloserItem;
 import net.fenn7.thatchermod.item.custom.CommandSceptreItem;
+import net.fenn7.thatchermod.item.custom.CommunityChargebowItem;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
@@ -14,6 +15,31 @@ public class ModPredicates {
                 (stack, world, entity, seed) -> {
                     return entity != null && CollieryCloserItem.isBreaking3x3(stack) ? 1.0F : 0.0F;
                 });
+
+        FabricModelPredicateProviderRegistry.register(ModItems.COMMUNITY_CHARGEBOW , new Identifier("rapid.fire"),
+                (stack, world, entity, seed) -> {
+                    return entity != null && CommunityChargebowItem.isRapidFiring(stack) ? 1.0F : 0.0F;
+                });
+
+        FabricModelPredicateProviderRegistry.register(ModItems.COMMUNITY_CHARGEBOW, new Identifier("pull"),
+                (stack, world, entity, seed) -> {
+                    if (entity == null) {
+                        return 0.0f;
+                    }
+                    if (entity.getActiveItem() != stack) {
+                        return 0.0f;
+                    }
+                    if (CommunityChargebowItem.isRapidFiring(stack)) {
+                        return (float) 2 * (stack.getMaxUseTime() - entity.getItemUseTimeLeft()) / 20.0f;
+                    }
+                    else {
+                        return (float) 0.75 * (stack.getMaxUseTime() - entity.getItemUseTimeLeft()) / 20.0f;
+                    }
+                });
+
+        FabricModelPredicateProviderRegistry.register(ModItems.COMMUNITY_CHARGEBOW, new Identifier("pulling"),
+                (stack, world, entity, seed) -> entity != null && entity.isUsingItem()
+                        && entity.getActiveItem() == stack ? 1.0f : 0.0f);
 
         /*FabricModelPredicateProviderRegistry.register(ModItems.COMMAND_SCEPTRE , new Identifier("isdivisible10"),
                 (stack, world, entity, seed) -> {

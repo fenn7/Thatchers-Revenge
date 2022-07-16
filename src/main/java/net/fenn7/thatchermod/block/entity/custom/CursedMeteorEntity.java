@@ -19,6 +19,7 @@ import java.util.List;
 
 public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     private static float explosionPower = 2.5F;
+    private static boolean isFalling = false;
 
     public CursedMeteorEntity(EntityType<? extends CursedMeteorEntity> entityType, World world) {
         super(entityType, world);
@@ -55,11 +56,14 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
 
     @Override
     public void tick() {
-        this.powerY -= 0.03;
+        if (isFalling) {
+            this.powerY -= 0.03;
+        }
         if (this.age >= 300) { this.discard(); }
         super.tick();
     }
 
+    public void setFalling(boolean shouldFall) { isFalling = shouldFall; }
     protected ParticleEffect getParticleType() { return ParticleTypes.SCULK_SOUL; }
     protected boolean isBurning() { return false; }
     public boolean collides() { return true; }
