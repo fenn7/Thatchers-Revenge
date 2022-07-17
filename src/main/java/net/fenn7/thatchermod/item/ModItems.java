@@ -4,7 +4,9 @@ import net.fabricmc.fabric.api.item.v1.CustomDamageHandler;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.item.custom.*;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -36,6 +38,18 @@ public class ModItems {
     public static final Item COMMAND_SCEPTRE = registerItem("command_sceptre",
             new CommandSceptreItem(new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).maxDamage(405).maxDamageIfAbsent(405).rarity(Rarity.RARE)));
+    public static final Item THATCHERITE_HELMET = registerItem("thatcherite_helmet",
+            new ArmorItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.HEAD,
+                    new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
+    public static final Item THATCHERITE_CHESTPLATE = registerItem("thatcherite_chestplate",
+            new ArmorItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.CHEST,
+                    new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
+    public static final Item THATCHERITE_GREAVES = registerItem("thatcherite_greaves",
+            new ArmorItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.LEGS,
+                    new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
+    public static final Item THATCHERITE_BOOTS = registerItem("thatcherite_boots",
+            new ArmorItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.FEET,
+                    new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
 
     public static void registerModItems(){
         ThatcherMod.LOGGER.debug("Registering Items for " + ThatcherMod.MOD_ID + " ...");

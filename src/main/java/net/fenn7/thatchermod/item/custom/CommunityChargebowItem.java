@@ -45,10 +45,10 @@ public class CommunityChargebowItem extends BowItem {
                 if (itemStack.isEmpty()) {
                     itemStack = new ItemStack(Items.ARROW);
                 }
-                int i = this.getMaxUseTime(stack) - remainingUseTicks;
-                float f;
-                if (isRapidFiring(stack)) { f = 2 * getPullProgress(i); } // 2x draw speed in rapid-fire mode, but cannot crit
-                else { f = (float) (0.75 * getPullProgress(i)); } // 25% reduced draw speed, but shot is extremely precise when fully charged
+                int i;
+                if (isRapidFiring(stack)) { i = (int) ((0.5 * this.getMaxUseTime(stack))) - remainingUseTicks; } // 2x draw speed in rapid-fire mode, but cannot crit
+                else { i = (int) ((1.34 * this.getMaxUseTime(stack)) - remainingUseTicks); } // 34% reduced draw speed, but shot is extremely precise when fully charged
+                float f = getPullProgress(i);
 
                 if (!((double) f < 0.1D)) {
                     boolean bl2 = bl && itemStack.isOf(Items.ARROW);
@@ -56,16 +56,21 @@ public class CommunityChargebowItem extends BowItem {
                         ArrowItem arrowItem = (ArrowItem) (itemStack.getItem() instanceof ArrowItem ? itemStack.getItem() : Items.ARROW);
                         PersistentProjectileEntity persistentProjectileEntity = arrowItem.createArrow(world, itemStack, playerEntity);
                         if (isRapidFiring(stack)) {
-                            persistentProjectileEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, f/2 * 3.0F, 1.0F);
+                            float originalF = getPullProgress(this.getMaxUseTime(stack) - remainingUseTicks);
+                            persistentProjectileEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2*originalF*3.0F, 1.0F);
                         }
                         else {
                             persistentProjectileEntity.setPos(user.getX(), user.getY() + 1.33D, user.getZ());
-                            persistentProjectileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, 4f/3 * 4.5F, 0.0F);
                             persistentProjectileEntity.setPierceLevel((byte) 2);
-                            if (f >= 0.7F) { persistentProjectileEntity.setCritical(true); persistentProjectileEntity.setNoGravity(true);
+                            if ((this.getMaxUseTime(stack) - remainingUseTicks) >= 27) { // 20 x number of seconds to zone in fully
+                                persistentProjectileEntity.setCritical(true); persistentProjectileEntity.setNoGravity(true);
                                 persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * 1.25);
-                            world.playSound(null, playerEntity.getBlockPos(), SoundEvents.ITEM_CROSSBOW_LOADING_END, SoundCategory.PLAYERS,
-                                    10F, 0.75F); }
+                                persistentProjectileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, 5f, 0.0F);
+                                world.playSound(null, playerEntity.getBlockPos(), SoundEvents.ITEM_CROSSBOW_LOADING_END, SoundCategory.PLAYERS,  15F, 0.75F);
+                            }
+                            else {
+                                persistentProjectileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, 2f, 0.0F);
+                            }
                         }
 
                         int j = EnchantmentHelper.getLevel(Enchantments.POWER, stack);

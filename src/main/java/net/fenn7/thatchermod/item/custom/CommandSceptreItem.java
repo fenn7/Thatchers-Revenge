@@ -63,6 +63,7 @@ public class CommandSceptreItem extends Item {
 
     private void launchMissileEntity(World world, PlayerEntity user) {
         CursedMissileEntity missileEntity = new CursedMissileEntity(ModEntities.CURSED_MISSILE, world);
+        missileEntity.setOwner(user);
         missileEntity.setPos(user.getX(), user.getY() + 1.33D, user.getZ());
         missileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, 4.0F, 0.25F);
         world.spawnEntity(missileEntity);
@@ -70,6 +71,7 @@ public class CommandSceptreItem extends Item {
 
     private void summonMeteorEntity(World world, PlayerEntity user) {
         CursedMeteorEntity meteorEntity = new CursedMeteorEntity(ModEntities.CURSED_METEOR, world);
+        meteorEntity.setOwner(user);
         meteorEntity.setFalling(true);
 
         HitResult hitResult = user.raycast(24, 0, true);
