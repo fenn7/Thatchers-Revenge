@@ -28,7 +28,7 @@ public class ThatcheriteArmourItem extends ArmorItem {
                 if (!this.hasUpdatedStatus) {
                     for (StatusEffectInstance effect : player.getStatusEffects()) {
                         if (effect.getEffectType().isBeneficial()) {
-                            effect.upgrade(new StatusEffectInstance(effect.getEffectType(), (int) (1.5 * effect.getDuration()),
+                            player.addStatusEffect(new StatusEffectInstance(effect.getEffectType(), (int) (1.5 * effect.getDuration()),
                                     effect.getAmplifier() + 1));
                         }
                     }
