@@ -2,6 +2,8 @@ package net.fenn7.thatchermod.item.custom;
 
 import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.util.CommonMethods;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -13,11 +15,13 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ModStatus;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class MilkSnatcherItem extends SwordItem {
@@ -69,5 +73,14 @@ public class MilkSnatcherItem extends SwordItem {
     private void spawnHitEffects(Entity entity, World world) {
         CommonMethods.summonDustParticles(world, 1, 1.0f, 1.0f, 1.0f, 2,
                 entity.getX(), entity.getY() + 0.5D, entity.getZ(), 0, 0, 0);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        if(Screen.hasShiftDown()) {
+            tooltip.add(Text.literal("Ability Ready!"));
+        } else {
+            tooltip.add(Text.literal("Use to drain vitality from enemies"));
+        }
     }
 }

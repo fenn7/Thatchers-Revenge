@@ -3,6 +3,8 @@ package net.fenn7.thatchermod.item.custom;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.util.CommonMethods;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -28,6 +30,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class CommunityChargebowItem extends BowItem {
@@ -57,7 +60,7 @@ public class CommunityChargebowItem extends BowItem {
                         PersistentProjectileEntity persistentProjectileEntity = arrowItem.createArrow(world, itemStack, playerEntity);
                         if (isRapidFiring(stack)) {
                             float originalF = getPullProgress(this.getMaxUseTime(stack) - remainingUseTicks);
-                            persistentProjectileEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2*originalF*3.0F, 1.0F);
+                            persistentProjectileEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, f * 3.0F, 1.0F);
                         }
                         else {
                             persistentProjectileEntity.setPos(user.getX(), user.getY() + 1.33D, user.getZ());
@@ -65,11 +68,11 @@ public class CommunityChargebowItem extends BowItem {
                             if ((this.getMaxUseTime(stack) - remainingUseTicks) >= 27) { // 20 x number of seconds to zone in fully
                                 persistentProjectileEntity.setCritical(true); persistentProjectileEntity.setNoGravity(true);
                                 persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * 1.25);
-                                persistentProjectileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, 5f, 0.0F);
+                                persistentProjectileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, 5.0F * f, 0.0F);
                                 world.playSound(null, playerEntity.getBlockPos(), SoundEvents.ITEM_CROSSBOW_LOADING_END, SoundCategory.PLAYERS,  15F, 0.75F);
                             }
                             else {
-                                persistentProjectileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, 2f, 0.0F);
+                                persistentProjectileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, f * 2.0F, 0.0F);
                             }
                         }
 
@@ -154,5 +157,20 @@ public class CommunityChargebowItem extends BowItem {
     public static void setRapidFiring(ItemStack stack, boolean active) {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         nbtCompound.putBoolean("rapid.fire", active);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        if(Screen.hasShiftDown()) {
+            tooltip.add(Text.literal("Ability Ready!"));
+        } else {
+            tooltip.add(Text.literal("Use + Sneak to escape from enemies"));
+            if (isRapidFiring(stack)) {
+                tooltip.add(Text.literal("Currently in Rapid-Fire Mode"));
+            }
+            else {
+                tooltip.add(Text.literal("Currently in Precision Mode"));
+            }
+        }
     }
 }

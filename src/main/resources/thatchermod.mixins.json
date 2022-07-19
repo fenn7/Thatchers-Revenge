@@ -4,7 +4,7 @@
   "package": "net.fenn7.thatchermod.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ModEntityDataSaver", "PersistentProjectileMixin", "LivingEntityMixin"
+    "ModEntityDataSaver", "PersistentProjectileMixin", "PlayerEntityMixin"
   ],
   "client": [
     "ModEntityDataSaver"

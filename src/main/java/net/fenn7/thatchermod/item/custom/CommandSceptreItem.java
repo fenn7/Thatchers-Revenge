@@ -6,6 +6,8 @@ import net.fenn7.thatchermod.block.entity.custom.CursedMissileEntity;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.util.CommonMethods;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -21,6 +23,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ShriekParticleEffect;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -31,6 +34,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class CommandSceptreItem extends Item {
@@ -46,7 +50,7 @@ public class CommandSceptreItem extends Item {
             user.swingHand(hand, true);
             if (!user.isSneaking()) {
                 launchMissileEntity(world, user);
-                user.getItemCooldownManager().set(ModItems.COMMAND_SCEPTRE, 10);
+                user.getItemCooldownManager().set(ModItems.COMMAND_SCEPTRE, 1);
                 user.getMainHandStack().damage(1, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
             else {
@@ -175,5 +179,16 @@ public class CommandSceptreItem extends Item {
     public static void setTicks(ItemStack stack, int ticks) {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         nbtCompound.putInt("ticks", ticks);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        if(Screen.hasShiftDown()) {
+            tooltip.add(Text.literal("Ability Ready!"));
+        } else {
+            tooltip.add(Text.literal("Use to cast explosive fireballs"));
+            tooltip.add(Text.literal("Use + Sneak to call down a meteor"));
+            tooltip.add(Text.literal("Lures passive mobs in offhand"));
+        }
     }
 }

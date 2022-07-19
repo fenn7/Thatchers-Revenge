@@ -92,9 +92,9 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
             ThatcherismAltarBlockEntity.buildCircleStrikeList(pos, player);
             world.setBlockState(pos, state.with(IS_CHANNELING, true));
             world.playSound(null, pos, new SoundEvent(new Identifier("thatchermod:thatcher_summoning")),
-                    SoundCategory.BLOCKS, 3.75F, 1F);
-            world.playSound(null, pos, SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,
-                    SoundCategory.BLOCKS, 5F, 1F);
+                    SoundCategory.BLOCKS, 4F, 1F);
+            world.playSound(null, pos, SoundEvents.BLOCK_END_PORTAL_SPAWN,
+                    SoundCategory.BLOCKS, 5F, 0.5F);
         }
 
         return ActionResult.SUCCESS;

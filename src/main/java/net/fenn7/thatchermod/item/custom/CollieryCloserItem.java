@@ -3,6 +3,8 @@ package net.fenn7.thatchermod.item.custom;
 import net.fenn7.thatchermod.util.CommonMethods;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -22,6 +24,8 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CollieryCloserItem extends PickaxeItem {
@@ -124,5 +128,21 @@ public class CollieryCloserItem extends PickaxeItem {
     public static void setBreaking3x3(ItemStack stack, boolean active) {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         nbtCompound.putBoolean("isBreaking3x3", active);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        if(Screen.hasShiftDown()) {
+            tooltip.add(Text.literal("Ability Ready!"));
+        } else {
+            tooltip.add(Text.literal("Use to transmute coal in offhand"));
+            if (isBreaking3x3(stack)) {
+                tooltip.add(Text.literal("3x3x3 Mode: ENABLED"));
+            }
+            else {
+                tooltip.add(Text.literal("3x3x3 Mode: DISABLED"));
+            }
+
+        }
     }
 }
