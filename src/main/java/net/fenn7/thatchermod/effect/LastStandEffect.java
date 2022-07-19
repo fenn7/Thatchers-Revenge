@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.effect;
 
+import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -29,9 +30,17 @@ public class LastStandEffect extends StatusEffect {
     protected LastStandEffect(StatusEffectCategory statusEffectCategory, int color) {
         super(statusEffectCategory, color);
         this.ticks = 0;
-        this.maxTicks = 0;
-        this.fightMsg = generateMessage();
-        this.bossBar = (ServerBossBar)(new ServerBossBar(Text.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.NOTCHED_6)).setDarkenSky(true);
+        this.maxTicks = 100;
+        this.fightMsg = "";
+        this.bossBar = (ServerBossBar)(new ServerBossBar(Text.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.PROGRESS)).setDarkenSky(true);
+    }
+
+    public LastStandEffect(StatusEffectCategory statusEffectCategory, int color, int maxTicks) {
+        super(statusEffectCategory, color);
+        this.ticks = 0;
+        this.maxTicks = maxTicks;
+        this.fightMsg = "";
+        this.bossBar = (ServerBossBar)(new ServerBossBar(Text.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
 
     @Override
@@ -53,18 +62,18 @@ public class LastStandEffect extends StatusEffect {
 
         if (entity instanceof PlayerEntity player) {
             if (!player.world.isClient) {
-                this.bossBar.setPercent(this.ticks / this.maxTicks);
+                this.bossBar.setPercent((float) this.ticks / this.maxTicks );
                 this.bossBar.addPlayer((ServerPlayerEntity) player);
             }
             player.addExhaustion(-1);
 
             if (this.ticks%20 == 0 || this.ticks%20 == 5) {
                 player.world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.PLAYERS,
-                        50F, 0.75F);
-                player.sendMessage(Text.literal(this.fightMsg));
+                        100F, 1.0F);
+                player.sendMessage(Text.literal(this.fightMsg), true);
             }
             this.ticks++;
-            if (this.ticks == this.maxTicks) {
+            if (this.ticks > this.maxTicks) {
                 this.ticks = 0;
             }
         }
@@ -84,12 +93,31 @@ public class LastStandEffect extends StatusEffect {
     }
 
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
-        this.maxTicks = duration;
         return true;
     }
 
+    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+        entity.setHealth(1F);
+        this.fightMsg = generateMessage();
+        //this.maxTicks = entity.getStatusEffect(ModEffects.LAST_STAND).getDuration();
+        if (entity instanceof PlayerEntity player) {
+            this.bossBar.addPlayer((ServerPlayerEntity) player);
+        }
+        super.onApplied(entity, attributes, amplifier);
+    }
+
+    public void setMaxTicks(int max) {
+        this.maxTicks = max;
+    }
+
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if (!shouldLiveOnRemove(entity)) {
+        if (entity instanceof PlayerEntity player) {
+            if (!player.isSpectator() && !player.isCreative() && !shouldLiveOnRemove(entity)) {
+                entity.kill();
+            }
+            this.bossBar.removePlayer((ServerPlayerEntity) player);
+        }
+        else if (!shouldLiveOnRemove(entity)) {
             entity.kill();
         }
         super.onRemoved(entity, attributes, amplifier);
