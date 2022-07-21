@@ -1,12 +1,18 @@
 package net.fenn7.thatchermod.mixin;
 
 import net.fenn7.thatchermod.ThatcherMod;
+import net.fenn7.thatchermod.effect.LastStandEffect;
+import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.item.custom.ThatcheriteArmourItem;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.apache.commons.compress.harmony.pack200.NewAttributeBands;
@@ -71,6 +77,23 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                     effect.isAmbient(), effect.shouldShowParticles(), effect.shouldShowIcon());
         }
         return super.addStatusEffect(effect, source);
+    }
+
+    @Override
+    public boolean onKilledOther(ServerWorld world, LivingEntity other) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        if (player.hasStatusEffect(ModEffects.LAST_STAND)) {
+            LastStandEffect.setStatusOnRemove(player, true);
+            player.removeStatusEffect(ModEffects.LAST_STAND);
+
+            float newHealth = other.getMaxHealth();
+            if (newHealth > 20) { newHealth = 20; }
+            player.setHealth(newHealth);
+
+            LastStandEffect.setStatusOnRemove(player, false);
+            player.playSound(SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.HOSTILE, 100F, 2.0F);
+        }
+        return super.onKilledOther(world, other);
     }
 }
 

@@ -11,5 +11,19 @@
     "sounds": [
       "thatchermod:thatcher_summoning"
     ]
+  },
+
+  "last_heartbeat": {
+    "subtitle": "thatchermod.last_heartbeat",
+    "sounds": [
+      "thatchermod:last_heartbeat"
+    ]
+  },
+
+  "heart_overload": {
+    "subtitle": "thatchermod.heart_overload",
+    "sounds": [
+      "thatchermod:heart_overload"
+    ]
   }
 }

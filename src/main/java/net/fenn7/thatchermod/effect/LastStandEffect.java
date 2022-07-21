@@ -1,6 +1,8 @@
 package net.fenn7.thatchermod.effect;
 
+import com.eliotlash.mclib.math.functions.classic.Mod;
 import net.fenn7.thatchermod.ThatcherMod;
+import net.fenn7.thatchermod.sound.ModSounds;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,8 +18,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,7 +34,7 @@ public class LastStandEffect extends StatusEffect {
     protected LastStandEffect(StatusEffectCategory statusEffectCategory, int color) {
         super(statusEffectCategory, color);
         this.ticks = 0;
-        this.maxTicks = 100;
+        this.maxTicks = 240;
         this.fightMsg = "";
         this.bossBar = (ServerBossBar)(new ServerBossBar(Text.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
@@ -62,18 +66,18 @@ public class LastStandEffect extends StatusEffect {
 
         if (entity instanceof PlayerEntity player) {
             if (!player.world.isClient) {
-                this.bossBar.setPercent((float) this.ticks / this.maxTicks );
+                this.bossBar.setPercent((float) this.ticks / this.maxTicks);
                 this.bossBar.addPlayer((ServerPlayerEntity) player);
             }
             player.addExhaustion(-1);
 
-            if (this.ticks%20 == 0 || this.ticks%20 == 5) {
-                player.world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.PLAYERS,
-                        100F, 1.0F);
+            if (this.ticks%40 == 0) {
+                player.world.playSound(null, player.getBlockPos(), new SoundEvent(new Identifier("thatchermod:last_heartbeat")),
+                        SoundCategory.HOSTILE, 50, 1.25F);
                 player.sendMessage(Text.literal(this.fightMsg), true);
             }
             this.ticks++;
-            if (this.ticks > this.maxTicks) {
+            if (this.ticks >= this.maxTicks) {
                 this.ticks = 0;
             }
         }
@@ -98,8 +102,8 @@ public class LastStandEffect extends StatusEffect {
 
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         entity.setHealth(1F);
+        setMaxTicks(entity.getStatusEffect(ModEffects.LAST_STAND).getDuration() * 2);
         this.fightMsg = generateMessage();
-        //this.maxTicks = entity.getStatusEffect(ModEffects.LAST_STAND).getDuration();
         if (entity instanceof PlayerEntity player) {
             this.bossBar.addPlayer((ServerPlayerEntity) player);
         }
@@ -114,12 +118,20 @@ public class LastStandEffect extends StatusEffect {
         if (entity instanceof PlayerEntity player) {
             if (!player.isSpectator() && !player.isCreative() && !shouldLiveOnRemove(entity)) {
                 entity.kill();
+                player.world.playSound(null, player.getBlockPos(),
+                        new SoundEvent(new Identifier("thatchermod:heart_overload")), SoundCategory.HOSTILE, 80, 1);
             }
             this.bossBar.removePlayer((ServerPlayerEntity) player);
         }
         else if (!shouldLiveOnRemove(entity)) {
             entity.kill();
         }
+
+        this.ticks = 0;
+        entity.setGlowing(false);
+        entity.setInvulnerable(false);
+        entity.setCustomNameVisible(false);
+
         super.onRemoved(entity, attributes, amplifier);
     }
 
@@ -128,8 +140,8 @@ public class LastStandEffect extends StatusEffect {
         return entityData.getPersistentData().getBoolean("should_live_post_stand");
     }
 
-    public static void setStatusOnRemove(Entity entity, boolean death) {
+    public static void setStatusOnRemove(Entity entity, boolean shouldLive) {
         IEntityDataSaver entityData = ((IEntityDataSaver) entity);
-        entityData.getPersistentData().putBoolean("should_live_post_stand", death);
+        entityData.getPersistentData().putBoolean("should_live_post_stand", shouldLive);
     }
 }

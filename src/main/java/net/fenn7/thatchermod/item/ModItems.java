@@ -39,16 +39,16 @@ public class ModItems {
             new CommandSceptreItem(new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).maxDamage(405).maxDamageIfAbsent(405).rarity(Rarity.RARE)));
     public static final Item THATCHERITE_HELMET = registerItem("thatcherite_helmet",
-            new ArmorItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.HEAD,
+            new ThatcheriteArmourItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.HEAD,
                     new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
     public static final Item THATCHERITE_CHESTPLATE = registerItem("thatcherite_chestplate",
-            new ArmorItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.CHEST,
+            new ThatcheriteArmourItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.CHEST,
                     new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
     public static final Item THATCHERITE_GREAVES = registerItem("thatcherite_greaves",
-            new ArmorItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.LEGS,
+            new ThatcheriteArmourItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.LEGS,
                     new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
     public static final Item THATCHERITE_BOOTS = registerItem("thatcherite_boots",
-            new ArmorItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.FEET,
+            new ThatcheriteArmourItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.FEET,
                     new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
 
     public static void registerModItems(){
