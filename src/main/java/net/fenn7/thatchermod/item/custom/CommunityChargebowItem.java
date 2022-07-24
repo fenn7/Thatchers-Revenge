@@ -13,6 +13,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.BowItem;
@@ -28,6 +29,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -58,9 +60,9 @@ public class CommunityChargebowItem extends BowItem {
                     if (!world.isClient) {
                         ArrowItem arrowItem = (ArrowItem) (itemStack.getItem() instanceof ArrowItem ? itemStack.getItem() : Items.ARROW);
                         PersistentProjectileEntity persistentProjectileEntity = arrowItem.createArrow(world, itemStack, playerEntity);
+                        float originalF = getPullProgress(this.getMaxUseTime(stack) - remainingUseTicks);
                         if (isRapidFiring(stack)) {
-                            float originalF = getPullProgress(this.getMaxUseTime(stack) - remainingUseTicks);
-                            persistentProjectileEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, f * 3.0F, 1.0F);
+                            persistentProjectileEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 1.5F * originalF * 3.0F, 1.0F);
                         }
                         else {
                             persistentProjectileEntity.setPos(user.getX(), user.getY() + 1.33D, user.getZ());
@@ -72,7 +74,7 @@ public class CommunityChargebowItem extends BowItem {
                                 world.playSound(null, playerEntity.getBlockPos(), SoundEvents.ITEM_CROSSBOW_LOADING_END, SoundCategory.PLAYERS,  15F, 0.75F);
                             }
                             else {
-                                persistentProjectileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, f * 2.0F, 0.0F);
+                                persistentProjectileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, originalF * 2.0F, 0.0F);
                             }
                         }
 

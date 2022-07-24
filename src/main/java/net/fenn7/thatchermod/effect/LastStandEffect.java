@@ -73,7 +73,7 @@ public class LastStandEffect extends StatusEffect {
 
             if (this.ticks%40 == 0) {
                 player.world.playSound(null, player.getBlockPos(), new SoundEvent(new Identifier("thatchermod:last_heartbeat")),
-                        SoundCategory.HOSTILE, 50, 1.25F);
+                        SoundCategory.HOSTILE, 80, 1.25F);
                 player.sendMessage(Text.literal(this.fightMsg), true);
             }
             this.ticks++;
@@ -119,7 +119,7 @@ public class LastStandEffect extends StatusEffect {
             if (!player.isSpectator() && !player.isCreative() && !shouldLiveOnRemove(entity)) {
                 entity.kill();
                 player.world.playSound(null, player.getBlockPos(),
-                        new SoundEvent(new Identifier("thatchermod:heart_overload")), SoundCategory.HOSTILE, 80, 1);
+                        new SoundEvent(new Identifier("thatchermod:heart_overload")), SoundCategory.HOSTILE, 100, 1);
             }
             this.bossBar.removePlayer((ServerPlayerEntity) player);
         }

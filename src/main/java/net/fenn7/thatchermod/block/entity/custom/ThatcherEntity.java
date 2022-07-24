@@ -342,7 +342,9 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             }
             if (this.getHealth() / this.getMaxHealth() <= 0.25) {
                 damageShield(10);
-                target.pushAwayFrom(this);
+                if (target instanceof LivingEntity living) {
+                    living.takeKnockback(2, living.prevX, living.prevZ);
+                }
             }
         }
         return true;

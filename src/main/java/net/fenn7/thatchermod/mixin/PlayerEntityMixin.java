@@ -1,20 +1,31 @@
 package net.fenn7.thatchermod.mixin;
 
+import com.mojang.datafixers.types.templates.Tag;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.effect.LastStandEffect;
 import net.fenn7.thatchermod.effect.ModEffects;
+import net.fenn7.thatchermod.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.item.custom.ThatcheriteArmourItem;
+import net.fenn7.thatchermod.util.IEntityDataSaver;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ElytraItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
 import org.apache.commons.compress.harmony.pack200.NewAttributeBands;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +33,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
@@ -39,10 +54,16 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Inject(method = "damage", at = @At("HEAD"))
     public void injectDamageMethod(DamageSource source, float amount, CallbackInfoReturnable cir) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
-        if (ThatcheriteArmourItem.hasChest(player) && source.isExplosive()) {
-            player.setStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 60, 1), player);
-            player.setStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 60), player);
-            amount = (amount / 2);
+        if (source.isExplosive()) {
+            if (ThatcheriteArmourItem.hasChest(player)) {
+                player.setStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 60, 1), player);
+                player.setStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 60), player);
+                amount = (amount / 2);
+            }
+            int aaLevel = EnchantmentHelper.getLevel(ModEnchantments.AIR_ASSAULT, player.getEquippedStack(EquipmentSlot.CHEST));
+            if (aaLevel != 0 && player.getEquippedStack(EquipmentSlot.CHEST).isOf(Items.ELYTRA)) {
+                amount = (amount / (aaLevel + 1));
+            }
         }
         if (source.getAttacker() instanceof LivingEntity attacker && attacker != player) {
             if (ThatcheriteArmourItem.hasLegs(player)) {
@@ -68,6 +89,31 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
     }
 
+    @Inject(method = "dropInventory", at = @At("HEAD"))
+    public void injectDropInventoryMethod(CallbackInfo ci) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        IEntityDataSaver playerData = (IEntityDataSaver) player;
+        List<ItemStack> stackList = new ArrayList<>();
+        for (int i = 0; i < player.getInventory().size(); i++) {
+            ItemStack stack = player.getInventory().getStack(i);
+            if (EnchantmentHelper.getLevel(ModEnchantments.BAILOUT, stack) != 0) {
+                stack.setDamage(stack.getMaxDamage() - 1);
+                stackList.add(stack);
+                player.getInventory().removeStack(i);
+            }
+            if (!stackList.isEmpty()) {
+                NbtList nbtList = new NbtList();
+                Iterator stackIterator = stackList.iterator();
+
+                while(stackIterator.hasNext()) {
+                    ItemStack bailoutStack = (ItemStack) stackIterator.next();
+                    nbtList.add(bailoutStack.writeNbt(new NbtCompound()));
+                }
+                playerData.getPersistentData().put("bailout.items", nbtList);
+            }
+        }
+    }
+
     @Override
     public boolean addStatusEffect(StatusEffectInstance effect, @Nullable Entity source) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
@@ -86,14 +132,34 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             LastStandEffect.setStatusOnRemove(player, true);
             player.removeStatusEffect(ModEffects.LAST_STAND);
 
-            float newHealth = other.getMaxHealth();
-            if (newHealth > 20) { newHealth = 20; }
+            float newHealth = other.getMaxHealth()/2;
+            if (newHealth > 10) { newHealth = 10; }
             player.setHealth(newHealth);
 
             LastStandEffect.setStatusOnRemove(player, false);
             player.playSound(SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.HOSTILE, 100F, 2.0F);
         }
         return super.onKilledOther(world, other);
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    public void injectTickAirAssaultMethod(CallbackInfo ci) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        ItemStack chest = player.getEquippedStack(EquipmentSlot.CHEST);
+        int aaLevel = (EnchantmentHelper.getLevel(ModEnchantments.AIR_ASSAULT, chest));
+        if (player.isFallFlying() && chest.isOf(Items.ELYTRA) && ElytraItem.isUsable(chest) && aaLevel != 0) {
+            if (!world.isClient && (player.getRoll() + 1)%(25 - 2 * aaLevel) == 0) {
+                BlockPos pos = player.getBlockPos();
+                while (world.getBlockState(pos).isAir() && pos.getY() >= -64) {
+                    pos = pos.offset(Direction.DOWN, 1);
+                    if (!world.getBlockState(pos).isAir()) {
+                        break;
+                    }
+                }
+                world.createExplosion(player, player.getX(), pos.getY() + 1, player.getZ(), (float) aaLevel/2,
+                        Explosion.DestructionType.NONE);
+            }
+        }
     }
 }
 

@@ -6,9 +6,17 @@
   "item.thatchermod.colliery_closer": "Colliery Closer",
   "item.thatchermod.command_sceptre": "Imperial Sceptre",
   "item.thatchermod.community_chargebow": "Community Chargebow",
+  "item.thatchermod.thatcherite_helmet": "Thatcherite Helmet",
+  "item.thatchermod.thatcherite_chestplate": "Thatcherite Chestplate",
+  "item.thatchermod.thatcherite_greaves": "Thatcherite Greaves",
+  "item.thatchermod.thatcherite_boots": "Thatcherite Boots",
 
   "effect.thatchermod.calcium_deficiency": "Hypocalcemia",
   "effect.thatchermod.static_buildup": "Static Buildup",
+  "effect.thatchermod.last_stand": "LAST STAND",
+  "effect.thatchermod.discontent": "Discontent",
+
+  "enchantment.thatchermod.bailout": "Bailout",
 
   "block.thatchermod.thatcherism_altar": "Thatcherism Altar",
 

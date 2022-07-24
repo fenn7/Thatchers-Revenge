@@ -5,6 +5,7 @@ import net.fenn7.thatchermod.block.ModBlocks;
 import net.fenn7.thatchermod.block.entity.ModBlockEntities;
 import net.fenn7.thatchermod.callback.ModCallbacks;
 import net.fenn7.thatchermod.effect.ModEffects;
+import net.fenn7.thatchermod.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.particle.ModParticles;
 import net.fenn7.thatchermod.screen.ModScreenHandlers;
@@ -35,6 +36,7 @@ public class ThatcherMod implements ModInitializer {
 		ModPredicates.registerAllPredicates();
 
 		ModParticles.registerParticles();
+		ModEnchantments.registerModEnchantments();
 
 		ModBlockEntities.registerModBlockEntities();
 		ModScreenHandlers.registerScreenHandlers();

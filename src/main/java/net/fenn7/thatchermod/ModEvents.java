@@ -16,6 +16,7 @@ public class ModEvents {
         ServerPlayConnectionEvents.DISCONNECT.register(new PlayConnectionEvents());
         ServerPlayerEvents.AFTER_RESPAWN.register(new PlayerEvents());
         ServerPlayerEvents.ALLOW_DEATH.register(new PlayerEvents());
+        ServerPlayerEvents.COPY_FROM.register(new PlayerEvents());
         PlayerBlockBreakEvents.AFTER.register(new BlockBreakEvents());
         WorldRenderEvents.END.register(new RenderEvents());
     }

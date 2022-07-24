@@ -26,7 +26,6 @@ public class CalciumDeficiencyEffect extends StatusEffect {
                     adjustModifierAmount(3, modifier);
                 }
             }
-
             ((ServerWorld)entity.world).spawnParticles(ModParticles.DEFICIENCY_INDICATOR.getType(),
                     entity.getX(), entity.getY() + entity.getHeight() + 0.5D, entity.getZ(), 1,
                     0, 0, 0, 0);

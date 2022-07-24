@@ -34,6 +34,11 @@ public class ModEffects {
                     0.35D, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
             .addAttributeModifier(EntityAttributes.GENERIC_ATTACK_DAMAGE, "908ec8f3-f5fe-48e9-8b7f-8c1aea9e63ea",
                     0.35D, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+    public static final StatusEffect DISCONTENT = Registry.register(Registry.STATUS_EFFECT,
+            new Identifier(ThatcherMod.MOD_ID, "discontent"),
+            new DiscontentEffect(StatusEffectCategory.HARMFUL, 11260403))
+            .addAttributeModifier(EntityAttributes.GENERIC_ATTACK_SPEED, "7b707fcf-083d-48d7-9d8e-36bc289a8cab",
+                    -0.125D, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
 
 
     public static void registerModEffects(){
