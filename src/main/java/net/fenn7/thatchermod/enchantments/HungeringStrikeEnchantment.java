@@ -10,6 +10,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
+import net.minecraft.item.TridentItem;
 
 public class HungeringStrikeEnchantment extends Enchantment {
     protected HungeringStrikeEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot[] slotTypes) {
@@ -28,7 +29,8 @@ public class HungeringStrikeEnchantment extends Enchantment {
 
     @Override
     public boolean isAcceptableItem(ItemStack stack) {
-        return stack.getItem() instanceof SwordItem || stack.getItem() instanceof AxeItem || super.isAcceptableItem(stack);
+        return stack.getItem() instanceof SwordItem || stack.getItem() instanceof AxeItem ||
+                stack.getItem() instanceof TridentItem || super.isAcceptableItem(stack);
     }
 
     @Override

@@ -30,7 +30,7 @@ public abstract class PersistentProjectileMixin extends Entity {
     }
 
     @Inject(method = "onEntityHit", at = @At("HEAD"))
-    protected void injectEntityHit(EntityHitResult entityHitResult, CallbackInfo ci) {
+    protected void injectEntityHit(EntityHitResult entityHitResult, CallbackInfo ci) throws Exception {
         Entity entity = entityHitResult.getEntity();
         PersistentProjectileEntity projectile = ((PersistentProjectileEntity) (Object) this);
         if (entity instanceof LivingEntity living) {
@@ -51,12 +51,9 @@ public abstract class PersistentProjectileMixin extends Entity {
                 }
                 if (attacker instanceof PlayerEntity player /*&& (player.getMainHandStack().getItem() instanceof TridentItem
                         || player.getOffHandStack().getItem() instanceof TridentItem) && projectile instanceof TridentEntity*/) {
-                    ThatcherMod.LOGGER.warn("A");
                     if (player.isWet()) {
-                        ThatcherMod.LOGGER.warn("B");
                         int power = Math.max(EnchantmentHelper.getLevel(ModEnchantments.TORPEDO, player.getMainHandStack()),
                                 EnchantmentHelper.getLevel(ModEnchantments.TORPEDO, player.getOffHandStack()));
-                        ThatcherMod.LOGGER.warn("" + power);
                         world.createExplosion(living, living.getX(), living.getY(), living.getZ(), power, Explosion.DestructionType.NONE);
                     }
                 }

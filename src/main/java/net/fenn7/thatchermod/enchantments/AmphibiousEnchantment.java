@@ -8,10 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
+import net.minecraft.item.*;
 
 public class AmphibiousEnchantment extends Enchantment {
     protected AmphibiousEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot[] slotTypes) {
@@ -31,7 +28,8 @@ public class AmphibiousEnchantment extends Enchantment {
     }
 
     public boolean isAcceptableItem(ItemStack stack) {
-        return stack.getItem() instanceof SwordItem || stack.getItem() instanceof AxeItem || super.isAcceptableItem(stack);
+        return stack.getItem() instanceof SwordItem || stack.getItem() instanceof AxeItem ||
+                stack.getItem() instanceof TridentItem || super.isAcceptableItem(stack);
     }
 
     @Override
