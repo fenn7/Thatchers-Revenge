@@ -23,6 +23,11 @@ public class ModItems {
     public static final Item SOUL_OF_THATCHER = registerItem("soul_of_thatcher",
             new ThatcherSoulItem(new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)
                     .food(ModFoodComponents.SOUL_OF_THATCHER)));
+    public static final Item HARDENED_FLESH_OF_THATCHER = registerItem("hardened_flesh_of_thatcher",
+            new Item(new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().rarity(Rarity.EPIC)));
+    public static final Item ESSENCE_OF_THATCHER = registerItem("essence_of_thatcher",
+            new Item(new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().rarity(Rarity.EPIC)));
+
     public static final Item UNION_BUSTER = registerItem("union_buster",
             new UnionBusterItem(ModToolMaterials.THATCHERITE, 6.5F, -2.75F, new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).rarity(Rarity.RARE)));

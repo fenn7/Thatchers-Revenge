@@ -22,7 +22,7 @@ public class SmokeEntity extends ExplosiveProjectileEntity {
     }
 
     public void tick() {
-        if (this.age >= 20) {
+        if (this.age >= 30) {
             this.discard();
         }
         Entity owner = this.getOwner();
@@ -31,7 +31,7 @@ public class SmokeEntity extends ExplosiveProjectileEntity {
             this.setPos(owner.prevX + offset.x, owner.prevY - offset.y - 1.0D, owner.prevZ + offset.z);
             this.setVelocity(owner.getVelocity());
         }
-        if (this.age % 10 == 0) {
+        if (this.age % 5 == 0) {
             this.getWorld().addParticle(ParticleTypes.FIREWORK, this.getX(), this.getY(), this.getZ(), 0, 0, 0);
             this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_BLAZE_BURN, SoundCategory.PLAYERS,
                     1.5F, 0.75F);
