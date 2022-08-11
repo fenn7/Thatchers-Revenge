@@ -23,6 +23,9 @@ public class RenderEvents implements WorldRenderEvents.End {
             List<AbstractClientPlayerEntity> playerList = context.world().getPlayers();
             for (PlayerEntity player : playerList) {
                 if (player.hasStatusEffect(ModEffects.LAST_STAND)) {
+
+                    // try https://forums.minecraftforge.net/topic/111422-custom-screen-overlay-1165/
+
                     /*int width = MinecraftClient.getInstance().getWindow().getScaledWidth();
                     int height = MinecraftClient.getInstance().getWindow().getScaledHeight();
 

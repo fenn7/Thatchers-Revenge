@@ -25,5 +25,8 @@
   "thatchermod.thatcher_possession": "PAY THE COMMUNITY CHARGE",
   "thatchermod.thatcher_summoning": "...",
 
+  "key.thatchermod.category": "Thatcher's Revenge",
+  "key.thatchermod.launch": "Jet-Assisted Launch",
+
   "itemGroup.thatchermod.thatcher": "Thatcher's Revenge"
 }

@@ -18,6 +18,15 @@ public class ModEnchantments {
     public static Enchantment AIR_ASSAULT = register("air_assault",
             new AirAssaultEnchantment(Enchantment.Rarity.VERY_RARE,
                     EnchantmentTarget.WEARABLE, new EquipmentSlot[]{EquipmentSlot.CHEST}));
+    public static Enchantment INTERCEPTOR = register("interceptor",
+            new InterceptorEnchantment(Enchantment.Rarity.RARE,
+                    EnchantmentTarget.WEARABLE, new EquipmentSlot[]{EquipmentSlot.CHEST}));
+    public static Enchantment STEALTH = register("stealth",
+            new StealthEnchantment(Enchantment.Rarity.UNCOMMON,
+                    EnchantmentTarget.WEARABLE, new EquipmentSlot[]{EquipmentSlot.CHEST}));
+    public static Enchantment JET_ASSIST = register("jet_assist",
+            new JetAssistEnchantment(Enchantment.Rarity.COMMON,
+                    EnchantmentTarget.WEARABLE, new EquipmentSlot[]{EquipmentSlot.CHEST}));
     public static Enchantment PRIVATISATION = register("privatisation",
             new PrivatisationEnchantment(Enchantment.Rarity.COMMON,
                     EnchantmentTarget.DIGGER, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));

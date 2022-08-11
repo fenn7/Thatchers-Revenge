@@ -62,7 +62,8 @@ public class CommunityChargebowItem extends BowItem {
                         PersistentProjectileEntity persistentProjectileEntity = arrowItem.createArrow(world, itemStack, playerEntity);
                         float originalF = getPullProgress(this.getMaxUseTime(stack) - remainingUseTicks);
                         if (isRapidFiring(stack)) {
-                            persistentProjectileEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 1.5F * originalF * 3.0F, 1.0F);
+                            if (originalF > 0.5F) { originalF = 0.5F; }
+                            persistentProjectileEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 1.6F * originalF * 3.0F, 1.0F);
                         }
                         else {
                             persistentProjectileEntity.setPos(user.getX(), user.getY() + 1.33D, user.getZ());

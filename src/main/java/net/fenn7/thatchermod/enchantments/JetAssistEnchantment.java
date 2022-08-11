@@ -6,21 +6,17 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 
-public class AirAssaultEnchantment extends Enchantment {
-    protected AirAssaultEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot[] slotTypes) {
+public class JetAssistEnchantment extends Enchantment {
+    protected JetAssistEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot[] slotTypes) {
         super(weight, type, slotTypes);
     }
 
-    @Override
-    public int getMaxLevel() { return 4; }
+    public int getMaxLevel() { return 5; }
 
-    @Override
-    public boolean isTreasure() { return true; }
-
-    public int getMinPower(int level) { return level * 20; }
+    public int getMinPower(int level) { return level * 10; }
 
     public int getMaxPower(int level) {
-        return this.getMinPower(level) + 40;
+        return super.getMinPower(level) + 25;
     }
 
     @Override

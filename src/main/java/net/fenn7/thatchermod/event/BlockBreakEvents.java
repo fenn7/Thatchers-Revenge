@@ -24,18 +24,7 @@ public class BlockBreakEvents implements PlayerBlockBreakEvents.After {
     @Override
     public void afterBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         int level = EnchantmentHelper.getLevel(ModEnchantments.PRIVATISATION, player.getMainHandStack());
-        if (level != 0) { // override postmine instead ?
-            BlockPos pos1 = new BlockPos(pos.getX() - level, pos.getY() - level, pos.getZ() - level);
-            BlockPos pos2 = new BlockPos(pos.getX() + level, pos.getY() + level, pos.getZ() + level);
-            Box box = new Box(pos1, pos2);
-
-            List<Entity> entityList = world.getOtherEntities(null, box);
-            for (Entity entity : entityList) {
-                if (entity instanceof ItemEntity item) {
-                    player.giveItemStack(item.getStack());
-                }
-            }
-
+        if (level != 0) {
             if (state.isOf(Blocks.COAL_ORE) || state.isOf(Blocks.DEEPSLATE_COAL_ORE)) {
                 for (int j = 0; j < level; j++) {
                     int random = ThreadLocalRandom.current().nextInt(0, 99 + 1);

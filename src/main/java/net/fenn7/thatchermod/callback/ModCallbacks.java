@@ -39,13 +39,5 @@ public class ModCallbacks implements CommonMethods {
 
     private static void registerScepterEvent() {
     }
-
-    private static void summonDustParticles(World world, int number, float red, float green, float blue, float f,
-                                     double x, double y, double z, double velX, double velY, double velZ) {
-        DustParticleEffect dust = new DustParticleEffect(new Vec3f(red, green, blue), f);
-        for (int i = 0; i < number; i++) {
-            world.addParticle(dust, x, y, z, velX, velY, velZ);
-        }
-    }
 }
 

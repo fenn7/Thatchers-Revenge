@@ -68,7 +68,7 @@ public class CommandSceptreItem extends Item {
     private void launchMissileEntity(World world, PlayerEntity user) {
         CursedMissileEntity missileEntity = new CursedMissileEntity(ModEntities.CURSED_MISSILE, world);
         missileEntity.setOwner(user);
-        missileEntity.setPos(user.getX(), user.getY() + 1.33D, user.getZ());
+        missileEntity.setPos(user.getX(), user.getBodyY(0.7D), user.getZ());
         missileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, 4.0F, 0.25F);
         world.spawnEntity(missileEntity);
     }
@@ -131,12 +131,11 @@ public class CommandSceptreItem extends Item {
     }
 
     private void lurePassiveEntity(PassiveEntity passive, PlayerEntity player) {
-        passive.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 20));
+        passive.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 20, 0, false, false, false));
         passive.getLookControl().lookAt(player, (float)(passive.getMaxHeadRotation() + 20), (float)passive.getMaxLookPitchChange());
         Path pathToPlayer = passive.getNavigation().findPathTo(player, 6);
-        if (passive.squaredDistanceTo(player) > 1.5F) {
-            if (passive instanceof TameableEntity tameable && tameable.isInSittingPose()) {}
-            else {
+        if (passive.distanceTo(player) > 1.5F) {
+            if (!(passive instanceof TameableEntity tamable && tamable.isInSittingPose())) {
                 passive.getNavigation().startMovingAlong(pathToPlayer, 0.5);
                 passive.getMoveControl().moveTo(player.getX(), player.getY(), player.getZ(), 0.5);
             }

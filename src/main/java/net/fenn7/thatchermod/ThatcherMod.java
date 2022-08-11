@@ -7,6 +7,7 @@ import net.fenn7.thatchermod.callback.ModCallbacks;
 import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.item.ModItems;
+import net.fenn7.thatchermod.network.ModPackets;
 import net.fenn7.thatchermod.particle.ModParticles;
 import net.fenn7.thatchermod.screen.ModScreenHandlers;
 import net.fenn7.thatchermod.util.ModPredicates;
@@ -45,5 +46,6 @@ public class ThatcherMod implements ModInitializer {
 		ModCallbacks.registerAllEvents();
 		ModCommands.registerAllCommands();
 		ModEvents.registerAllEvents();
+		ModPackets.registerC2SPackets();
 	}
 }

@@ -32,7 +32,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
         super(type, world);
     }
 
-    @Inject(method = "onEntityHit", at = @At("HEAD"))
+    @Inject(method = "onEntityHit", at = @At("TAIL"))
     public void injectOnHit(EntityHitResult entityHitResult, CallbackInfo ci) {
         TridentEntity trident = (TridentEntity) (Object) this;
         ItemStack tridentStack = ((TridentInterface) this).callAsItemStack();
@@ -44,6 +44,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
                 if (torpedoPower != 0) {
                     world.createExplosion(null, target.getX(), target.getY(), target.getZ(), 1F + ((torpedoPower - 1) * 0.75F),
                             Explosion.DestructionType.NONE);
+                    target.damage(DamageSource.trident(trident, thrower), torpedoPower * 1.5F);
                 }
                 int amphPower = EnchantmentHelper.getLevel(ModEnchantments.AMPHIBIOUS, tridentStack);
                 if (amphPower != 0) {

@@ -30,4 +30,12 @@ public interface CommonMethods {
         DustParticleEffect dust = new DustParticleEffect(new Vec3f(red, green, blue), size);
         ((ServerWorld) world).spawnParticles(dust, x, y, z, number, velX, velY, velZ, 0);
     }
+
+    static void findFirstNonAirBlockDown() {
+
+    }
+
+    static void findFirstNonAirBlockUp() {
+
+    }
 }

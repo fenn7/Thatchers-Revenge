@@ -1,32 +1,30 @@
 package net.fenn7.thatchermod.mixin;
 
-import com.mojang.datafixers.types.templates.Tag;
-import net.fenn7.thatchermod.ThatcherMod;
+import com.eliotlash.mclib.math.functions.classic.Mod;
 import net.fenn7.thatchermod.effect.LastStandEffect;
 import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.item.custom.ThatcheriteArmourItem;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
+import net.fenn7.thatchermod.util.NBTInterface;
+import net.minecraft.block.Block;
+import net.minecraft.client.render.entity.feature.ElytraFeatureRenderer;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ElytraItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.entity.projectile.FireballEntity;
+import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
-import org.apache.commons.compress.harmony.pack200.NewAttributeBands;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -101,16 +99,13 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 stackList.add(stack);
                 player.getInventory().removeStack(i);
             }
-            if (!stackList.isEmpty()) {
-                NbtList nbtList = new NbtList();
-                Iterator stackIterator = stackList.iterator();
-
-                while(stackIterator.hasNext()) {
-                    ItemStack bailoutStack = (ItemStack) stackIterator.next();
-                    nbtList.add(bailoutStack.writeNbt(new NbtCompound()));
-                }
-                playerData.getPersistentData().put("bailout.items", nbtList);
+        }
+        if (!stackList.isEmpty()) {
+            NbtList nbtList = new NbtList();
+            for (ItemStack bailoutStack : stackList) {
+                nbtList.add(bailoutStack.writeNbt(new NbtCompound()));
             }
+            playerData.getPersistentData().put("bailout.items", nbtList);
         }
     }
 
@@ -142,13 +137,16 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         return super.onKilledOther(world, other);
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(method = "tick", at = @At("HEAD"))
     public void injectTickAirAssaultMethod(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
-        ItemStack chest = player.getEquippedStack(EquipmentSlot.CHEST);
-        int aaLevel = (EnchantmentHelper.getLevel(ModEnchantments.AIR_ASSAULT, chest));
-        if (player.isFallFlying() && chest.isOf(Items.ELYTRA) && ElytraItem.isUsable(chest) && aaLevel != 0) {
-            if (!world.isClient && (player.getRoll() + 1)%(25 - 2 * aaLevel) == 0) {
+        ItemStack chest = player.getEquippedStack(EquipmentSlot.CHEST); // Elytra Enchantments
+        if (player.isFallFlying() && chest.isOf(Items.ELYTRA) && ElytraItem.isUsable(chest) && !world.isClient) {
+            int aaLevel = EnchantmentHelper.getLevel(ModEnchantments.AIR_ASSAULT, chest);
+            int stLevel = EnchantmentHelper.getLevel(ModEnchantments.STEALTH, chest);
+            boolean isBombing = NBTInterface.isBombing(chest);
+
+            if (aaLevel != 0 && isBombing && (player.getRoll() + 1) % (25 - 2 * aaLevel) == 0) {
                 BlockPos pos = player.getBlockPos();
                 while (world.getBlockState(pos).isAir() && pos.getY() >= -64) {
                     pos = pos.offset(Direction.DOWN, 1);
@@ -158,6 +156,23 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 }
                 world.createExplosion(player, player.getX(), pos.getY() + 1, player.getZ(), (float) aaLevel/2,
                         Explosion.DestructionType.NONE);
+            }
+            if (stLevel != 0) {
+                player.setStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 2, 0, false, false), player);
+            }
+        }
+
+        int prLevel = EnchantmentHelper.getLevel(ModEnchantments.PRIVATISATION, player.getMainHandStack());
+        if (prLevel != 0) {
+            Vec3d pos = player.getPos();
+            BlockPos pos1 = new BlockPos(pos.getX() - prLevel - 1, pos.getY() - prLevel - 1, pos.getZ() - prLevel - 1);
+            BlockPos pos2 = new BlockPos(pos.getX() + prLevel + 1, pos.getY() + prLevel + 1, pos.getZ() + prLevel + 1);
+            Box box = new Box(pos1, pos2);
+            List<Entity> entityList = world.getOtherEntities(null, box);
+            for (Entity entity : entityList) {
+                if (entity instanceof ItemEntity item) {
+                    player.giveItemStack(item.getStack());
+                }
             }
         }
     }
