@@ -34,17 +34,14 @@ public class LastStandEffect extends StatusEffect {
     protected LastStandEffect(StatusEffectCategory statusEffectCategory, int color) {
         super(statusEffectCategory, color);
         this.ticks = 0;
-        this.maxTicks = 240;
+        this.maxTicks = 120;
         this.fightMsg = "";
         this.bossBar = (ServerBossBar)(new ServerBossBar(Text.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
 
     public LastStandEffect(StatusEffectCategory statusEffectCategory, int color, int maxTicks) {
-        super(statusEffectCategory, color);
-        this.ticks = 0;
+        this(statusEffectCategory, color);
         this.maxTicks = maxTicks;
-        this.fightMsg = "";
-        this.bossBar = (ServerBossBar)(new ServerBossBar(Text.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
 
     @Override
@@ -53,7 +50,6 @@ public class LastStandEffect extends StatusEffect {
         // also induces a "berserker state": increases attack speed and damage by 35%
         // kills the entity after, unless it is a player who kills another entity (handled elsewhere)
         // max level 1
-
         if (amplifier > 0) {
             for (EntityAttributeModifier modifier : this.getAttributeModifiers().values()) {
                 adjustModifierAmount(0, modifier);
@@ -70,13 +66,16 @@ public class LastStandEffect extends StatusEffect {
                 this.bossBar.addPlayer((ServerPlayerEntity) player);
             }
             player.addExhaustion(-1);
-
-            if (this.ticks%40 == 0) {
+            if (this.ticks % 40 == 0) {
                 player.world.playSound(null, player.getBlockPos(), new SoundEvent(new Identifier("thatchermod:last_heartbeat")),
                         SoundCategory.HOSTILE, 80, 1.25F);
                 player.sendMessage(Text.literal(this.fightMsg), true);
             }
-            this.ticks++;
+            if (!player.world.isClient) {
+                this.ticks++;
+                IEntityDataSaver entityData = ((IEntityDataSaver) player);
+                entityData.getPersistentData().putInt("ls.current.ticks", this.ticks);
+            }
             if (this.ticks >= this.maxTicks) {
                 this.ticks = 0;
             }
@@ -102,9 +101,12 @@ public class LastStandEffect extends StatusEffect {
 
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         entity.setHealth(1F);
-        setMaxTicks(entity.getStatusEffect(ModEffects.LAST_STAND).getDuration() * 2);
+        setMaxTicks(entity.getStatusEffect(ModEffects.LAST_STAND).getDuration());
         this.fightMsg = generateMessage();
+
         if (entity instanceof PlayerEntity player) {
+            IEntityDataSaver entityData = ((IEntityDataSaver) player);
+            entityData.getPersistentData().putInt("ls.max.ticks", this.maxTicks);
             this.bossBar.addPlayer((ServerPlayerEntity) player);
         }
         super.onApplied(entity, attributes, amplifier);

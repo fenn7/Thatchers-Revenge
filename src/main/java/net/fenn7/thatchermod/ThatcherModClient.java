@@ -37,6 +37,5 @@ public class ThatcherModClient implements ClientModInitializer {
 
         KeyInputs.register();
         ModPackets.registerS2CPackets();
-        HudRenderCallback.EVENT.register(new LastStandOverlay());
     }
 }
