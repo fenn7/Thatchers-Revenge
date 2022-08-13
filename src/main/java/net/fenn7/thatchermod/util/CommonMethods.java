@@ -8,6 +8,7 @@ import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
@@ -31,8 +32,17 @@ public interface CommonMethods {
         ((ServerWorld) world).spawnParticles(dust, x, y, z, number, velX, velY, velZ, 0);
     }
 
-    static void findFirstNonAirBlockDown() {
-
+    static BlockPos findFirstNonAirBlockDown(World world, BlockPos pos) {
+        BlockPos returnPos = pos;
+        boolean found = false;
+        while (world.getBlockState(returnPos).isAir() && returnPos.getY() >= -64 && !found) {
+            returnPos = returnPos.offset(Direction.DOWN, 1);
+            if (!world.getBlockState(returnPos).isAir()) {
+                found = true;
+                break;
+            }
+        }
+        return returnPos;
     }
 
     static void findFirstNonAirBlockUp() {

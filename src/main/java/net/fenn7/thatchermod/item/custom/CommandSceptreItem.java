@@ -86,13 +86,7 @@ public class CommandSceptreItem extends Item {
             default -> { pos = new BlockPos(hitResult.getPos()); break; }
         }
 
-        BlockPos impactPos = new BlockPos(pos);
-        while (world.getBlockState(impactPos).isAir() && impactPos.getY() >= -64) {
-            impactPos = impactPos.offset(Direction.DOWN, 1);
-            if (!world.getBlockState(impactPos).isAir()) {
-                break;
-            }
-        }
+        BlockPos impactPos = CommonMethods.findFirstNonAirBlockDown(world, pos);
         CommonMethods.summonDustParticles(world, 10, 0, 0, 0.33F, 2,
                 impactPos.getX() + 0.5D, impactPos.getY() + 1.5D, impactPos.getZ() + 0.5D,0 ,0 ,0);
 

@@ -14,6 +14,8 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.potion.Potions;
@@ -65,11 +67,11 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.hasSummonedSquad = false;
         this.ticksSinceTracked = 0;
         this.ticksSinceDeath = 0;
-        this.setPathfindingPenalty(PathNodeType.LAVA, 3.0F);
+        this.setPathfindingPenalty(PathNodeType.LAVA, 8.0F);
         this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, 0.0F);
         this.setPathfindingPenalty(PathNodeType.DAMAGE_FIRE, 0.0F);
         this.experiencePoints = 750;
-        this.bossBar = (ServerBossBar)(new ServerBossBar(Text.literal("§1" + this.getDisplayName()), BossBar.Color.BLUE, BossBar.Style.PROGRESS)).setDarkenSky(true);
+        this.bossBar = (ServerBossBar)(new ServerBossBar(Text.literal("§1" + this.getDisplayName().getString()), BossBar.Color.BLUE, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
 
     @Override
@@ -248,14 +250,17 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private void activateDeathSquad() {
         if (!this.hasSummonedSquad) {
             for (int i = 0; i < 4; i++) {
-                BlazeEntity blaze = new BlazeEntity(EntityType.BLAZE, this.world);
-                switch (i) {
-                    case 0: blaze.setPosition(this.getX() + 3, this.getY() + 5, this.getZ()); break;
-                    case 1: blaze.setPosition(this.getX(), this.getY() + 5, this.getZ() + 3); break;
-                    case 2: blaze.setPosition(this.getX() - 3, this.getY() + 5, this.getZ()); break;
-                    case 3: blaze.setPosition(this.getX(), this.getY() + 5, this.getZ() - 3); break;
+                SkeletonEntity skeleton = new SkeletonEntity(EntityType.SKELETON, this.world);
+                EquipmentSlot[] slots = EquipmentSlot.values(); // equips armour
+                for (EquipmentSlot slot : slots) {
+                    skeleton.equipStack(slot, new ItemStack(MobEntity.getEquipmentForSlot(slot, 3)));
                 }
-                world.spawnEntity(blaze);
+                skeleton.equipStack(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
+                if (i < 2) { skeleton.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE)); }
+                else { skeleton.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW)); }
+
+                skeleton.setPosition(this.getX(), this.getY(), this.getZ());
+                world.spawnEntity(skeleton);
             }
             this.hasSummonedSquad = true;
         }
@@ -350,11 +355,8 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.isAttacking()) {
-            int random = ThreadLocalRandom.current().nextInt(0, 2);
-            switch (random) {
-                case 0: event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.attack_1", true)); return PlayState.STOP;
-                case 1: event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.attack_2", true)); return PlayState.STOP;
-            }
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.attack_2", true));
+            return PlayState.CONTINUE;
         }
         else if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.move", true));

@@ -5,7 +5,9 @@ import net.fenn7.thatchermod.block.entity.custom.ThatcherEntity;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.item.inventory.ImplementedInventory;
 import net.fenn7.thatchermod.screen.ThatcherismAltarScreenHandler;
+import net.fenn7.thatchermod.util.CommonMethods;
 import net.minecraft.block.AirBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -48,11 +50,10 @@ import static net.fenn7.thatchermod.block.custom.ThatcherismAltarBlock.IS_PREPAR
 
 public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
-    private String displayName = "§fᔑ ʖ⚍∷リ╎リ⊣ ᓭJ⚍ꖎ, ᔑ ⎓∷J⨅ᒷリ ⍑ᒷᔑ∷ℸ";
+    private final String displayName = "§fᔑ ʖ⚍∷リ╎リ⊣ ᓭJ⚍ꖎ, ᔑ ⎓∷J⨅ᒷリ ⍑ᒷᔑ∷ℸ";
 
-    /* USED FOR ANIMATED HELLFIRE BLOOD BAR */
     protected final PropertyDelegate propertyDelegate;
-    public static List<BlockPos> positions = new ArrayList<>();
+    private List<BlockPos> positions;
     private int progress = 0;
     private int maxProgress = 28;
     private int channelingProgress = 0;
@@ -60,6 +61,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
 
     public ThatcherismAltarBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.THATCHERISM_ALTAR, pos, state);
+        this.positions = buildCircleStrikeList(pos);
         this.propertyDelegate = new PropertyDelegate() {
             @Override
             public int get(int index) {
@@ -118,7 +120,6 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, ThatcherismAltarBlockEntity entity) {
-
         if (state.get(IS_PREPARED) && !state.get(IS_CHANNELING)) {
             double diff1 = ThreadLocalRandom.current().nextDouble(-0.33D, 0.33D);
             double diff2 = ThreadLocalRandom.current().nextDouble(-0.33D, 0.33D);
@@ -131,8 +132,8 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
             world.setBlockState(pos, state.with(IS_PREPARED, false));
             if (entity.channelingProgress < entity.maxChannelingProgress) {
                 if (entity.channelingProgress % 20 == 0 && entity.channelingProgress <= 140) {
-                    if (!world.isClient() && !positions.isEmpty()) { // at 20TPS this will occur every second
-                        BlockPos strikePos = positions.get(entity.channelingProgress / 20);
+                    if (!world.isClient() && !entity.positions.isEmpty()) { // at 20TPS this will occur every second
+                        BlockPos strikePos = entity.positions.get(entity.channelingProgress / 20);
                         world.addParticle(ParticleTypes.LARGE_SMOKE, strikePos.getX(), strikePos.getY(), strikePos.getZ(), 0, 2, 0);
                         EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null,
                                 strikePos, SpawnReason.TRIGGERED, true, true);
@@ -175,27 +176,19 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         }
     }
 
-    public static void buildCircleStrikeList(BlockPos pos, PlayerEntity player) {
-        Direction direction = player.getMovementDirection();
-        
+    private List<BlockPos> buildCircleStrikeList(BlockPos pos) {
         //get 8 block positions in a circle around the altar's position.
-        BlockPos N = new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ() - 4);
-        BlockPos NE = new BlockPos(pos.getX() + 3, pos.getY() - 1, pos.getZ() - 3);
-        BlockPos E = new BlockPos(pos.getX() + 4, pos.getY() - 1, pos.getZ());
-        BlockPos SE = new BlockPos(pos.getX() + 3, pos.getY() - 1, pos.getZ() + 3);
-        BlockPos S = new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ() + 4);
-        BlockPos SW = new BlockPos(pos.getX() - 3, pos.getY() - 1, pos.getZ() + 3);
-        BlockPos W = new BlockPos(pos.getX() - 4, pos.getY() - 1, pos.getZ());
-        BlockPos NW = new BlockPos(pos.getX() - 3, pos.getY() - 1, pos.getZ() - 3);
+        BlockPos N = new BlockPos(pos.getX(), pos.getY(), pos.getZ() - 4);
+        BlockPos NE = new BlockPos(pos.getX() + 3, pos.getY(), pos.getZ() - 3);
+        BlockPos E = new BlockPos(pos.getX() + 4, pos.getY(), pos.getZ());
+        BlockPos SE = new BlockPos(pos.getX() + 3, pos.getY(), pos.getZ() + 3);
+        BlockPos S = new BlockPos(pos.getX(), pos.getY(), pos.getZ() + 4);
+        BlockPos SW = new BlockPos(pos.getX() - 3, pos.getY(), pos.getZ() + 3);
+        BlockPos W = new BlockPos(pos.getX() - 4, pos.getY(), pos.getZ());
+        BlockPos NW = new BlockPos(pos.getX() - 3, pos.getY(), pos.getZ() - 3);
 
-
-        switch (direction) {
-            case NORTH, UP, DOWN -> { positions = Arrays.asList(N, NE, E, SE, S, SW, W, NW); break; }
-            case EAST -> { positions = Arrays.asList(E, SE, S, SW, W, NW, N, NE); break; }
-            case SOUTH -> { positions = Arrays.asList(S, SW, W, NW, N, NE, E, SE); break; }
-            case WEST -> { positions = Arrays.asList(W, NW, N, NE, E, SE, S, SW); break;
-            }
-        }
+        List<BlockPos> posList = Arrays.asList(N, NE, E, SE, S, SW, W, NW);
+        return posList;
     }
 
     private static boolean hasRecipe(ThatcherismAltarBlockEntity entity) {
