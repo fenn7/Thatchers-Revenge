@@ -19,13 +19,27 @@
   "effect.thatchermod.discontent": "Discontent",
 
   "enchantment.thatchermod.bailout": "Bailout",
+  "enchantment.thatchermod.torpedo": "Torpedo",
+  "enchantment.thatchermod.air_assault": "Air Assault",
+  "enchantment.thatchermod.interceptor": "Interceptor",
+  "enchantment.thatchermod.stealth": "Stealth",
+  "enchantment.thatchermod.jet_assist": "Jet Assist",
+  "enchantment.thatchermod.privatisation": "Privatisation",
+  "enchantment.thatchermod.amphibious": "Amphibious",
+  "enchantment.thatchermod.cursed_guard": "Cursed Guard",
+  "enchantment.thatchermod.discontent": "Discontent",
 
   "block.thatchermod.thatcherism_altar": "Thatcherism Altar",
 
-  "entity.thatchermod.thatcher": "???",
+  "entity.thatchermod.thatcher": "MARGARET THATCHER",
+  "entity.thatchermod.cursed_meteor": "Cursed Meteor",
+  "entity.thatchermod.cursed_missile": "Cursed Missile",
+  "entity.thatchermod.smoke_entity": "Rocket Smoke",
 
   "thatchermod.thatcher_possession": "PAY THE COMMUNITY CHARGE",
   "thatchermod.thatcher_summoning": "...",
+  "thatchermod.last_heartbeat": "The noblest end of all...",
+  "thatchermod.heart_overload": "FLATLINE",
 
   "key.thatchermod.category": "Thatcher's Revenge",
   "key.thatchermod.launch": "Jet-Assisted Launch",

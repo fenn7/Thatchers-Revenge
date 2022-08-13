@@ -73,8 +73,6 @@ public class LastStandEffect extends StatusEffect {
             }
             if (!player.world.isClient) {
                 this.ticks++;
-                IEntityDataSaver entityData = ((IEntityDataSaver) player);
-                entityData.getPersistentData().putInt("ls.current.ticks", this.ticks);
             }
             if (this.ticks >= this.maxTicks) {
                 this.ticks = 0;
@@ -106,8 +104,6 @@ public class LastStandEffect extends StatusEffect {
 
         if (entity instanceof PlayerEntity player) {
             IEntityDataSaver entityData = ((IEntityDataSaver) player);
-            entityData.getPersistentData().putInt("ls.max.ticks", this.maxTicks);
-            this.bossBar.addPlayer((ServerPlayerEntity) player);
         }
         super.onApplied(entity, attributes, amplifier);
     }

@@ -6,7 +6,7 @@
 				"identifier": "geometry.thatcher",
 				"texture_width": 64,
 				"texture_height": 64,
-				"visible_bounds_width": 3,
+				"visible_bounds_width": 5,
 				"visible_bounds_height": 3.5,
 				"visible_bounds_offset": [0, 1.25, 0]
 			},
@@ -30,7 +30,7 @@
 				{
 					"name": "RightArm",
 					"pivot": [-5, 22, 0],
-					"rotation": [0, 0, 90],
+					"rotation": [-45, 0, 10],
 					"cubes": [
 						{"origin": [-7, 12, -2], "size": [3, 12, 4], "uv": [40, 16]},
 						{"origin": [-7, 12, -2], "size": [3, 12, 4], "inflate": 0.25, "uv": [40, 32]}
@@ -39,7 +39,7 @@
 				{
 					"name": "LeftArm",
 					"pivot": [5, 22, 0],
-					"rotation": [0, 0, -90],
+					"rotation": [-45, 0, -10],
 					"cubes": [
 						{"origin": [4, 12, -2], "size": [3, 12, 4], "uv": [32, 48]},
 						{"origin": [4, 12, -2], "size": [3, 12, 4], "inflate": 0.25, "uv": [48, 48]}

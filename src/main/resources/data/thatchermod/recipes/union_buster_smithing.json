@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "addition": {
+    "item": "thatchermod:essence_of_thatcher"
+  },
+  "base": {
+    "item": "minecraft:netherite_axe"
+  },
+  "result": {
+    "item": "thatchermod:union_buster"
+  }
+}

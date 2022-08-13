@@ -20,12 +20,12 @@ import java.util.List;
 
 public class RenderEvents implements WorldRenderEvents.End {
     private static final Identifier LAST_STAND_OVERLAY = new Identifier(ThatcherMod.MOD_ID, "textures/misc/last_stand.png");
-    @Override
+
     public void onEnd(WorldRenderContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client != null && client.player.hasStatusEffect(ModEffects.LAST_STAND)) { // last stand blood effect
-            int width = MinecraftClient.getInstance().getWindow().getScaledWidth();
-            int height = MinecraftClient.getInstance().getWindow().getScaledHeight();
+        if (client != null && client.player.hasStatusEffect(ModEffects.LAST_STAND)) {
+            int width = client.getWindow().getScaledWidth();
+            int height = client.getWindow().getScaledHeight();
             renderOverlay(LAST_STAND_OVERLAY, 0.6F, height, width);
         }
     }
@@ -40,9 +40,9 @@ public class RenderEvents implements WorldRenderEvents.End {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-        bufferBuilder.vertex(0.0D, (double) scaledHeight, -90.0D).texture(0.0F, 1.0F).next();
-        bufferBuilder.vertex((double) scaledWidth, (double) scaledHeight, -90.0D).texture(1.0F, 1.0F).next();
-        bufferBuilder.vertex((double) scaledWidth, 0.0D, -90.0D).texture(1.0F, 0.0F).next();
+        bufferBuilder.vertex(0.0D, scaledHeight, -90.0D).texture(0.0F, 1.0F).next();
+        bufferBuilder.vertex(scaledWidth, scaledHeight, -90.0D).texture(1.0F, 1.0F).next();
+        bufferBuilder.vertex(scaledWidth, 0.0D, -90.0D).texture(1.0F, 0.0F).next();
         bufferBuilder.vertex(0.0D, 0.0D, -90.0D).texture(0.0F, 0.0F).next();
         tessellator.draw();
         RenderSystem.depthMask(true);

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "addition": {
+    "item": "thatchermod:hardened_flesh_of_thatcher"
+  },
+  "base": {
+    "item": "minecraft:netherite_helmet"
+  },
+  "result": {
+    "item": "thatchermod:thatcherite_helmet"
+  }
+}

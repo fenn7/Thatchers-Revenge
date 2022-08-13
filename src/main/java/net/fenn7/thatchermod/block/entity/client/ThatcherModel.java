@@ -3,10 +3,13 @@ package net.fenn7.thatchermod.block.entity.client;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.block.entity.custom.ThatcherEntity;
 import net.minecraft.util.Identifier;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ThatcherModel extends AnimatedGeoModel<ThatcherEntity> {
     @Override
@@ -21,10 +24,9 @@ public class ThatcherModel extends AnimatedGeoModel<ThatcherEntity> {
 
     @Override
     public Identifier getAnimationResource(ThatcherEntity animatable) {
-        return new Identifier(ThatcherMod.MOD_ID, "animations/thatcher_animation.json");
+        return new Identifier(ThatcherMod.MOD_ID, "animations/thatcher.animation.json");
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" }) //sets head to stare at player
     @Override
     public void setLivingAnimations(ThatcherEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
