@@ -16,7 +16,6 @@ import net.minecraft.util.registry.Registry;
 import java.util.function.Consumer;
 
 public class ModItems {
-
     public static final Item HEART_OF_THATCHER = registerItem("heart_of_thatcher",
             new Item(new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)
                     .food(ModFoodComponents.HEART_OF_THATCHER)));

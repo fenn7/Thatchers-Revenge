@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class UnionBusterItem extends ModAxeItem {
-    public static final int DURATION = 1200;
+    public static final int DURATION = 900;
 
     public UnionBusterItem(ToolMaterial material, float attackDamage, float attackSpeed, Settings settings) {
         super(material, attackDamage, attackSpeed, settings);
@@ -103,7 +103,7 @@ public class UnionBusterItem extends ModAxeItem {
             CommonMethods.summonDustParticles(world, 1, 1.0f, 0.6f, 0.3f, 3,
                     user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
             world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GRASS_PLACE, SoundCategory.HOSTILE, 15F, 0.33F);
-            user.getItemCooldownManager().set(this, 0); //DURATION);
+            user.getItemCooldownManager().set(this, DURATION); //DURATION);
         }
     }
 
@@ -121,10 +121,5 @@ public class UnionBusterItem extends ModAxeItem {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if(Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Ability Ready!"));
-        } else {
-            tooltip.add(Text.literal("Use to unleash an earthquake"));
-        }
     }
 }

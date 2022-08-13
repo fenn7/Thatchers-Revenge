@@ -37,6 +37,7 @@ import java.util.List;
 
 public class CommunityChargebowItem extends BowItem {
     // note most of the arrow effects are handled in PersistentProjectileMixin
+    public static final int DURATION = 900;
     public CommunityChargebowItem(Settings settings) {
         super(settings);
     }
@@ -130,6 +131,7 @@ public class CommunityChargebowItem extends BowItem {
                 CommonMethods.summonDustParticles(world, 1, 0.0f, 0.33f, 0.0f, 3,
                         user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
                 world.playSound(null, user.getBlockPos(), SoundEvents.PARTICLE_SOUL_ESCAPE, SoundCategory.HOSTILE, 45F, 1.5F);
+
                 return TypedActionResult.fail(this.getDefaultStack());
             }
             else { return super.use(world, user, hand); }
@@ -164,16 +166,11 @@ public class CommunityChargebowItem extends BowItem {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if(Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Ability Ready!"));
-        } else {
-            tooltip.add(Text.literal("Use + Sneak to escape from enemies"));
             if (isRapidFiring(stack)) {
-                tooltip.add(Text.literal("Currently in Rapid-Fire Mode"));
+                tooltip.add(Text.literal("Rapid-Fire Mode"));
             }
             else {
-                tooltip.add(Text.literal("Currently in Precision Mode"));
-            }
+                tooltip.add(Text.literal("Precision Mode"));
         }
     }
 }

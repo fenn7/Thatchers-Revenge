@@ -76,6 +76,7 @@ public class CollieryCloserItem extends PickaxeItem {
             CommonMethods.summonDustParticles(world, 1, 1.0f, 0.8255f, 0.26f, 3,
                     user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
             world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 12F, 0.66F);
+            user.getItemCooldownManager().set(this, DURATION);
         }
     }
 
@@ -135,17 +136,11 @@ public class CollieryCloserItem extends PickaxeItem {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if(Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Ability Ready!"));
-        } else {
-            tooltip.add(Text.literal("Use to transmute coal in offhand"));
             if (isBreaking3x3(stack)) {
                 tooltip.add(Text.literal("3x3x3 Mode: ENABLED"));
             }
             else {
                 tooltip.add(Text.literal("3x3x3 Mode: DISABLED"));
-            }
-
         }
     }
 }

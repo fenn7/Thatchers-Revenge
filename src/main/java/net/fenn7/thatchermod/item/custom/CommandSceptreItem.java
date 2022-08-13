@@ -38,6 +38,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class CommandSceptreItem extends Item {
+    public static final int METEOR_DURATION = 200;
     private int ticks;
     public CommandSceptreItem(Settings settings) {
         super(settings);
@@ -50,7 +51,6 @@ public class CommandSceptreItem extends Item {
             user.swingHand(hand, true);
             if (!user.isSneaking()) {
                 launchMissileEntity(world, user);
-                user.getItemCooldownManager().set(ModItems.COMMAND_SCEPTRE, 1);
                 user.getMainHandStack().damage(1, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
             else {
@@ -58,7 +58,7 @@ public class CommandSceptreItem extends Item {
                         user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
                 world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_SKELETON_HORSE_DEATH, SoundCategory.HOSTILE, 8F, 0.75F);
                 summonMeteorEntity(world, user);
-                user.getItemCooldownManager().set(ModItems.COMMAND_SCEPTRE, 1);
+                user.getItemCooldownManager().set(ModItems.COMMAND_SCEPTRE, METEOR_DURATION);
                 user.getMainHandStack().damage(3, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
         }
@@ -176,12 +176,5 @@ public class CommandSceptreItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if(Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Ability Ready!"));
-        } else {
-            tooltip.add(Text.literal("Use to cast explosive fireballs"));
-            tooltip.add(Text.literal("Use + Sneak to call down a meteor"));
-            tooltip.add(Text.literal("Lures passive mobs in offhand"));
-        }
     }
 }

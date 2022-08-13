@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class MilkSnatcherItem extends SwordItem {
-    public static final int DURATION = 1200;
+    public static final int DURATION = 900;
 
     public MilkSnatcherItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
         super(toolMaterial, attackDamage, attackSpeed, settings);
@@ -67,6 +67,7 @@ public class MilkSnatcherItem extends SwordItem {
             CommonMethods.summonDustParticles(world, 1, 1.0f, 1.0f, 1.0f, 3,
                     user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
             world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_STRAY_DEATH, SoundCategory.HOSTILE, 15F, 0.66F);
+            user.getItemCooldownManager().set(this, DURATION);
         }
     }
 
@@ -77,10 +78,5 @@ public class MilkSnatcherItem extends SwordItem {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if(Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Ability Ready!"));
-        } else {
-            tooltip.add(Text.literal("Use to drain vitality from enemies"));
-        }
     }
 }
