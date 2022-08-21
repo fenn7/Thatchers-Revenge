@@ -13,5 +13,4 @@ public interface NBTInterface {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         nbtCompound.putBoolean("isBombing", bombing);
     }
-
 }

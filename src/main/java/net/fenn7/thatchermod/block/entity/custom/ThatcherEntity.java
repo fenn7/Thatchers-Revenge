@@ -3,6 +3,8 @@ package net.fenn7.thatchermod.block.entity.custom;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.pathing.BirdNavigation;
+import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -133,8 +135,8 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     protected void initGoals() { // right now has basic AI of a vindicator minus raid mechanics
         this.goalSelector.add(0, new SwimGoal(this));
         this.targetSelector.add(1, (new RevengeGoal(this, new Class[0])).setGroupRevenge(new Class[0]));
-        this.targetSelector.add(2, new ActiveTargetGoal(this, PlayerEntity.class, true));
-        this.targetSelector.add(3, new ActiveTargetGoal(this, IronGolemEntity.class, true));
+        this.targetSelector.add(2, new ActiveTargetGoal(this, PlayerEntity.class, false));
+        this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, false));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.6D));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
@@ -216,7 +218,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             double g = target.getZ() - this.getZ();
 
             CursedMissileEntity fireBall = new CursedMissileEntity(this.world, this, this.getRandom().nextTriangular(e, 2.5D), f, this.getRandom().nextTriangular(g, 2.5D));
-            fireBall.setPosition(fireBall.getX(), this.getBodyY(0.5D) + 0.5D, fireBall.getZ());
+            fireBall.setPosition(fireBall.getX() + ThreadLocalRandom.current().nextDouble(-1, 1 + 1), this.getBodyY(0.5D) + 0.5D, fireBall.getZ() + ThreadLocalRandom.current().nextDouble(-1, 1 + 1));
             this.world.spawnEntity(fireBall);
         }
     }
@@ -301,20 +303,24 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         }
     }
 
-    protected void updatePostDeath() {
+    public void onDeath(DamageSource damageSource) {
         if (!this.hasReturnedStartPos) {
             BlockPos pos = new BlockPos(this.serverX, this.serverY, this.serverZ);
             this.setPosition(Vec3d.ofCenter(pos));
             world.playSound(null, pos, new SoundEvent(new Identifier("thatchermod:thatcher_possession")), SoundCategory.BLOCKS, 5F, 0.75F);
+
             BlockState blockState = world.getBlockState(pos);
             if (blockState.isIn(BlockTags.FIRE)) {
                 world.removeBlock(pos, false);
             }
             this.hasReturnedStartPos = true;
         }
-        this.world.addParticle(ParticleTypes.EXPLOSION,
-                this.getX(), this.getY() + 2.0D, this.getZ(), 0.0D, 0.0D, 0.0D);
-        if (this.ticksSinceDeath < 101) {
+        super.onDeath(damageSource);
+    }
+
+    protected void updatePostDeath() {
+        this.world.addParticle(ParticleTypes.EXPLOSION, this.getX(), this.getY() + 2.0D, this.getZ(), 0.0D, 0.0D, 0.0D);
+        if (this.ticksSinceDeath < 100) {
             this.ticksSinceDeath++;
             if (this.ticksSinceDeath == 100) {
                 this.emitGameEvent(GameEvent.ENTITY_DIE);

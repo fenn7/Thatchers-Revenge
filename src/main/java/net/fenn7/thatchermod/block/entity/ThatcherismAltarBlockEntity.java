@@ -61,7 +61,6 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
 
     public ThatcherismAltarBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.THATCHERISM_ALTAR, pos, state);
-        this.positions = buildCircleStrikeList(pos);
         this.propertyDelegate = new PropertyDelegate() {
             @Override
             public int get(int index) {
@@ -117,6 +116,11 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         super.readNbt(nbt);
         nbt.getInt("altar.progress");
         nbt.getInt("channeling.progress");
+    }
+
+    public void onOpen(PlayerEntity player) {
+        this.positions = buildCircleStrikeList(player, pos);
+        ImplementedInventory.super.onOpen(player);
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, ThatcherismAltarBlockEntity entity) {
@@ -176,7 +180,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         }
     }
 
-    private List<BlockPos> buildCircleStrikeList(BlockPos pos) {
+    private List<BlockPos> buildCircleStrikeList(PlayerEntity player, BlockPos pos) {
         //get 8 block positions in a circle around the altar's position.
         BlockPos N = new BlockPos(pos.getX(), pos.getY(), pos.getZ() - 4);
         BlockPos NE = new BlockPos(pos.getX() + 3, pos.getY(), pos.getZ() - 3);
@@ -187,7 +191,21 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         BlockPos W = new BlockPos(pos.getX() - 4, pos.getY(), pos.getZ());
         BlockPos NW = new BlockPos(pos.getX() - 3, pos.getY(), pos.getZ() - 3);
 
-        List<BlockPos> posList = Arrays.asList(N, NE, E, SE, S, SW, W, NW);
+        Direction direction = player.getMovementDirection();
+        List<BlockPos> posList;
+        switch (direction) {
+            default -> { posList = Arrays.asList(N, NE, E, SE, S, SW, W, NW); break; }
+            case EAST -> { posList = Arrays.asList(E, SE, S, SW, W, NW, N, NE); break; }
+            case SOUTH -> { posList = Arrays.asList(S, SW, W, NW, N, NE, E, SE); break; }
+            case WEST -> { posList = Arrays.asList(W, NW, N, NE, E, SE, S, SW); break;
+            }
+        }
+
+        if (player.world != null) {
+            for (int i = 0; i < posList.size(); i++) {
+                posList.set(i, CommonMethods.findFirstNonAirBlockDown(player.world, posList.get(i)).offset(Direction.UP, 1));
+            }
+        }
         return posList;
     }
 

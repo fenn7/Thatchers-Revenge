@@ -102,6 +102,7 @@ public class CommandSceptreItem extends Item {
             }
             i++;
         }
+
         if (blockFound) { meteorEntity.setPos(pos.getX() + 0.5, pos.getY() - 1, pos.getZ() + 0.5); }
         else { meteorEntity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5); }
         meteorEntity.setVelocity(0, -64, 0, 0F, 0.0F);
