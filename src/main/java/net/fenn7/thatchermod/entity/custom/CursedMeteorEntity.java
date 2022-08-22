@@ -1,6 +1,6 @@
-package net.fenn7.thatchermod.block.entity.custom;
+package net.fenn7.thatchermod.entity.custom;
 
-import net.fenn7.thatchermod.block.entity.ModEntities;
+import net.fenn7.thatchermod.entity.ModEntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;

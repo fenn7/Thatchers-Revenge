@@ -1,12 +1,11 @@
 package net.fenn7.thatchermod.item.custom;
 
-import net.fenn7.thatchermod.block.entity.ModEntities;
-import net.fenn7.thatchermod.block.entity.custom.CursedMeteorEntity;
-import net.fenn7.thatchermod.block.entity.custom.CursedMissileEntity;
+import net.fenn7.thatchermod.entity.ModEntities;
+import net.fenn7.thatchermod.entity.custom.CursedMeteorEntity;
+import net.fenn7.thatchermod.entity.custom.CursedMissileEntity;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.util.CommonMethods;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;

@@ -1,10 +1,8 @@
-package net.fenn7.thatchermod.block.entity.custom;
+package net.fenn7.thatchermod.entity.custom;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.ai.pathing.BirdNavigation;
-import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -14,7 +12,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.*;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -34,7 +31,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.explosion.Explosion;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -43,8 +39,6 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ThatcherEntity extends HostileEntity implements IAnimatable {
@@ -58,6 +52,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private boolean hasSummonedSquad;
     private int ticksSinceTracked;
     private int ticksSinceDeath;
+    private int attackTicksLeft;
 
     public ThatcherEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -132,31 +127,36 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         return !(this.world.getDifficulty() == Difficulty.PEACEFUL && this.isDisallowedInPeaceful());
     }
 
-    protected void initGoals() { // right now has basic AI of a vindicator minus raid mechanics
+    protected void initGoals() { // right now has basic melee AI
         this.goalSelector.add(0, new SwimGoal(this));
         this.targetSelector.add(1, (new RevengeGoal(this, new Class[0])).setGroupRevenge(new Class[0]));
         this.targetSelector.add(2, new ActiveTargetGoal(this, PlayerEntity.class, false));
-        this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, false));
+        this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, false,
+                (entity) -> entity instanceof MobEntity && !(((MobEntity) entity).isUndead())));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.6D));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
     }
 
+    public void tickMovement() {
+        super.tickMovement();
+        if (this.attackTicksLeft > 0) {
+            --this.attackTicksLeft;
+        }
+    }
+
     protected void mobTick() {
         float healthRatio = this.getHealth()/this.getMaxHealth();
         this.bossBar.setPercent(healthRatio);
-
         if (!this.hasSetStartPos) {
             this.serverX = this.getX();
             this.serverY = this.getY();
             this.serverZ = this.getZ();
             this.hasSetStartPos = true;
         }
-
-        Entity target = this.getTarget();
-        if (target == null) { target = getAttacker(); }
-        else if (this.isAlive()) {
+        LivingEntity target = this.getTarget();
+        if (this.isAlive() && target != null && target.isAttackable()) {
             // implements one of 6 special attacks that occurs every 5 seconds on 20TPS against current targets.
             if (this.ticksSinceTracked < 100) {
                 this.ticksSinceTracked++;
@@ -245,7 +245,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     private void activateRageMode() {
-        this.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 100, 1));
+        this.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 100));
         this.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 100));
     }
 
@@ -269,7 +269,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     private void activateInfernalMode() {
-        this.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 100, 2));
+        this.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 100, 1));
         this.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 100, 1));
         this.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 100, 1));
         this.world.sendEntityStatus(this, (byte) 63);
@@ -290,7 +290,11 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     public void handleStatus(byte status) { // required to handle particles
-        if (status == 63) {
+        if (status == 4) {
+            this.attackTicksLeft = 10;
+            this.playSound(SoundEvents.AMBIENT_CAVE, 5.0F, 2.0F);
+        }
+        else if (status == 63) {
             this.world.addParticle(ParticleTypes.LAVA,
                     this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
             this.world.addParticle(ParticleTypes.LARGE_SMOKE,
@@ -304,10 +308,10 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     public void onDeath(DamageSource damageSource) {
+        world.playSound(null, this.getBlockPos(), new SoundEvent(new Identifier("thatchermod:thatcher_possession")), SoundCategory.BLOCKS, 5F, 0.75F);
         if (!this.hasReturnedStartPos) {
             BlockPos pos = new BlockPos(this.serverX, this.serverY, this.serverZ);
             this.setPosition(Vec3d.ofCenter(pos));
-            world.playSound(null, pos, new SoundEvent(new Identifier("thatchermod:thatcher_possession")), SoundCategory.BLOCKS, 5F, 0.75F);
 
             BlockState blockState = world.getBlockState(pos);
             if (blockState.isIn(BlockTags.FIRE)) {
@@ -342,9 +346,11 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     public boolean tryAttack(Entity target) {
-        float healthRatio = this.getHealth() / this.getMaxHealth();
         if (!super.tryAttack(target)) { return false; }
         else {
+            this.attackTicksLeft = 10;
+            this.world.sendEntityStatus(this, (byte) 4);
+            float healthRatio = this.getHealth() / this.getMaxHealth();
             if (!target.getWorld().isClient() && healthRatio <= 0.5) {
                 EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null, target.getSteppingPos(),
                         SpawnReason.TRIGGERED, true, true);
@@ -359,23 +365,28 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         return true;
     }
 
+    public int getAttackTicksLeft() {
+        return this.attackTicksLeft;
+    }
+
+    // animations and sounds
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (this.isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.attack_2", true));
+        if (this.isAlive()) {
+            if (this.isAttacking() && this.getAttackTicksLeft() > 0) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.attack_2", false));
+            } else if (event.isMoving()) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.move", true));
+            } else {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.idle", true));
+            }
             return PlayState.CONTINUE;
         }
-        else if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.move", true));
-            return PlayState.CONTINUE;
-        }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.idle", true));
-        return PlayState.CONTINUE;
+        else return PlayState.STOP;
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "controller",
-                0, this::predicate));
+        animationData.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
     }
 
     @Override
@@ -383,18 +394,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         return factory;
     }
 
-    @Override
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.AMBIENT_NETHER_WASTES_MOOD;
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK;
-    }
-
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, 0.15f, 1.0f);
-    }
+    protected SoundEvent getAmbientSound() { return SoundEvents.AMBIENT_NETHER_WASTES_MOOD; }
+    protected SoundEvent getHurtSound(DamageSource source) { return SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK; }
+    protected void playStepSound(BlockPos pos, BlockState state) { this.playSound(SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, 0.5f, 1.0f); }
 }

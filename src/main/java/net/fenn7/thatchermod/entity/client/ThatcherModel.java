@@ -1,15 +1,12 @@
-package net.fenn7.thatchermod.block.entity.client;
+package net.fenn7.thatchermod.entity.client;
 
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.block.entity.custom.ThatcherEntity;
+import net.fenn7.thatchermod.entity.custom.ThatcherEntity;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ThatcherModel extends AnimatedGeoModel<ThatcherEntity> {
     @Override

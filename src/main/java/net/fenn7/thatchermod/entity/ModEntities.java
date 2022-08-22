@@ -1,8 +1,8 @@
-package net.fenn7.thatchermod.block.entity;
+package net.fenn7.thatchermod.entity;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.block.entity.custom.*;
+import net.fenn7.thatchermod.entity.custom.*;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -13,7 +13,12 @@ public class ModEntities {
     public static final EntityType<ThatcherEntity> THATCHER = Registry.register(
             Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "thatcher"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, ThatcherEntity::new)
-                    .dimensions(EntityDimensions.fixed(1.0f, 2.0f)).build());
+                    .dimensions(EntityDimensions.fixed(0.9f, 1.9f)).build());
+
+    public static final EntityType<ParamilitaryEntity> PARAMILITARY = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "paramilitary"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, ParamilitaryEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.9f, 1.9f)).build());
 
     public static final EntityType<CursedMeteorEntity> CURSED_METEOR = Registry.register(
             Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "cursed_meteor"),

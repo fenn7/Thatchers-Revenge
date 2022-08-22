@@ -1,14 +1,11 @@
 package net.fenn7.thatchermod.effect;
 
-import net.fenn7.thatchermod.block.entity.ModEntities;
+import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.particle.ModParticles;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.DamageModifierStatusEffect;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 
 public class CalciumDeficiencyEffect extends StatusEffect {

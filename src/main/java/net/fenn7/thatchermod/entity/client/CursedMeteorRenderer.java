@@ -1,8 +1,9 @@
-package net.fenn7.thatchermod.block.entity.client;
+package net.fenn7.thatchermod.entity.client;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.block.entity.custom.CursedMissileEntity;
-import net.fenn7.thatchermod.block.entity.custom.CursedMissileEntity;
+import net.fenn7.thatchermod.entity.custom.CursedMeteorEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -16,33 +17,34 @@ import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 
-public class CursedMissileRenderer extends EntityRenderer<CursedMissileEntity> {
-    private static final Identifier TEXTURE = new Identifier(ThatcherMod.MOD_ID, "textures/entity/thatcher/cursed_missile.png");
+@Environment(EnvType.CLIENT)
+public class CursedMeteorRenderer extends EntityRenderer<CursedMeteorEntity> {
+    private static final Identifier TEXTURE = new Identifier(ThatcherMod.MOD_ID, "textures/entity/thatcher/cursed_meteor.png");
     private static final RenderLayer LAYER;
 
-    public CursedMissileRenderer(EntityRendererFactory.Context ctx) {
+    public CursedMeteorRenderer(EntityRendererFactory.Context ctx) {
         super(ctx);
     }
 
-    protected int getBlockLight(CursedMissileEntity missileEntity, BlockPos blockPos) {
-        return 10;
+    protected int getBlockLight(CursedMeteorEntity meteorEntity, BlockPos blockPos) {
+        return 15;
     }
 
-    public void render(CursedMissileEntity missileEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+    public void render(CursedMeteorEntity meteorEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         matrixStack.push();
-        matrixStack.scale(0.4F, 0.4F, 0.4F);
+        matrixStack.scale(0.75F, 0.75F, 0.75F);
         matrixStack.multiply(this.dispatcher.getRotation());
         matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
         MatrixStack.Entry entry = matrixStack.peek();
         Matrix4f matrix4f = entry.getPositionMatrix();
         Matrix3f matrix3f = entry.getNormalMatrix();
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
-        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 0.0F, 1, 0, 1);
-        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 1.0F, 1, 1, 1);
-        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 1.0F, 2, 1, 0);
-        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 0.0F, 2, 0, 0);
+        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 0.0F, 0, 0, 1);
+        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 1.0F, 0, 1, 1);
+        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 1.0F, 1, 1, 0);
+        produceVertex(vertexConsumer, matrix4f, matrix3f, i, 0.0F, 1, 0, 0);
         matrixStack.pop();
-        super.render(missileEntity, f, g, matrixStack, vertexConsumerProvider, i);
+        super.render(meteorEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
 
     private static void produceVertex(VertexConsumer vertexConsumer, Matrix4f positionMatrix, Matrix3f normalMatrix, int light, float x, int y, int textureU, int textureV) {
@@ -50,7 +52,7 @@ public class CursedMissileRenderer extends EntityRenderer<CursedMissileEntity> {
     }
 
     @Override
-    public Identifier getTexture(CursedMissileEntity entity) {
+    public Identifier getTexture(CursedMeteorEntity entity) {
         return TEXTURE;
     }
 

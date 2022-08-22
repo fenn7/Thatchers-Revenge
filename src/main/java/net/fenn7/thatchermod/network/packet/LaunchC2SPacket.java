@@ -1,21 +1,16 @@
 package net.fenn7.thatchermod.network.packet;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fenn7.thatchermod.block.entity.custom.SmokeEntity;
+import net.fenn7.thatchermod.entity.custom.SmokeEntity;
 import net.fenn7.thatchermod.enchantments.ModEnchantments;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.MathHelper;
 
 public class LaunchC2SPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,

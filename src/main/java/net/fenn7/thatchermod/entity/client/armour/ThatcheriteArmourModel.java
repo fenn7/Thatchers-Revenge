@@ -1,4 +1,4 @@
-package net.fenn7.thatchermod.block.entity.client.armour;
+package net.fenn7.thatchermod.entity.client.armour;
 
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.item.custom.ThatcheriteArmourItem;

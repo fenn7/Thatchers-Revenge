@@ -3,11 +3,10 @@ package net.fenn7.thatchermod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fenn7.thatchermod.block.entity.ModEntities;
-import net.fenn7.thatchermod.block.entity.client.*;
-import net.fenn7.thatchermod.block.entity.client.armour.ThatcheriteArmourRenderer;
+import net.fenn7.thatchermod.entity.ModEntities;
+import net.fenn7.thatchermod.entity.client.*;
+import net.fenn7.thatchermod.entity.client.armour.ThatcheriteArmourRenderer;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.network.ModPackets;
 import net.fenn7.thatchermod.particle.ModParticles;
@@ -28,6 +27,7 @@ public class ThatcherModClient implements ClientModInitializer {
         ScreenRegistry.register(ModScreenHandlers.THATCHERISM_ALTAR_SCREEN_HANDLER, ThatcherismAltarScreen::new);
 
         EntityRendererRegistry.register(ModEntities.THATCHER, ThatcherModelRenderer::new);
+        EntityRendererRegistry.register(ModEntities.PARAMILITARY, ParamilitaryModelRenderer::new);
         EntityRendererRegistry.register(ModEntities.CURSED_METEOR, CursedMeteorRenderer::new);
         EntityRendererRegistry.register(ModEntities.CURSED_MISSILE, CursedMissileRenderer::new);
         EntityRendererRegistry.register(ModEntities.SMOKE_ENTITY, SmokeRenderer::new);

@@ -1,7 +1,7 @@
-package net.fenn7.thatchermod.block.entity.client;
+package net.fenn7.thatchermod.entity.client;
 
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.block.entity.custom.SmokeEntity;
+import net.fenn7.thatchermod.entity.custom.SmokeEntity;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;

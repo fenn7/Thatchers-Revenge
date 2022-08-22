@@ -131,7 +131,7 @@ public class CommunityChargebowItem extends BowItem {
                 CommonMethods.summonDustParticles(world, 1, 0.0f, 0.33f, 0.0f, 3,
                         user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
                 world.playSound(null, user.getBlockPos(), SoundEvents.PARTICLE_SOUL_ESCAPE, SoundCategory.HOSTILE, 45F, 1.5F);
-
+                user.getItemCooldownManager().set(this, DURATION);
                 return TypedActionResult.fail(this.getDefaultStack());
             }
             else { return super.use(world, user, hand); }
