@@ -62,6 +62,18 @@ public class ParamilitaryModelRenderer extends GeoEntityRenderer<ParamilitaryEnt
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
         }
+        else if (bone.getName().equals("Body") && !this.isAttacking) {
+            stack.push();
+            stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bone.getRotationX()));
+            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY()));
+            stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(bone.getRotationZ() - 90));
+            stack.translate(-1.25D, 0.0D, 0.15D);
+            stack.scale(0.7f, 0.7f, 0.7f);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(mainHand, ModelTransformation.Mode.NONE,
+                    packedLightIn, packedOverlayIn, stack, this.rtb, 0);
+            stack.pop();
+            bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
+        }
         super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 }

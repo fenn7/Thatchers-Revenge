@@ -112,7 +112,6 @@ public class ParamilitaryEntity extends PathAwareEntity implements IAnimatable, 
             if (this.random.nextInt(100 + 1) == 0 && !world.isClient() && this.distanceTo(this.getTarget()) >= 6.6D) {
                 this.jumpAtTarget();
             }
-            this.setAngryAt(this.getTarget().getUuid());
             this.tickAngerPassing();
         }
         if (this.hasAngerTime()) {
