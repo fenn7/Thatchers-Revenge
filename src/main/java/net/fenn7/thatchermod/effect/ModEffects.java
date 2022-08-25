@@ -12,7 +12,6 @@ import java.lang.reflect.Modifier;
 import java.util.UUID;
 
 public class ModEffects {
-
     public static final StatusEffect CALCIUM_DEFICIENCY = Registry.register(Registry.STATUS_EFFECT,
             new Identifier(ThatcherMod.MOD_ID, "calcium_deficiency"),
             new CalciumDeficiencyEffect(StatusEffectCategory.HARMFUL, 15856113)

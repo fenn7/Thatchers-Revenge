@@ -3,12 +3,14 @@ package net.fenn7.thatchermod.item;
 import net.fabricmc.fabric.api.item.v1.CustomDamageHandler;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fenn7.thatchermod.ThatcherMod;
+import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.item.custom.*;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
@@ -54,6 +56,10 @@ public class ModItems {
     public static final Item THATCHERITE_BOOTS = registerItem("thatcherite_boots",
             new ThatcheriteArmourItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.FEET,
                     new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
+
+    public static final Item PARAMILITARY_SPAWN_EGG = registerItem("paramilitary_spawn_egg",
+            new SpawnEggItem(ModEntities.PARAMILITARY, 0x000000, 0x78582F,
+                    new FabricItemSettings().group(ModItemGroup.THATCHER)));
 
     public static void registerModItems(){
         ThatcherMod.LOGGER.debug("Registering Items for " + ThatcherMod.MOD_ID + " ...");

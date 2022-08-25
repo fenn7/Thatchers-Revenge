@@ -2,8 +2,18 @@ package net.fenn7.thatchermod.entity.client;
 
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.custom.ParamilitaryEntity;
+import net.fenn7.thatchermod.entity.custom.ThatcherEntity;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.model.ModelWithArms;
+import net.minecraft.client.render.entity.model.ModelWithHead;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class ParamilitaryModel extends AnimatedGeoModel<ParamilitaryEntity> {
     @Override
@@ -19,5 +29,17 @@ public class ParamilitaryModel extends AnimatedGeoModel<ParamilitaryEntity> {
     @Override
     public Identifier getAnimationResource(ParamilitaryEntity animatable) {
         return new Identifier(ThatcherMod.MOD_ID, "animations/paramilitary.animation.json");
+    }
+
+    @Override
+    public void setLivingAnimations(ParamilitaryEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
+        super.setLivingAnimations(entity, uniqueID, customPredicate);
+        IBone head = this.getAnimationProcessor().getBone("head");
+
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+        if (head != null) {
+            head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
+            head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+        }
     }
 }

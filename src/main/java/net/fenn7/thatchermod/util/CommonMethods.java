@@ -3,7 +3,6 @@ package net.fenn7.thatchermod.util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +15,7 @@ import java.util.List;
 
 public interface CommonMethods {
 
-    static List<Entity> getEntitiesNearPlayer(PlayerEntity user, double x1, double y1, double z1, double x2,
+    static List<Entity> getEntitiesNearEntity(Entity user, double x1, double y1, double z1, double x2,
                                               double y2, double z2, World world) {
         BlockPos pos1 = new BlockPos(user.getX() + x1, user.getY() + y1, user.getZ() + z1);
         BlockPos pos2 = new BlockPos(user.getX() + x2, user.getY() + y2, user.getZ() + z2);

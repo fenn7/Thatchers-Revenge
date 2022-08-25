@@ -2,7 +2,6 @@ package net.fenn7.thatchermod.item.custom;
 
 import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.util.CommonMethods;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -17,7 +16,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ModStatus;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
@@ -48,7 +46,7 @@ public class MilkSnatcherItem extends SwordItem {
     }
 
     private void drainCalciumFromEntities(World world, PlayerEntity user, Hand hand) {
-        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(user, -4, -4, -4, 4, 4, 4, world);
+        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(user, -4, -4, -4, 4, 4, 4, world);
         boolean success = false;
 
         for (Entity entity: nearbyEntities) {

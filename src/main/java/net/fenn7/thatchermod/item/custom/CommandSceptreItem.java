@@ -111,7 +111,7 @@ public class CommandSceptreItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof PlayerEntity player && player.getOffHandStack().getItem() == this) {
-            List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(player, 6, 3, 6, -6, -3, -6, world);
+            List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(player, 6, 3, 6, -6, -3, -6, world);
             for (Entity mobs: nearbyEntities) {
                 if (mobs instanceof PassiveEntity passive) {
                     lurePassiveEntity(passive, player); ticks++;

@@ -138,7 +138,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    public void injectTickAirAssaultMethod(CallbackInfo ci) {
+    public void injectTickElytraMethod(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         ItemStack chest = player.getEquippedStack(EquipmentSlot.CHEST); // Elytra Enchantments
         if (player.isFallFlying() && chest.isOf(Items.ELYTRA) && ElytraItem.isUsable(chest) && !world.isClient) {
@@ -169,11 +169,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             BlockPos pos2 = new BlockPos(pos.getX() + prLevel + 1, pos.getY() + prLevel + 1, pos.getZ() + prLevel + 1);
             Box box = new Box(pos1, pos2);
             List<Entity> entityList = world.getOtherEntities(null, box);
-            for (Entity entity : entityList) {
-                if (entity instanceof ItemEntity item) {
-                    player.giveItemStack(item.getStack());
-                }
-            }
+            entityList.stream().filter(e -> e instanceof ItemEntity)
+                    .forEach(e -> player.giveItemStack(((ItemEntity) e).getStack()));
         }
     }
 }

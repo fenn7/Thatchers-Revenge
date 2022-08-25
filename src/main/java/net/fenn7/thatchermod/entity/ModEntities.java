@@ -17,8 +17,8 @@ public class ModEntities {
 
     public static final EntityType<ParamilitaryEntity> PARAMILITARY = Registry.register(
             Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "paramilitary"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, ParamilitaryEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.9f, 1.9f)).build());
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ParamilitaryEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.7f, 1.8f)).build());
 
     public static final EntityType<CursedMeteorEntity> CURSED_METEOR = Registry.register(
             Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "cursed_meteor"),

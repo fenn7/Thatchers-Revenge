@@ -1,9 +1,6 @@
 package net.fenn7.thatchermod.item.custom;
 
-import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.util.CommonMethods;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -13,7 +10,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.BowItem;
@@ -25,11 +21,9 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -53,7 +47,7 @@ public class CommunityChargebowItem extends BowItem {
                 }
                 int i;
                 if (isRapidFiring(stack)) { i = (int) ((0.5 * this.getMaxUseTime(stack))) - remainingUseTicks; } // 2x draw speed in rapid-fire mode, but cannot crit
-                else { i = (int) ((1.34 * this.getMaxUseTime(stack)) - remainingUseTicks); } // 34% reduced draw speed, but shot is extremely precise when fully charged
+                else { i = (int) ((1.4 * this.getMaxUseTime(stack)) - remainingUseTicks); } // 40% reduced draw speed, but shot is extremely precise when fully charged
                 float f = getPullProgress(i);
 
                 if (!((double) f < 0.1D)) {
@@ -112,7 +106,7 @@ public class CommunityChargebowItem extends BowItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (user.isSneaking()) {
             boolean success = false;
-            List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(user, 5, 4, 5, -5, -4, -5, world); {
+            List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(user, 5, 4, 5, -5, -4, -5, world); {
                 for (Entity entity: nearbyEntities) {
                     if (entity instanceof LivingEntity alive && entity != user) {
                         if (!world.isClient) { CommonMethods.summonDustParticles(world, 1, 0f, 0.33f, 0f, 2,

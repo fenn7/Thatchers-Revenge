@@ -13,6 +13,8 @@
   "item.thatchermod.thatcherite_greaves": "Thatcherite Greaves",
   "item.thatchermod.thatcherite_boots": "Thatcherite Boots",
 
+  "item.thatchermod.paramilitary_spawn_egg": "Paramilitary Spawn Egg",
+
   "effect.thatchermod.calcium_deficiency": "Hypocalcemia",
   "effect.thatchermod.static_buildup": "Static Buildup",
   "effect.thatchermod.last_stand": "LAST STAND",
@@ -26,6 +28,7 @@
   "enchantment.thatchermod.jet_assist": "Jet Assist",
   "enchantment.thatchermod.privatisation": "Privatisation",
   "enchantment.thatchermod.amphibious": "Amphibious",
+  "enchantment.thatchermod.hungering_strike": "Hungering Strike",
   "enchantment.thatchermod.cursed_guard": "Cursed Guard",
   "enchantment.thatchermod.discontent": "Discontent",
 

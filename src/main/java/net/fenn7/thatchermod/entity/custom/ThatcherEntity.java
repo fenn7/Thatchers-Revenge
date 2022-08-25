@@ -42,7 +42,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ThatcherEntity extends HostileEntity implements IAnimatable {
-    private AnimationFactory factory = new AnimationFactory(this);
+    private final AnimationFactory factory = new AnimationFactory(this);
     private final ServerBossBar bossBar;
     private boolean hasSetStartPos;
     private boolean hasReturnedStartPos;
@@ -132,11 +132,16 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.targetSelector.add(1, (new RevengeGoal(this, new Class[0])).setGroupRevenge(new Class[0]));
         this.targetSelector.add(2, new ActiveTargetGoal(this, PlayerEntity.class, false));
         this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, false,
-                (entity) -> entity instanceof MobEntity && !(((MobEntity) entity).isUndead())));
+                (entity) -> entity instanceof MobEntity && !(entity instanceof ParamilitaryEntity) && !(((MobEntity) entity).isUndead())));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.6D));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
+    }
+
+    public void endCombat() {
+        this.ticksSinceTracked = 0;
+        super.endCombat();
     }
 
     public void tickMovement() {
@@ -346,19 +351,19 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     public boolean tryAttack(Entity target) {
-        if (!super.tryAttack(target)) { return false; }
+        if (!super.tryAttack(target)) return false;
         else {
             this.attackTicksLeft = 10;
             this.world.sendEntityStatus(this, (byte) 4);
             float healthRatio = this.getHealth() / this.getMaxHealth();
-            if (!target.getWorld().isClient() && healthRatio <= 0.5) {
+            if (!target.getWorld().isClient() && healthRatio <= 0.25) {
+                damageShield(10);
                 EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null, target.getSteppingPos(),
                         SpawnReason.TRIGGERED, true, true);
-            }
-            if (healthRatio <= 0.25) {
-                damageShield(10);
+                double x = target.getX() - this.getX();
+                double z = target.getZ() - this.getZ();
                 if (target instanceof LivingEntity living) {
-                    living.takeKnockback(2, living.prevX, living.prevZ);
+                    living.takeKnockback(2.0D, x, z);
                 }
             }
         }
@@ -384,16 +389,15 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         else return PlayState.STOP;
     }
 
-    @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
     }
 
-    @Override
     public AnimationFactory getFactory() {
         return factory;
     }
 
+    protected void onBlockCollision(BlockState state) { if (state.getBlock().getHardness() >= 0) { /* add breaking later */ } super.onBlockCollision(state); }
     protected SoundEvent getAmbientSound() { return SoundEvents.AMBIENT_NETHER_WASTES_MOOD; }
     protected SoundEvent getHurtSound(DamageSource source) { return SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK; }
     protected void playStepSound(BlockPos pos, BlockState state) { this.playSound(SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, 0.5f, 1.0f); }

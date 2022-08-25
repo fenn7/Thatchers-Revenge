@@ -1,38 +1,22 @@
 package net.fenn7.thatchermod.item.custom;
 
-import net.fenn7.thatchermod.particle.ModParticles;
 import net.fenn7.thatchermod.util.CommonMethods;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.ToolMaterial;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
@@ -61,7 +45,7 @@ public class UnionBusterItem extends ModAxeItem {
     }
 
     private void launchEntitiesUpwards(World world, PlayerEntity user, Hand hand) {
-        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearPlayer(user, -4, -4, -4, 4, 4, 4, world);
+        List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(user, -4, -4, -4, 4, 4, 4, world);
         boolean success = false;
 
         for (Entity entity : nearbyEntities) {
