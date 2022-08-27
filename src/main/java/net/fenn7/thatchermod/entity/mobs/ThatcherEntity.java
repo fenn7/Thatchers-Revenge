@@ -1,5 +1,7 @@
-package net.fenn7.thatchermod.entity.custom;
+package net.fenn7.thatchermod.entity.mobs;
 
+import net.fenn7.thatchermod.entity.projectiles.CursedMeteorEntity;
+import net.fenn7.thatchermod.entity.projectiles.CursedMissileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;

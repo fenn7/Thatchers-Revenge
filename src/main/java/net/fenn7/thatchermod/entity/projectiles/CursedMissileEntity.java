@@ -1,4 +1,4 @@
-package net.fenn7.thatchermod.entity.custom;
+package net.fenn7.thatchermod.entity.projectiles;
 
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.minecraft.entity.EntityType;
@@ -13,7 +13,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
 public class CursedMissileEntity extends ExplosiveProjectileEntity {
-    private static float explosionPower = 1.25F;
+    private static final float explosionPower = 1.25F;
+    private static final int maximumAgeTicks = 200;
 
     public CursedMissileEntity(EntityType<? extends CursedMissileEntity> entityType, World world) {
         super(entityType, world);
@@ -26,7 +27,7 @@ public class CursedMissileEntity extends ExplosiveProjectileEntity {
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
         if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult)hitResult).getEntity())) {
-            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), this.explosionPower, Explosion.DestructionType.NONE);
+            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
             this.discard();
         }
     }
@@ -34,13 +35,13 @@ public class CursedMissileEntity extends ExplosiveProjectileEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         entityHitResult.getEntity().setOnFireFromLava();
-        entityHitResult.getEntity().damage(DamageSource.LAVA, 4.0F);
+        entityHitResult.getEntity().damage(DamageSource.magic(this, this.getOwner()), 5.0F);
         super.onEntityHit(entityHitResult);
     }
 
     @Override
     public void tick() {
-        if (this.age >= 200) { this.discard(); }
+        if (this.age >= maximumAgeTicks) { this.discard(); }
         super.tick();
     }
 

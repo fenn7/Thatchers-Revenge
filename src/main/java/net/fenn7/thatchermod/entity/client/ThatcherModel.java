@@ -1,7 +1,7 @@
 package net.fenn7.thatchermod.entity.client;
 
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.entity.custom.ThatcherEntity;
+import net.fenn7.thatchermod.entity.mobs.ThatcherEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;

@@ -1,16 +1,12 @@
 package net.fenn7.thatchermod.entity.client;
 
-import com.google.common.collect.Lists;
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.entity.custom.ParamilitaryEntity;
+import net.fenn7.thatchermod.entity.mobs.ParamilitaryEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;

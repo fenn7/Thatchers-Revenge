@@ -40,10 +40,5 @@ public class ModPredicates {
         FabricModelPredicateProviderRegistry.register(ModItems.COMMUNITY_CHARGEBOW, new Identifier("pulling"),
                 (stack, world, entity, seed) -> entity != null && entity.isUsingItem()
                         && entity.getActiveItem() == stack ? 1.0f : 0.0f);
-
-        /*FabricModelPredicateProviderRegistry.register(ModItems.COMMAND_SCEPTRE , new Identifier("isdivisible10"),
-                (stack, world, entity, seed) -> {
-                    return entity != null && CommandSceptreItem.getTicksDivisibleBy(stack, 60) ? 1.0F : 0.0F;
-                });*/
     }
 }

@@ -1,14 +1,7 @@
 package net.fenn7.thatchermod.entity.client;
 
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.entity.custom.ParamilitaryEntity;
-import net.fenn7.thatchermod.entity.custom.ThatcherEntity;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.ModelWithArms;
-import net.minecraft.client.render.entity.model.ModelWithHead;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Arm;
+import net.fenn7.thatchermod.entity.mobs.ParamilitaryEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;

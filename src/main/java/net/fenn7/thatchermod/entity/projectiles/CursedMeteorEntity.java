@@ -1,4 +1,4 @@
-package net.fenn7.thatchermod.entity.custom;
+package net.fenn7.thatchermod.entity.projectiles;
 
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.minecraft.entity.EntityType;
@@ -18,7 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CursedMeteorEntity extends ExplosiveProjectileEntity {
-    private static float explosionPower = 2.5F;
+    private static final float explosionPower = 2.5F;
+    private static final int maximumAgeTicks = 300;
     private static boolean isFalling = false;
 
     public CursedMeteorEntity(EntityType<? extends CursedMeteorEntity> entityType, World world) {
@@ -36,30 +37,27 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
                 List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(2.0D, 2.0D, 2.0D));
                 if (!list.isEmpty()) {
                     Iterator var5 = list.iterator();
-
                     while(var5.hasNext()) {
                         LivingEntity livingEntity = (LivingEntity)var5.next();
                         livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 100, 2));
                     }
                 }
             }
-            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), this.explosionPower, Explosion.DestructionType.NONE);
+            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
             this.discard();
         }
     }
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        entityHitResult.getEntity().damage(DamageSource.MAGIC, 5.0F);
+        entityHitResult.getEntity().damage(DamageSource.magic(this, this.getOwner()), 7.5F);
         super.onEntityHit(entityHitResult);
     }
 
     @Override
     public void tick() {
-        if (isFalling) {
-            this.powerY -= 0.03;
-        }
-        if (this.age >= 300) { this.discard(); }
+        if (isFalling) { this.powerY -= 0.03; }
+        if (this.age >= maximumAgeTicks) { this.discard(); }
         super.tick();
     }
 

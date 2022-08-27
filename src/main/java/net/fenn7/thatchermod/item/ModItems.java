@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.item.custom.*;
+import net.fenn7.thatchermod.item.custom.grenade.GrenadeItem;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ArmorItem;
@@ -56,6 +57,9 @@ public class ModItems {
     public static final Item THATCHERITE_BOOTS = registerItem("thatcherite_boots",
             new ThatcheriteArmourItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.FEET,
                     new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));
+
+    public static final Item GRENADE = registerItem("grenade",
+            new GrenadeItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxCount(16)));
 
     public static final Item PARAMILITARY_SPAWN_EGG = registerItem("paramilitary_spawn_egg",
             new SpawnEggItem(ModEntities.PARAMILITARY, 0x000000, 0x78582F,

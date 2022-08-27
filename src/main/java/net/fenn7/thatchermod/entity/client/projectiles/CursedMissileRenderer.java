@@ -1,7 +1,7 @@
-package net.fenn7.thatchermod.entity.client;
+package net.fenn7.thatchermod.entity.client.projectiles;
 
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.entity.custom.CursedMissileEntity;
+import net.fenn7.thatchermod.entity.projectiles.CursedMissileEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;

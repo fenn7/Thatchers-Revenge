@@ -1,4 +1,4 @@
-package net.fenn7.thatchermod.entity.custom;
+package net.fenn7.thatchermod.entity.projectiles;
 
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.minecraft.entity.Entity;

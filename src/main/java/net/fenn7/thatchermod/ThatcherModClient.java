@@ -7,6 +7,10 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.entity.client.*;
 import net.fenn7.thatchermod.entity.client.armour.ThatcheriteArmourRenderer;
+import net.fenn7.thatchermod.entity.client.projectiles.CursedMeteorRenderer;
+import net.fenn7.thatchermod.entity.client.projectiles.CursedMissileRenderer;
+import net.fenn7.thatchermod.entity.client.projectiles.GrenadeRenderer;
+import net.fenn7.thatchermod.entity.client.projectiles.SmokeRenderer;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.network.ModPackets;
 import net.fenn7.thatchermod.particle.ModParticles;
@@ -28,9 +32,11 @@ public class ThatcherModClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(ModEntities.THATCHER, ThatcherModelRenderer::new);
         EntityRendererRegistry.register(ModEntities.PARAMILITARY, ParamilitaryModelRenderer::new);
+
         EntityRendererRegistry.register(ModEntities.CURSED_METEOR, CursedMeteorRenderer::new);
         EntityRendererRegistry.register(ModEntities.CURSED_MISSILE, CursedMissileRenderer::new);
         EntityRendererRegistry.register(ModEntities.SMOKE_ENTITY, SmokeRenderer::new);
+        EntityRendererRegistry.register(ModEntities.GRENADE_ENTITY, GrenadeRenderer::new);
 
         GeoArmorRenderer.registerArmorRenderer(new ThatcheriteArmourRenderer(), ModItems.THATCHERITE_BOOTS,
                 ModItems.THATCHERITE_GREAVES, ModItems.THATCHERITE_CHESTPLATE, ModItems.THATCHERITE_HELMET);

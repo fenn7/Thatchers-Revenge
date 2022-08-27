@@ -1,0 +1,21 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.grenade.flying": {
+			"loop": true,
+			"animation_length": 0.5,
+			"bones": {
+				"Top": {
+					"rotation": [0, 0, 0]
+				},
+				"Grenade": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.25": [0, 0, -180],
+						"0.5": [0, 0, -360]
+					}
+				}
+			}
+		}
+	}
+}
