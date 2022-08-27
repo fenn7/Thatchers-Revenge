@@ -41,7 +41,7 @@ public class ModItems {
     public static final Item COMMUNITY_CHARGEBOW = registerItem("community_chargebow",
             new CommunityChargebowItem(new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof()
                     .maxCount(1).maxDamage(805).maxDamageIfAbsent(805).rarity(Rarity.RARE)));
-    public static final Item COMMAND_SCEPTRE = registerItem("command_sceptre",
+    public static final Item COMMAND_SCEPTRE = registerItem("command_sceptre_3d",
             new CommandSceptreItem(new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).maxDamage(405).maxDamageIfAbsent(405).rarity(Rarity.RARE)));
     public static final Item THATCHERITE_HELMET = registerItem("thatcherite_helmet",
