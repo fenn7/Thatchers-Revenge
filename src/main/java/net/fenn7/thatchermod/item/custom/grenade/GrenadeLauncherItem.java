@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class GrenadeLauncherItem extends Item {
+    private GrenadeLauncherInventory grenadeInv;
 
     public GrenadeLauncherItem(Settings settings) {
         super(settings);
@@ -29,7 +30,7 @@ public class GrenadeLauncherItem extends Item {
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType == ClickType.RIGHT) {
-            openScreen(player, player.getActiveHand());
+            openScreen(player, stack);
             ThatcherMod.LOGGER.warn("aba");
             return true;
         }
@@ -39,15 +40,12 @@ public class GrenadeLauncherItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient) {
-            openScreen(user, hand);
+            openScreen(user, user.getStackInHand(hand));
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
 
-    public void openScreen(PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
-        GrenadeLauncherItem gl = (GrenadeLauncherItem) stack.getItem();
-
+    public void openScreen(PlayerEntity user, ItemStack stack) {
         user.openHandledScreen(new NamedScreenHandlerFactory() {
             @Override
             public Text getDisplayName() {
@@ -56,7 +54,7 @@ public class GrenadeLauncherItem extends Item {
 
             @Override
             public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                return new GrenadeLauncherScreenHandler(syncId, inv, new GrenadeLauncherInventory(hand));
+                return new GrenadeLauncherScreenHandler(syncId, inv, new GrenadeLauncherInventory(stack));
             }
         });
     }
