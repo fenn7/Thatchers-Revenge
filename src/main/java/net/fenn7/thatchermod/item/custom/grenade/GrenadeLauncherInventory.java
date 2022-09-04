@@ -8,18 +8,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 
+import java.util.List;
 import java.util.UUID;
 
 public class GrenadeLauncherInventory extends SimpleInventory implements Inventory {
-    private final DefaultedList<ItemStack> list = DefaultedList.ofSize(2, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> list;
     private Hand hand;
     private final ItemStack stack;
     private UUID uuid;
     private GrenadeNBTSaver saver;
 
-    public GrenadeLauncherInventory(ItemStack stack) {
+    public GrenadeLauncherInventory(ItemStack stack, DefaultedList<ItemStack> list) {
         this.stack = stack;
-        //this.uuid = uuid;
+        this.list = list;
         this.saver = GrenadeNBTSaver.EMPTY;
     }
 

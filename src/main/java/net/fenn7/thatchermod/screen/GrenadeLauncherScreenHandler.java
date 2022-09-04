@@ -19,7 +19,8 @@ public class GrenadeLauncherScreenHandler extends ScreenHandler implements Grena
     private final String nbtTagName = "Grenades";
 
     public GrenadeLauncherScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new GrenadeLauncherInventory(playerInventory.player.getMainHandStack()));
+        this(syncId, playerInventory,
+                new GrenadeLauncherInventory(playerInventory.player.getMainHandStack(), DefaultedList.ofSize(2, ItemStack.EMPTY)));
     }
 
     public GrenadeLauncherScreenHandler(int syncId, PlayerInventory playerInventory, GrenadeLauncherInventory inventory) {
