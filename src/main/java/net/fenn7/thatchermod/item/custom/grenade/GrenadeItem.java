@@ -19,7 +19,7 @@ public class GrenadeItem extends Item {
 		user.getItemCooldownManager().set(this, 10);
 
         if (!world.isClient) {
-            GrenadeEntity grenade = new GrenadeEntity(world, user);
+            AbstractGrenadeEntity grenade = createGrenadeAt(world, user);
             grenade.setItem(itemStack);
             grenade.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 0.8F, 0.2F);
             world.spawnEntity(grenade);
@@ -30,5 +30,9 @@ public class GrenadeItem extends Item {
         }
 
         return TypedActionResult.success(itemStack, world.isClient());
+    }
+
+    public AbstractGrenadeEntity createGrenadeAt(World world, PlayerEntity player) {
+        return new GrenadeEntity(world, player);
     }
 }

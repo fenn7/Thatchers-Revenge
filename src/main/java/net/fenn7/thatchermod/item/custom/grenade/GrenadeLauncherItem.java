@@ -2,6 +2,8 @@ package net.fenn7.thatchermod.item.custom.grenade;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fenn7.thatchermod.ThatcherMod;
+import net.fenn7.thatchermod.entity.projectiles.AbstractGrenadeEntity;
+import net.fenn7.thatchermod.entity.projectiles.GrenadeEntity;
 import net.fenn7.thatchermod.screen.GrenadeLauncherScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -45,18 +47,26 @@ public class GrenadeLauncherItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient) {
-            //openScreen(user, user.getStackInHand(hand));
-            Inventories.splitStack(list, 0, 1);
-            Inventories.removeStack(list, 1);
-            ThatcherMod.LOGGER.warn(list.toString());
+        if (!world.isClient()) {
+            if (list.get(0).getCount() <= 0) {
+                openScreen(user, user.getStackInHand(hand));
+            }
+            else if (!user.isSneaking()) {
+                ItemStack grenadeStack = list.get(0);
+                GrenadeItem grenadeItem = (GrenadeItem) grenadeStack.getItem();
 
-            NbtCompound nbt = new NbtCompound();
-            ItemStack stack = user.getStackInHand(hand);
-            Inventories.writeNbt(new NbtCompound(), list, true);
+                AbstractGrenadeEntity grenadeEntity = grenadeItem.createGrenadeAt(world, user);
+                grenadeEntity.setItem(grenadeStack);
+                grenadeEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 0.0F);
+                grenadeEntity.setExplosionPower(2.0F * grenadeEntity.getExplosionPower());
+                world.spawnEntity(grenadeEntity);
 
-            Inventories.writeNbt(nbt, list, true);
-            stack.getOrCreateNbt().put(nbtTagName, nbt);
+                if (!user.isCreative()) {
+                    grenadeStack.decrement(1);
+                }
+
+                saveListNBT(user, hand);
+            }
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
@@ -73,5 +83,14 @@ public class GrenadeLauncherItem extends Item {
                 return new GrenadeLauncherScreenHandler(syncId, inv, new GrenadeLauncherInventory(stack, list));
             }
         });
+    }
+
+    private void saveListNBT(PlayerEntity player, Hand hand){
+        NbtCompound nbt = new NbtCompound();
+        ItemStack stack = player.getStackInHand(hand);
+        Inventories.writeNbt(new NbtCompound(), list, true);
+
+        Inventories.writeNbt(nbt, list, true);
+        stack.getOrCreateNbt().put(nbtTagName, nbt);
     }
 }

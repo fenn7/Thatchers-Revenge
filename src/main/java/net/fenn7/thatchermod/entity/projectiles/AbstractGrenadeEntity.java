@@ -47,11 +47,13 @@ public abstract class AbstractGrenadeEntity extends ThrownItemEntity {
         this.explosionPower = explosionPower;
     }
 
-    protected void setMaxAgeTicks(int maxAgeTicks) {
+    public void setMaxAgeTicks(int maxAgeTicks) {
         this.maxAgeTicks = maxAgeTicks;
     }
 
-    protected void setExplosionPower(int explosionPower) {
+    public void setExplosionPower(float explosionPower) {
         this.explosionPower = explosionPower;
     }
+
+    public float getExplosionPower() { return this.explosionPower; };
 }
