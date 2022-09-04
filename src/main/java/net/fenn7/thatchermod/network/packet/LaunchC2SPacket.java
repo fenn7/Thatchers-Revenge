@@ -18,11 +18,7 @@ public class LaunchC2SPacket {
         int jLevel = EnchantmentHelper.getLevel(ModEnchantments.JET_ASSIST, player.getEquippedStack(EquipmentSlot.CHEST));
         player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ENTITY_BLAZE_BURN, SoundCategory.PLAYERS,
                 1.0F + jLevel * 0.2F, 0.75F);
-        SmokeEntity smoke = new SmokeEntity(player.getWorld(), player, player.getX(), player.getY(), player.getZ());
+        SmokeEntity smoke = new SmokeEntity(player.getWorld(), player, player.getX(), player.getBodyY(0.001F), player.getZ());
         player.getWorld().spawnEntity(smoke);
-        /*((ServerWorld) player.getWorld()).spawnParticles(player, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, true, player.getX(),
-                player.getBodyY(0.5D), player.getZ(), 1, 0, 0, 0, 0);
-        ((ServerWorld) player.getWorld()).spawnParticles(player, ParticleTypes.FIREWORK, true, player.getX(),
-                player.getBodyY(0.5D), player.getZ(), 3, 0, 0, 0, 0);*/
     }
 }

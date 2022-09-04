@@ -12,7 +12,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 public class ThatcherismAltarScreenHandler extends ScreenHandler {
-
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
 
@@ -43,8 +42,8 @@ public class ThatcherismAltarScreenHandler extends ScreenHandler {
 
     public int getScaledProgress() {
         int progress = propertyDelegate.get(0);
-        int maxProgress = propertyDelegate.get(1); //should be 50
-        int pixelsDrawnSize = 27; //width of hellfire blood bar pixels
+        int maxProgress = propertyDelegate.get(1); // should be 50
+        int pixelsDrawnSize = 27; // width of hellfire blood bar pixels
 
         return maxProgress != 0 && progress != 0 ? progress + pixelsDrawnSize / maxProgress : 0;
     }

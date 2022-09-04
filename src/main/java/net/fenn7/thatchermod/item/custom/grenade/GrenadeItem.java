@@ -21,7 +21,7 @@ public class GrenadeItem extends Item {
         if (!world.isClient) {
             GrenadeEntity grenade = new GrenadeEntity(world, user);
             grenade.setItem(itemStack);
-            grenade.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.0F, 0.2F);
+            grenade.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 0.8F, 0.2F);
             world.spawnEntity(grenade);
         }
 

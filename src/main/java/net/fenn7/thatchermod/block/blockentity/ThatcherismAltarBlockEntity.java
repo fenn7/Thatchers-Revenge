@@ -77,9 +77,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
-        return inventory;
-    }
+    public DefaultedList<ItemStack> getItems() { return inventory; }
 
     @Override
     public Text getDisplayName() {
@@ -120,7 +118,6 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
             world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.getX() + 0.5D, pos.getY() + 1.1D, pos.getZ() + 0.5D, 0, 0, 0);
             world.addParticle(ParticleTypes.SOUL, pos.getX() + 0.5D + diff1, pos.getY() + 1.5D, pos.getZ() + 0.5D + diff2, 0, 0, 0);
         }
-
         if (state.get(IS_CHANNELING)) {
             emptyAltar(entity);
             world.setBlockState(pos, state.with(IS_PREPARED, false));
@@ -151,7 +148,6 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
                 }
             }
         }
-
         if (hasRecipe(entity)) {
             if (entity.progress < entity.maxProgress) {
                 entity.progress++;

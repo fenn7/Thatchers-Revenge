@@ -33,7 +33,6 @@ public abstract class AbstractGrenadeEntity extends ThrownItemEntity {
     protected void onCollision(HitResult hitResult) {
         if (!this.world.isClient()) {
             world.sendEntityStatus(this, (byte) 3);
-            explode();
         }
         super.onCollision(hitResult);
     }

@@ -6,6 +6,7 @@ import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.item.custom.*;
 import net.fenn7.thatchermod.item.custom.grenade.GrenadeItem;
+import net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherItem;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ArmorItem;
@@ -60,6 +61,9 @@ public class ModItems {
 
     public static final Item GRENADE = registerItem("grenade",
             new GrenadeItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxCount(16)));
+    public static final Item GRENADE_LAUNCHER = registerItem("grenade_launcher",
+            new GrenadeLauncherItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxCount(1)
+                    .maxDamage(512).maxDamageIfAbsent(512)));
 
     public static final Item PARAMILITARY_SPAWN_EGG = registerItem("paramilitary_spawn_egg",
             new SpawnEggItem(ModEntities.PARAMILITARY, 0x000000, 0x78582F,

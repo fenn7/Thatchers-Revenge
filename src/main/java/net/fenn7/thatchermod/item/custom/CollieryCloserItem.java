@@ -101,7 +101,7 @@ public class CollieryCloserItem extends PickaxeItem {
         if (entity instanceof LivingEntity miner) {
             Hand hand = miner.getActiveHand();
             if (miner.getStackInHand(hand).getItem() == this) {
-                miner.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 20));
+                miner.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 1));
             }
         }
     }

@@ -32,7 +32,7 @@ public class CursedGuardEnchantment extends Enchantment {
             living.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 40, level - 1,
                     false, false, true));
             if (living.squaredDistanceTo(user) <= 2.0D) {
-                living.takeKnockback(level - 1, living.prevX, living.prevZ);
+                living.takeKnockback(level - 1, attacker.getX() - user.getX(), attacker.getZ() - user.getZ());
             }
         }
         super.onUserDamaged(user, attacker, level);

@@ -444,8 +444,8 @@
 		},
 		"gui": {
 			"rotation": [0, -90, 0],
-			"translation": [0, 9.5, 0],
-			"scale": [2, 2, 2]
+			"translation": [0, 11, 0],
+			"scale": [2.2, 2.2, 2.2]
 		},
 		"fixed": {
 			"rotation": [0, 90, 0],

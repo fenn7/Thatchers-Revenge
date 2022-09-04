@@ -12,6 +12,11 @@ public class ModScreenHandlers {
             new Identifier(ThatcherMod.MOD_ID, "thatcherism_altar"),
             new ScreenHandlerType<>(ThatcherismAltarScreenHandler::new));
 
+    public static final ScreenHandlerType<GrenadeLauncherScreenHandler> GRENADE_LAUNCHER_SCREEN_HANDLER = Registry.register(
+            Registry.SCREEN_HANDLER,
+            new Identifier(ThatcherMod.MOD_ID, "grenade_launcher"),
+            new ScreenHandlerType<>(GrenadeLauncherScreenHandler::new));
+
     public static void registerScreenHandlers() {
         ThatcherMod.LOGGER.debug("Registering Screen Handlers for " + ThatcherMod.MOD_ID + " ...");
     }

@@ -16,6 +16,7 @@ import net.fenn7.thatchermod.network.ModPackets;
 import net.fenn7.thatchermod.particle.ModParticles;
 import net.fenn7.thatchermod.particle.custom.DeficiencyIndicatorParticle;
 import net.fenn7.thatchermod.particle.custom.ThatcherJumpParticle;
+import net.fenn7.thatchermod.screen.GrenadeLauncherScreen;
 import net.fenn7.thatchermod.screen.ModScreenHandlers;
 import net.fenn7.thatchermod.screen.ThatcherismAltarScreen;
 import net.fenn7.thatchermod.event.KeyInputs;
@@ -29,6 +30,7 @@ public class ThatcherModClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(ModParticles.DEFICIENCY_INDICATOR, DeficiencyIndicatorParticle.Factory::new);
 
         ScreenRegistry.register(ModScreenHandlers.THATCHERISM_ALTAR_SCREEN_HANDLER, ThatcherismAltarScreen::new);
+        ScreenRegistry.register(ModScreenHandlers.GRENADE_LAUNCHER_SCREEN_HANDLER, GrenadeLauncherScreen::new);
 
         EntityRendererRegistry.register(ModEntities.THATCHER, ThatcherModelRenderer::new);
         EntityRendererRegistry.register(ModEntities.PARAMILITARY, ParamilitaryModelRenderer::new);

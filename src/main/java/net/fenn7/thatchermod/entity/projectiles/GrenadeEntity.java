@@ -18,6 +18,7 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -32,7 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class GrenadeEntity extends AbstractGrenadeEntity implements IAnimatable {
     private final AnimationFactory factory = new AnimationFactory(this);
-    private static final int MAX_AGE = 90;
+    private static final int MAX_AGE = 100;
     private static final float EXPLOSION_POWER = 1.0F;
     private static final Block IRON = Blocks.IRON_BLOCK;
 
@@ -57,7 +58,8 @@ public class GrenadeEntity extends AbstractGrenadeEntity implements IAnimatable 
             for (int i = 0; i < 3; i++) {
                 double x = ThreadLocalRandom.current().nextDouble(-EXPLOSION_POWER, EXPLOSION_POWER);
                 double z = ThreadLocalRandom.current().nextDouble(-EXPLOSION_POWER, EXPLOSION_POWER);
-                this.world.addParticle(effect, this.getX(), this.getY(), this.getZ(), x,EXPLOSION_POWER, z);
+                this.world.addParticle(effect, this.getX(), this.getY(), this.getZ(),
+                        EXPLOSION_POWER + x, 2 * EXPLOSION_POWER, EXPLOSION_POWER + z);
             }
         }
     }
@@ -73,8 +75,13 @@ public class GrenadeEntity extends AbstractGrenadeEntity implements IAnimatable 
 
     protected void onCollision(HitResult hitResult) {
         if (!this.world.isClient()) {
+            if (hitResult.getType() == HitResult.Type.BLOCK) {
+                // testing direction. may be used for bounce physics in future.
+                ThatcherMod.LOGGER.warn(((BlockHitResult) hitResult).getSide().asString());
+            }
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(1.5D, 1.5D, 1.5D));
             list.stream().forEach(e -> e.damage(DamageSource.thrownProjectile(this, this.getOwner()), 4.0F));
+            explode();
         }
         super.onCollision(hitResult);
     }

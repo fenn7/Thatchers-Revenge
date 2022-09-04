@@ -27,8 +27,7 @@ public class SmokeEntity extends ExplosiveProjectileEntity {
         }
         Entity owner = this.getOwner();
         if (owner != null) {
-            Vec3d offset = getRotationVector(0.0F, owner.getYaw()).multiply(0.5D);
-            this.setPos(owner.prevX + offset.x, owner.prevY - offset.y - 1.0D, owner.prevZ + offset.z);
+            this.setPos(owner.prevX, owner.getBodyY(0.001F), owner.prevZ);
             this.setVelocity(owner.getVelocity());
         }
         if (this.age % 5 == 0) {
