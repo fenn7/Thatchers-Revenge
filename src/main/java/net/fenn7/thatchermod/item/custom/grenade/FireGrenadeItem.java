@@ -1,6 +1,7 @@
 package net.fenn7.thatchermod.item.custom.grenade;
 
 import net.fenn7.thatchermod.entity.projectiles.AbstractGrenadeEntity;
+import net.fenn7.thatchermod.entity.projectiles.FireGrenadeEntity;
 import net.fenn7.thatchermod.entity.projectiles.GrenadeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -9,9 +10,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class GrenadeItem extends AbstractGrenadeItem {
-    public GrenadeItem(Settings settings) {
+public class FireGrenadeItem extends AbstractGrenadeItem {
+    public FireGrenadeItem(Settings settings) {
         super(settings);
+        this.defaultSpeed = 0.675F;
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
@@ -19,6 +21,6 @@ public class GrenadeItem extends AbstractGrenadeItem {
     }
 
     public AbstractGrenadeEntity createGrenadeAt(World world, PlayerEntity player) {
-        return new GrenadeEntity(world, player);
+        return new FireGrenadeEntity(world, player);
     }
 }

@@ -16,6 +16,7 @@ public class SmokeEntity extends ExplosiveProjectileEntity {
     public SmokeEntity(EntityType<? extends SmokeEntity> entityType, World world) {
         super(entityType, world);
     }
+
     public SmokeEntity(World world, LivingEntity owner, double directionX, double directionY, double directionZ) {
         super(ModEntities.SMOKE_ENTITY, owner, directionX, directionY, directionZ, world);
         this.setOwner(owner);

@@ -5,8 +5,10 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.item.custom.*;
+import net.fenn7.thatchermod.item.custom.grenade.FireGrenadeItem;
 import net.fenn7.thatchermod.item.custom.grenade.GrenadeItem;
 import net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherItem;
+import net.fenn7.thatchermod.item.custom.grenade.SmokeGrenadeItem;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ArmorItem;
@@ -61,6 +63,10 @@ public class ModItems {
 
     public static final Item GRENADE = registerItem("grenade",
             new GrenadeItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxCount(16)));
+    public static final Item GRENADE_FIRE = registerItem("grenade_fire",
+            new FireGrenadeItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxCount(12)));
+    public static final Item GRENADE_SMOKE = registerItem("grenade_smoke",
+            new SmokeGrenadeItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxCount(8)));
     public static final Item GRENADE_LAUNCHER = registerItem("grenade_launcher",
             new GrenadeLauncherItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxCount(1)
                     .maxDamage(512).maxDamageIfAbsent(512)));

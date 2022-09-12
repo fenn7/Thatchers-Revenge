@@ -53,12 +53,12 @@ public class GrenadeLauncherItem extends Item {
             }
             else if (!user.isSneaking()) {
                 ItemStack grenadeStack = list.get(0);
-                GrenadeItem grenadeItem = (GrenadeItem) grenadeStack.getItem();
+                AbstractGrenadeItem grenadeItem = (AbstractGrenadeItem) grenadeStack.getItem();
 
                 AbstractGrenadeEntity grenadeEntity = grenadeItem.createGrenadeAt(world, user);
                 grenadeEntity.setItem(grenadeStack);
                 grenadeEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 0.0F);
-                grenadeEntity.setExplosionPower(2.0F * grenadeEntity.getExplosionPower());
+                grenadeEntity.setPower(1.5F * grenadeEntity.getPower());
                 world.spawnEntity(grenadeEntity);
 
                 if (!user.isCreative()) {

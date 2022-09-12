@@ -3,10 +3,7 @@ package net.fenn7.thatchermod.entity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.mobs.*;
-import net.fenn7.thatchermod.entity.projectiles.CursedMeteorEntity;
-import net.fenn7.thatchermod.entity.projectiles.CursedMissileEntity;
-import net.fenn7.thatchermod.entity.projectiles.GrenadeEntity;
-import net.fenn7.thatchermod.entity.projectiles.SmokeEntity;
+import net.fenn7.thatchermod.entity.projectiles.*;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -46,5 +43,17 @@ public class ModEntities {
             Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "grenade_entity"),
             FabricEntityTypeBuilder.<GrenadeEntity>create(SpawnGroup.MISC, GrenadeEntity::new)
                     .dimensions(EntityDimensions.fixed(0.25F, 0.375F))
-                    .trackRangeBlocks(32).trackedUpdateRate(10).build());
+                    .trackRangeBlocks(48).trackedUpdateRate(10).build());
+
+    public static final EntityType<FireGrenadeEntity> FIRE_GRENADE_ENTITY = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "fire_grenade_entity"),
+            FabricEntityTypeBuilder.<FireGrenadeEntity>create(SpawnGroup.MISC, FireGrenadeEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.25F, 0.375F))
+                    .trackRangeBlocks(48).trackedUpdateRate(10).build());
+
+    public static final EntityType<SmokeGrenadeEntity> SMOKE_GRENADE_ENTITY = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "smoke_grenade_entity"),
+            FabricEntityTypeBuilder.<SmokeGrenadeEntity>create(SpawnGroup.MISC, SmokeGrenadeEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.25F, 0.375F))
+                    .trackRangeBlocks(48).trackedUpdateRate(10).build());
 }
