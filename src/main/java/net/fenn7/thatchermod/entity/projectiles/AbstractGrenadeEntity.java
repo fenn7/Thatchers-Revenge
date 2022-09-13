@@ -1,12 +1,15 @@
 package net.fenn7.thatchermod.entity.projectiles;
 
 import net.fenn7.thatchermod.ThatcherMod;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -49,6 +52,17 @@ public abstract class AbstractGrenadeEntity extends ThrownItemEntity implements 
             }
         }
         super.onCollision(hitResult);
+    }
+
+    @Override
+    protected void onBlockCollision(BlockState state) {
+        super.onBlockCollision(state);
+    }
+
+    @Override
+    protected void onEntityHit(EntityHitResult entityHitResult) {
+        entityHitResult.getEntity().damage(DamageSource.thrownProjectile(this, this.getOwner()), 1.0F);
+        super.onEntityHit(entityHitResult);
     }
 
     protected abstract void explode(float power);

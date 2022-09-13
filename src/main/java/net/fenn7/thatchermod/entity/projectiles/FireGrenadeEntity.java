@@ -4,6 +4,8 @@ import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.item.ModItems;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CampfireBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -15,6 +17,7 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -33,7 +36,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimatable {
-    private static final float FIRE_RANGE = 3.0F;
+    private static final float FIRE_RANGE = 2.8F;
     private boolean shouldDiscard = false;
     private boolean shouldLinger = false;
     private int postExplosionTicks = 0;
@@ -108,19 +111,23 @@ public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimata
         Box impactBox = new Box(impactPos).expand(power, power/ 2, power);
 
         Stream<BlockPos> posStream = BlockPos.stream(impactBox);
-        posStream.filter(pos -> AbstractFireBlock.canPlaceAt(world, pos, this.getMovementDirection()))
-                .filter(pos -> Math.sqrt(pos.getSquaredDistance(impactPos)) <= power)
+        posStream.filter(pos -> Math.sqrt(pos.getSquaredDistance(impactPos)) <= power)
+                .filter(pos -> AbstractFireBlock.canPlaceAt(world, pos, this.getMovementDirection()))
                 .forEach(pos -> {
-                    BlockState fireState = AbstractFireBlock.getState(world, pos);
-                    world.setBlockState(pos, fireState, 11);
-                    world.setBlockState(pos.offset(this.getMovementDirection()), fireState, 11);
+                    if (CampfireBlock.canBeLit(this.world.getBlockState(pos))) {
+                        world.setBlockState(pos, this.world.getBlockState(pos).with(Properties.LIT, true), 11);
+                    }
+                    else {
+                        BlockState fireState = AbstractFireBlock.getState(world, pos);
+                        world.setBlockState(pos, fireState, 11);
+                    }
                 });
 
         if (this.shouldLinger) {
             List<LivingEntity> list = world.getNonSpectatingEntities(LivingEntity.class, impactBox);
             list.stream().filter(e -> Math.sqrt(e.squaredDistanceTo(
-                            impactPos.getX(), impactPos.getY(), impactPos.getZ())) <= power)
-                    .forEach(e -> e.damage(DamageSource.thrownProjectile(this, this.getOwner()), 1.0F));
+                            impactPos.getX(), impactPos.getY(), impactPos.getZ())) <= 1.5F)
+                    .forEach(Entity::setOnFireFromLava);
         }
 
         if (this.shouldDiscard) {

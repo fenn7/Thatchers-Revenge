@@ -37,7 +37,7 @@ public class ThatcherModClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.SMOKE_ENTITY, SmokeRenderer::new);
         EntityRendererRegistry.register(ModEntities.GRENADE_ENTITY, GrenadeRenderer::new);
         EntityRendererRegistry.register(ModEntities.FIRE_GRENADE_ENTITY, FireGrenadeRenderer::new);
-        EntityRendererRegistry.register(ModEntities.SMOKE_GRENADE_ENTITY, SmokeGrenadeRender::new);
+        EntityRendererRegistry.register(ModEntities.SMOKE_GRENADE_ENTITY, SmokeGrenadeRenderer::new);
 
         GeoArmorRenderer.registerArmorRenderer(new ThatcheriteArmourRenderer(), ModItems.THATCHERITE_BOOTS,
                 ModItems.THATCHERITE_GREAVES, ModItems.THATCHERITE_CHESTPLATE, ModItems.THATCHERITE_HELMET);

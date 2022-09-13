@@ -13,9 +13,7 @@ import java.util.UUID;
 
 public class GrenadeLauncherInventory extends SimpleInventory implements Inventory {
     private final DefaultedList<ItemStack> list;
-    private Hand hand;
     private final ItemStack stack;
-    private UUID uuid;
     private GrenadeNBTSaver saver;
 
     public GrenadeLauncherInventory(ItemStack stack, DefaultedList<ItemStack> list) {
@@ -26,14 +24,6 @@ public class GrenadeLauncherInventory extends SimpleInventory implements Invento
 
     public ItemStack returnFinalStack() {
         return stack;
-    }
-
-    public Hand hand() {
-        return this.hand;
-    }
-
-    public UUID uuid() {
-        return this.uuid;
     }
 
     public GrenadeNBTSaver saver() {
