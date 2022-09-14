@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 public abstract class AbstractGrenadeItem extends Item {
     protected float defaultRoll = 0.1F;
-    protected float defaultSpeed = 0.75F;
+    protected float defaultSpeed = 0.7F;
     protected float defaultDiv = 0.2F;
 
     public AbstractGrenadeItem(Settings settings) {
@@ -20,7 +20,7 @@ public abstract class AbstractGrenadeItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        user.getItemCooldownManager().set(this, 10);
+        user.getItemCooldownManager().set(this, 20);
 
         if (!world.isClient) {
             AbstractGrenadeEntity grenade = createGrenadeAt(world, user);

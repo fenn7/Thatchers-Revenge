@@ -11,7 +11,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -19,10 +18,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.List;
@@ -66,32 +62,20 @@ public class GrenadeEntity extends AbstractGrenadeEntity implements IAnimatable 
     }
 
     protected void onCollision(HitResult hitResult) {
-        if (!this.world.isClient()) {
-            List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(this.power, this.power, this.power));
-            list.stream().forEach(e -> e.damage(DamageSource.thrownProjectile(this, this.getOwner()), 3.0F));
-            world.sendEntityStatus(this, (byte) 3);
-            explode(this.power);
-        }
         super.onCollision(hitResult);
     }
 
     @Override
     protected void explode(float power) {
-        this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), power, Explosion.DestructionType.NONE);
+        if (!this.world.isClient()) {
+            List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(this.power, this.power, this.power));
+            list.stream().forEach(e -> e.damage(DamageSource.thrownProjectile(this, this.getOwner()), 3.0F));
+            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), power, Explosion.DestructionType.NONE);
+        }
         this.discard();
     }
 
     protected Item getDefaultItem() {
         return ModItems.GRENADE;
-    }
-
-    @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "controller", 0, this::flyingAnimation));
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 }

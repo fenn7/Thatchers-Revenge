@@ -1,6 +1,7 @@
 package net.fenn7.thatchermod.mixin;
 
 import com.eliotlash.mclib.math.functions.classic.Mod;
+import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.effect.LastStandEffect;
 import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.enchantments.ModEnchantments;
@@ -38,6 +39,7 @@ import java.util.List;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
+    private int recoilTicks = 0;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -138,7 +140,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    public void injectTickElytraMethod(CallbackInfo ci) {
+    public void injectTickEnchantsMethod(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         ItemStack chest = player.getEquippedStack(EquipmentSlot.CHEST); // Elytra Enchantments
         if (player.isFallFlying() && chest.isOf(Items.ELYTRA) && ElytraItem.isUsable(chest) && !world.isClient) {
@@ -171,6 +173,28 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             List<Entity> entityList = world.getOtherEntities(null, box);
             entityList.stream().filter(e -> e instanceof ItemEntity)
                     .forEach(e -> player.giveItemStack(((ItemEntity) e).getStack()));
+        }
+    }
+
+    @Inject(method = "tickMovement", at = @At("HEAD"))
+    public void injectTickHeadTiltMethod(CallbackInfo ci) {
+        PlayerEntity player = ((PlayerEntity) (Object) this);
+        IEntityDataSaver playerData = (IEntityDataSaver) player;
+
+        if (playerData.getPersistentData().getBoolean("should_recoil") && player.world.isClient()) {
+            if (this.recoilTicks == 0) {
+                Vec3d vel = Vec3d.fromPolar(player.getPitch(), player.getBodyYaw());
+                player.takeKnockback(0.2D, vel.getX(), vel.getZ());
+            }
+
+            this.recoilTicks++;
+            if (this.recoilTicks <= 5) {
+                player.setPitch(player.getPitch() - 3.2F);
+            }
+            else {
+                playerData.getPersistentData().putBoolean("should_recoil", false);
+                this.recoilTicks = 0;
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import com.eliotlash.mclib.math.functions.classic.Mod;
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.item.ModItems;
 import net.minecraft.block.AbstractFireBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.EntityType;
@@ -62,35 +63,28 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
     }
 
     @Override
-    protected void onCollision(HitResult hitResult) {
-        if (!this.world.isClient()) {
-            this.world.sendEntityStatus(this, (byte) 3);
-            this.setVelocity(Vec3d.ZERO);
-            this.setNoGravity(true);
-            this.shouldSmoke = true;
-            explode(this.power);
-        }
-        super.onCollision(hitResult);
-    }
-
-    @Override
     public void handleStatus(byte status) {
         if (status == 3) {
             this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_GENERIC_BURN, SoundCategory.HOSTILE,
                     3.0F, 0.8F, true);
         }
         else if (status == 33) {
-            ParticleEffect effect = ParticleTypes.CAMPFIRE_COSY_SMOKE;
             Box smokeBox = new Box(this.getBlockPos()).expand(this.power, this.power, this.power);
-
             Stream<BlockPos> posStream = BlockPos.stream(smokeBox);
-            posStream.filter(pos -> Math.sqrt(pos.getSquaredDistance(this.getBlockPos())) <= this.power)
+            posStream.filter(pos -> Math.sqrt(pos.getSquaredDistance(this.getPos())) <= this.power)
+                    .filter(pos -> this.world.getBlockState(pos).isAir())
                     .forEach(pos -> {
+                        ParticleEffect smoke1 = ParticleTypes.CAMPFIRE_COSY_SMOKE;
+                        ParticleEffect smoke2 = ParticleTypes.CAMPFIRE_SIGNAL_SMOKE;
                         double x = ThreadLocalRandom.current().nextDouble(-0.5D, 0.5D);
                         double z = ThreadLocalRandom.current().nextDouble(-0.5D, 0.5D);
-                        BlockPos newPos = new BlockPos(pos.getX() + x, pos.getY(), pos.getZ() + z);
-                        CampfireBlock.spawnSmokeParticle(this.world, newPos, true, true);
+                        this.world.addParticle(smoke1, pos.getX() - x, pos.getY() + 0.375, pos.getZ() - z, 0, 0, 0);
+                        this.world.addParticle(smoke2, pos.getX() + x, pos.getY() - 0.375, pos.getZ() + z, 0, 0, 0);
                     });
+
+            List<LivingEntity> list = world.getNonSpectatingEntities(LivingEntity.class, smokeBox);
+            list.stream().filter(e -> Math.sqrt(e.squaredDistanceTo(this.getX(), this.getY(), this.getZ())) <= this.power)
+                    .forEach(e -> e.setStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0, false, false), this));
         }
         else {
             super.handleStatus(status);
@@ -106,31 +100,38 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
     public void tick() {
         if (this.shouldSmoke) {
             this.setVelocity(Vec3d.ZERO);
-            if (this.smokeTicks >= 0 && this.smokeTicks % 15 == 0) {
+            if (this.smokeTicks >= 0 && this.smokeTicks % 5 == 0) {
                 this.world.sendEntityStatus(this, (byte) 33);
             }
             this.smokeTicks++;
             if (this.smokeTicks == 200) {
                 this.discard();
             }
+
         }
         super.tick();
     }
 
     @Override
     protected void explode(float power) {
+        this.setVelocity(Vec3d.ZERO);
+        this.setNoGravity(true);
+        this.shouldSmoke = true;
+
         BlockPos impactPos = this.getBlockPos();
         Box impactBox = new Box(impactPos).expand(power, power, power);
 
         Stream<BlockPos> posStream = BlockPos.stream(impactBox);
         posStream.filter(pos -> Math.sqrt(pos.getSquaredDistance(impactPos)) <= power)
-                .filter(pos -> this.world.getBlockState(pos).isIn(BlockTags.FIRE))
-                .forEach(pos -> world.removeBlock(pos, false));
-
-        List<LivingEntity> list = world.getNonSpectatingEntities(LivingEntity.class, impactBox);
-        list.stream().filter(e -> Math.sqrt(e.squaredDistanceTo(
-                        impactPos.getX(), impactPos.getY(), impactPos.getZ())) <= power)
-                .forEach(e -> e.setStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 120, 0, true, false), this));
+                .forEach(pos -> {
+                    BlockState blockState = this.world.getBlockState(pos);
+                    if (blockState.getProperties().contains(Properties.LIT)) {
+                        world.setBlockState(pos, blockState.with(Properties.LIT, false), 11);
+                    }
+                    else if (this.world.getBlockState(pos).isIn(BlockTags.FIRE)) {
+                        world.removeBlock(pos, false);
+                    }
+                });
     }
 
     public boolean isSmoking() {
@@ -155,15 +156,5 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
         super.readNbt(nbt);
         this.shouldSmoke = nbt.getBoolean("shouldSmoke");
         this.smokeTicks = nbt.getInt("smokeTicks");
-    }
-
-    @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "controller", 0, this::flyingAnimation));
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 }

@@ -5,6 +5,9 @@ import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.projectiles.AbstractGrenadeEntity;
 import net.fenn7.thatchermod.entity.projectiles.GrenadeEntity;
 import net.fenn7.thatchermod.screen.GrenadeLauncherScreenHandler;
+import net.fenn7.thatchermod.util.IEntityDataSaver;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -30,6 +33,7 @@ import java.util.List;
 public class GrenadeLauncherItem extends Item {
     private final DefaultedList<ItemStack> list = DefaultedList.ofSize(2, ItemStack.EMPTY);
     private final String nbtTagName = "Grenades";
+    private boolean shouldRecoil = false;
 
     public GrenadeLauncherItem(Settings settings) {
         super(settings);
@@ -68,7 +72,19 @@ public class GrenadeLauncherItem extends Item {
                 saveListNBT(user, hand);
             }
         }
+        IEntityDataSaver data = (IEntityDataSaver) user;
+        data.getPersistentData().putBoolean("should_recoil", true);
         return TypedActionResult.pass(user.getStackInHand(hand));
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if (entity instanceof PlayerEntity player && player.getMainHandStack().isOf(this)) {
+            if (this.shouldRecoil) {
+
+            }
+        }
+        super.inventoryTick(stack, world, entity, slot, selected);
     }
 
     public void openScreen(PlayerEntity user, ItemStack stack) {

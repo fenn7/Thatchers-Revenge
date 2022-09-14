@@ -76,6 +76,7 @@ public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimata
         }
     }
 
+    @Override
     protected void onCollision(HitResult hitResult) {
         if (!this.world.isClient()) {
             world.sendEntityStatus(this, (byte) 3);
@@ -114,13 +115,8 @@ public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimata
         posStream.filter(pos -> Math.sqrt(pos.getSquaredDistance(impactPos)) <= power)
                 .filter(pos -> AbstractFireBlock.canPlaceAt(world, pos, this.getMovementDirection()))
                 .forEach(pos -> {
-                    if (CampfireBlock.canBeLit(this.world.getBlockState(pos))) {
-                        world.setBlockState(pos, this.world.getBlockState(pos).with(Properties.LIT, true), 11);
-                    }
-                    else {
-                        BlockState fireState = AbstractFireBlock.getState(world, pos);
-                        world.setBlockState(pos, fireState, 11);
-                    }
+                    BlockState fireState = AbstractFireBlock.getState(world, pos.offset(this.getMovementDirection()));
+                    world.setBlockState(pos, fireState, 11);
                 });
 
         if (this.shouldLinger) {
@@ -133,15 +129,5 @@ public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimata
         if (this.shouldDiscard) {
             this.discard();
         }
-    }
-
-    @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "controller", 0, this::flyingAnimation));
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 }

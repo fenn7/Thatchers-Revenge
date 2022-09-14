@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 public class SmokeGrenadeItem extends AbstractGrenadeItem {
     public SmokeGrenadeItem(Settings settings) {
         super(settings);
-        this.defaultSpeed = 1.0F;
+        this.defaultSpeed = 0.8F;
     }
 
     @Override
