@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GrenadeEntity extends AbstractGrenadeEntity implements IAnimatable {
-    private static final float EXPLOSION_POWER = 1.35F;
+    private static final float EXPLOSION_POWER = 1.2F;
     private static final Block IRON = Blocks.IRON_BLOCK;
 
     public GrenadeEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {

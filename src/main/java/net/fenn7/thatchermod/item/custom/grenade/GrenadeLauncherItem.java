@@ -6,6 +6,7 @@ import net.fenn7.thatchermod.entity.projectiles.AbstractGrenadeEntity;
 import net.fenn7.thatchermod.entity.projectiles.GrenadeEntity;
 import net.fenn7.thatchermod.screen.GrenadeLauncherScreenHandler;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,7 +34,6 @@ import java.util.List;
 public class GrenadeLauncherItem extends Item {
     private final DefaultedList<ItemStack> list = DefaultedList.ofSize(2, ItemStack.EMPTY);
     private final String nbtTagName = "Grenades";
-    private boolean shouldRecoil = false;
 
     public GrenadeLauncherItem(Settings settings) {
         super(settings);
@@ -41,10 +41,16 @@ public class GrenadeLauncherItem extends Item {
 
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-        if (clickType == ClickType.RIGHT) {
-            openScreen(player, stack);
-            ThatcherMod.LOGGER.warn("aba");
-            return true;
+        if (!player.world.isClient()) {
+            if (clickType == ClickType.RIGHT) {
+                openScreen(player, stack);
+                return true;
+            }
+            if (clickType == ClickType.LEFT && otherStack.getItem() instanceof AbstractGrenadeItem) {
+                int index = this.list.get(0).isEmpty() ? 0 : 1;
+                appendStacktoSlot(index, stack, otherStack);
+                return true;
+            }
         }
         return super.onClicked(stack, otherStack, slot, clickType, player, cursorStackReference);
     }
@@ -52,16 +58,17 @@ public class GrenadeLauncherItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient()) {
-            if (list.get(0).getCount() <= 0) {
+            if (!user.isSneaking()) {
                 openScreen(user, user.getStackInHand(hand));
             }
-            else if (!user.isSneaking()) {
+            else {
                 ItemStack grenadeStack = list.get(0);
                 AbstractGrenadeItem grenadeItem = (AbstractGrenadeItem) grenadeStack.getItem();
 
                 AbstractGrenadeEntity grenadeEntity = grenadeItem.createGrenadeAt(world, user);
                 grenadeEntity.setItem(grenadeStack);
-                grenadeEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2.5F, 0.0F);
+                grenadeEntity.setShouldBounce(false);
+                grenadeEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2 * grenadeItem.getDefaultSpeed(), 0.0F);
                 grenadeEntity.setPower(1.5F * grenadeEntity.getPower());
                 world.spawnEntity(grenadeEntity);
 
@@ -69,7 +76,7 @@ public class GrenadeLauncherItem extends Item {
                     grenadeStack.decrement(1);
                 }
 
-                saveListNBT(user, hand);
+                saveListNBT(user.getStackInHand(hand));
             }
         }
         IEntityDataSaver data = (IEntityDataSaver) user;
@@ -78,16 +85,19 @@ public class GrenadeLauncherItem extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (entity instanceof PlayerEntity player && player.getMainHandStack().isOf(this)) {
-            if (this.shouldRecoil) {
-
-            }
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        ItemStack slot0 = this.list.get(0);
+        ItemStack slot1 = this.list.get(1);
+        if (!slot0.isEmpty()) {
+            tooltip.add(Text.literal(slot0.getItem().getTranslationKey() + ": " + slot0.getCount() + "/" + slot0.getMaxCount()));
         }
-        super.inventoryTick(stack, world, entity, slot, selected);
+        if (!slot1.isEmpty()) {
+            tooltip.add(Text.literal(slot1.getItem().getTranslationKey() + ": " + slot1.getCount() + "/" + slot1.getMaxCount()));
+        }
+        super.appendTooltip(stack, world, tooltip, context);
     }
 
-    public void openScreen(PlayerEntity user, ItemStack stack) {
+    private void openScreen(PlayerEntity user, ItemStack stack) {
         user.openHandledScreen(new NamedScreenHandlerFactory() {
             @Override
             public Text getDisplayName() {
@@ -101,9 +111,24 @@ public class GrenadeLauncherItem extends Item {
         });
     }
 
-    private void saveListNBT(PlayerEntity player, Hand hand){
+    private void appendStacktoSlot(int index, ItemStack thisStack, ItemStack otherStack) {
+        ItemStack slotStack = this.list.get(index);
+        ItemStack copiedStack = otherStack.copy();
+        if (slotStack.isEmpty()) {
+            list.set(0, copiedStack);
+            otherStack.decrement(copiedStack.getCount());
+        }
+        else if (ItemStack.canCombine(slotStack, otherStack)) {
+            while (slotStack.getCount() < copiedStack.getCount() && slotStack.getCount() < slotStack.getMaxCount()) {
+                slotStack.increment(1);
+                otherStack.decrement(1);
+            }
+        }
+        saveListNBT(thisStack);
+    }
+
+    private void saveListNBT(ItemStack stack){
         NbtCompound nbt = new NbtCompound();
-        ItemStack stack = player.getStackInHand(hand);
         Inventories.writeNbt(new NbtCompound(), list, true);
 
         Inventories.writeNbt(nbt, list, true);

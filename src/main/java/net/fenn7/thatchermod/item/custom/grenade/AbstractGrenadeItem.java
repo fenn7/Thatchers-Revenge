@@ -41,4 +41,8 @@ public abstract class AbstractGrenadeItem extends Item {
     }
 
     protected abstract AbstractGrenadeEntity createGrenadeAt(World world, PlayerEntity player);
+
+    public float getDefaultSpeed() {
+        return this.defaultSpeed;
+    }
 }
