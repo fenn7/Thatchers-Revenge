@@ -44,8 +44,8 @@ public class KeyInputs {
                     h *= n / m;
                     k *= n / m;
                     l *= n / m;
-                    player.addVelocity((double) h, (double) k, (double) l);
-                    chest.damage(5, player, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.CHEST));
+                    player.addVelocity(h, k, l);
+                    chest.damage(10, player, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.CHEST));
                     ClientPlayNetworking.send(ModPackets.LAUNCH_ID, PacketByteBufs.create());
                 }
             }

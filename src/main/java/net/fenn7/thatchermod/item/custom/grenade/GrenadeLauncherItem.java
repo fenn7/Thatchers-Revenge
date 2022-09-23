@@ -121,7 +121,7 @@ public class GrenadeLauncherItem extends Item {
         saveListNBT(thisStack);
     }
 
-    private boolean shootGrenade(ItemStack grenadeStack, World world, PlayerEntity user) {
+    public boolean shootGrenade(ItemStack grenadeStack, World world, PlayerEntity user) {
         if (!grenadeStack.isEmpty()) {
             AbstractGrenadeItem grenadeItem = (AbstractGrenadeItem) grenadeStack.getItem();
             AbstractGrenadeEntity grenadeEntity = grenadeItem.createGrenadeAt(world, user);
@@ -148,5 +148,9 @@ public class GrenadeLauncherItem extends Item {
 
         Inventories.writeNbt(nbt, this.list, true);
         stack.getOrCreateNbt().put(nbtTagName, nbt);
+    }
+
+    public List<ItemStack> getList() {
+        return this.list;
     }
 }
