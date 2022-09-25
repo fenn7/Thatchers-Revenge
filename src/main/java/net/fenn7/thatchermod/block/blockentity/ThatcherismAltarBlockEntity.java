@@ -77,7 +77,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() { return inventory; }
+    public DefaultedList<ItemStack> getGrenadeList() { return inventory; }
 
     @Override
     public Text getDisplayName() {

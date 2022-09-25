@@ -20,6 +20,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -36,8 +37,8 @@ import java.util.List;
 
 
 public class GrenadeLauncherItem extends Item {
-    private final DefaultedList<ItemStack> list = DefaultedList.ofSize(2, ItemStack.EMPTY);
-    private final String nbtTagName = "Grenades";
+    private static final String nbtTagName = "Grenades";
+    private GrenadeLauncherInventory grenadeInv;
 
     public GrenadeLauncherItem(Settings settings) {
         super(settings);
@@ -47,7 +48,7 @@ public class GrenadeLauncherItem extends Item {
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (!player.world.isClient()) {
             if (clickType == ClickType.RIGHT) {
-                openScreen(player, slot.getStack());
+                openScreen(player, stack, this.grenadeInv);
                 return true;
             }
             if (clickType == ClickType.LEFT && otherStack.getItem() instanceof AbstractGrenadeItem) {
@@ -60,9 +61,14 @@ public class GrenadeLauncherItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        boolean shouldrecoil;
-        if (!user.isSneaking()) shouldrecoil = shootGrenade(this.list.get(0), world, user);
-        else shouldrecoil = shootGrenade(this.list.get(1), world, user);
+        user.setCurrentHand(hand);
+        ItemStack stack = user.getStackInHand(hand);
+        this.grenadeInv = new GrenadeLauncherInventory(stack);
+
+        boolean shouldrecoil = false;
+        if (!user.isSneaking()) shouldrecoil = shootGrenade(this.grenadeInv.getStack(0), world, user);
+        else openScreen(user, user.getStackInHand(hand), this.grenadeInv);
+            //shouldrecoil = shootGrenade(this.grenadeInv.getStack(1), world, user);
 
         if (shouldrecoil) {
             IEntityDataSaver data = (IEntityDataSaver) user;
@@ -74,9 +80,10 @@ public class GrenadeLauncherItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        this.grenadeInv = new GrenadeLauncherInventory(stack);
         GrenadeLauncherItem literallyThis = (GrenadeLauncherItem) stack.getItem();
-        ItemStack slot0 = literallyThis.list.get(0);
-        ItemStack slot1 = literallyThis.list.get(1);
+        ItemStack slot0 = literallyThis.grenadeInv.getStack(0);
+        ItemStack slot1 = literallyThis.grenadeInv.getStack(1);
         if (!slot0.isEmpty()) {
             tooltip.add(Text.literal(slot0.getItem().getTranslationKey() + ": " + slot0.getCount() + "/" + slot0.getMaxCount()));
         }
@@ -86,26 +93,17 @@ public class GrenadeLauncherItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
     }
 
-    private void openScreen(PlayerEntity user, ItemStack stack) {
+    private void openScreen(PlayerEntity user, ItemStack stack, GrenadeLauncherInventory grenadeInv) {
         user.world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_BARREL_OPEN, SoundCategory.HOSTILE, 2.0F, 0.7F);
-        user.openHandledScreen(new NamedScreenHandlerFactory() {
-            @Override
-            public Text getDisplayName() {
-                return stack.getName();
-            }
-
-            @Override
-            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                return new GrenadeLauncherScreenHandler(syncId, inv, new GrenadeLauncherInventory(stack, list));
-            }
-        });
+        user.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) ->
+                GrenadeLauncherScreenHandler.createHandler(i, playerInventory, grenadeInv), stack.getName()));
     }
 
     private void appendStacktoSlot(int index, ItemStack thisStack, ItemStack otherStack) {
-        ItemStack slotStack = this.list.get(index);
+        ItemStack slotStack = this.grenadeInv.getStack(index);
         ItemStack copiedStack = otherStack.copy();
         if (slotStack.isEmpty()) {
-            list.set(index, copiedStack);
+            this.grenadeInv.setStack(index, copiedStack);
             otherStack.decrement(copiedStack.getCount());
         }
         else if (ItemStack.canCombine(slotStack, otherStack)) {
@@ -115,7 +113,7 @@ public class GrenadeLauncherItem extends Item {
             }
         }
         // maybe try a recursion solution?
-        else if (index < this.list.size() - 1) {
+        else if (index < this.grenadeInv.getGrenadeList().size() - 1) {
             appendStacktoSlot(index + 1, thisStack, otherStack);
         }
         saveListNBT(thisStack);
@@ -143,14 +141,10 @@ public class GrenadeLauncherItem extends Item {
     }
 
     private void saveListNBT(ItemStack stack){
-        NbtCompound nbt = new NbtCompound();
-        Inventories.writeNbt(new NbtCompound(), this.list, true);
-
-        Inventories.writeNbt(nbt, this.list, true);
-        stack.getOrCreateNbt().put(nbtTagName, nbt);
+        this.grenadeInv.markDirty();
     }
 
-    public List<ItemStack> getList() {
-        return this.list;
+    public DefaultedList<ItemStack> getList() {
+        return this.grenadeInv.getGrenadeList();
     }
 }

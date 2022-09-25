@@ -6,21 +6,26 @@ import net.fenn7.thatchermod.screen.slot.ModGrenadeSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.collection.DefaultedList;
 
-public class GrenadeLauncherScreenHandler extends ScreenHandler implements GrenadeNBTSaver {
+public class GrenadeLauncherScreenHandler extends ScreenHandler {
     private final GrenadeLauncherInventory grenadeInv;
     private final PlayerInventory playerInv;
-    private final String nbtTagName = "Grenades";
 
     public GrenadeLauncherScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory,
-                new GrenadeLauncherInventory(playerInventory.player.getMainHandStack(), DefaultedList.ofSize(2, ItemStack.EMPTY)));
+                new GrenadeLauncherInventory(playerInventory.player.getMainHandStack()));
+    }
+
+    public static GrenadeLauncherScreenHandler createHandler(int syncId, PlayerInventory playerInventory, GrenadeLauncherInventory inventory) {
+        return new GrenadeLauncherScreenHandler(syncId, playerInventory, inventory);
     }
 
     public GrenadeLauncherScreenHandler(int syncId, PlayerInventory playerInventory, GrenadeLauncherInventory inventory) {
@@ -28,10 +33,6 @@ public class GrenadeLauncherScreenHandler extends ScreenHandler implements Grena
         checkSize(inventory, 2);
         this.grenadeInv = inventory;
         this.playerInv = playerInventory;
-
-        if (!playerInv.player.getWorld().isClient()) {
-            this.grenadeInv.setSaver(this);
-        }
 
         this.addSlot(new ModGrenadeSlot(inventory, 0, 34, 41));
         this.addSlot(new ModGrenadeSlot(inventory, 1, 126, 41));
@@ -101,19 +102,5 @@ public class GrenadeLauncherScreenHandler extends ScreenHandler implements Grena
 
     public GrenadeLauncherInventory inventory() {
         return this.grenadeInv;
-    }
-
-    @Override
-    public void write(DefaultedList<ItemStack> stacks) {
-        ItemStack stack = this.grenadeInv.returnFinalStack();
-        NbtCompound nbt = new NbtCompound();
-        Inventories.writeNbt(nbt, stacks, true);
-        stack.getOrCreateNbt().put(nbtTagName, nbt);
-    }
-
-    @Override
-    public void read(DefaultedList<ItemStack> stacks) {
-        ItemStack stack = this.grenadeInv.returnFinalStack();
-        Inventories.readNbt(stack.getOrCreateNbt().getCompound(nbtTagName), stacks);
     }
 }
