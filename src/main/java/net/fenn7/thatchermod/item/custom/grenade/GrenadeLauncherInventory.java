@@ -108,7 +108,10 @@ public class GrenadeLauncherInventory implements ImplementedInventory
     {
         this.stack = stack;
         NbtCompound nbt = stack.getSubNbt(nbtTagName);
-        if (nbt != null) Inventories.readNbt(nbt, grenadeList);
+        if (nbt != null) {
+            Inventories.readNbt(nbt, grenadeList);
+            writeItemsAsNBTList();
+        }
     }
 
     @Override
@@ -117,8 +120,7 @@ public class GrenadeLauncherInventory implements ImplementedInventory
     }
 
     @Override
-    public void markDirty()
-    {
+    public void markDirty() {
         NbtCompound nbt = stack.getOrCreateSubNbt(nbtTagName);
         Inventories.writeNbt(nbt, grenadeList);
         writeItemsAsNBTList();
@@ -132,7 +134,6 @@ public class GrenadeLauncherInventory implements ImplementedInventory
             for (ItemStack itemStack : stackList) {
                 nbtList.add(itemStack.writeNbt(new NbtCompound()));
             }
-
             nbt.put(listTagName, nbtList);
         }
     }

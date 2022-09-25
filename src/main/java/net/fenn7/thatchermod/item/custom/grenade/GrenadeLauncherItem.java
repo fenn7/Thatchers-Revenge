@@ -37,10 +37,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import static net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherInventory.listTagName;
+import static net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherInventory.nbtTagName;
 
 
 public class GrenadeLauncherItem extends Item {
-    private static final String nbtTagName = "Grenades";
     private GrenadeLauncherInventory grenadeInv;
 
     public GrenadeLauncherItem(Settings settings) {
@@ -83,7 +83,7 @@ public class GrenadeLauncherItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-            // use Inventories nbt setup
+            // uses GrenadeLauncherInventory nbt setup
             NbtCompound nbt = stack.getOrCreateSubNbt(nbtTagName);
             if (nbt.contains(listTagName, 9)) {
                 NbtList nbtList = nbt.getList(listTagName, 10);
