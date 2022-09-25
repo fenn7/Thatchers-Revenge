@@ -1,10 +1,16 @@
 package net.fenn7.thatchermod.item.custom.grenade;
 
+import net.fenn7.thatchermod.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.item.inventory.ImplementedInventory;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.collection.DefaultedList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*public class GrenadeLauncherInventory extends SimpleInventory implements Inventory {
     private final DefaultedList<ItemStack> list;
@@ -93,7 +99,8 @@ import net.minecraft.util.collection.DefaultedList;
 
 public class GrenadeLauncherInventory implements ImplementedInventory
 {
-    private static final String nbtTagName = "Grenades";
+    protected static final String nbtTagName = "Grenades";
+    protected static final String listTagName = "Items.List";
     private final ItemStack stack;
     private final DefaultedList<ItemStack> grenadeList = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
@@ -114,5 +121,19 @@ public class GrenadeLauncherInventory implements ImplementedInventory
     {
         NbtCompound nbt = stack.getOrCreateSubNbt(nbtTagName);
         Inventories.writeNbt(nbt, grenadeList);
+        writeItemsAsNBTList();
+    }
+
+    private void writeItemsAsNBTList() {
+        NbtCompound nbt = stack.getSubNbt(nbtTagName);
+        List<ItemStack> stackList = new ArrayList<>(this.grenadeList);
+        if (!stackList.isEmpty()) {
+            NbtList nbtList = new NbtList();
+            for (ItemStack itemStack : stackList) {
+                nbtList.add(itemStack.writeNbt(new NbtCompound()));
+            }
+
+            nbt.put(listTagName, nbtList);
+        }
     }
 }

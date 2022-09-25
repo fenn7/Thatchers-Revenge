@@ -17,6 +17,7 @@ import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
@@ -34,6 +35,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherInventory.listTagName;
 
 
 public class GrenadeLauncherItem extends Item {
@@ -66,7 +69,7 @@ public class GrenadeLauncherItem extends Item {
         this.grenadeInv = new GrenadeLauncherInventory(stack);
 
         boolean shouldrecoil = false;
-        if (!user.isSneaking()) shouldrecoil = shootGrenade(this.grenadeInv.getStack(0), world, user);
+        if (!user.isSneaking()) shouldrecoil = shootGrenade(this.grenadeInv.getStack(1), world, user);
         else openScreen(user, user.getStackInHand(hand), this.grenadeInv);
             //shouldrecoil = shootGrenade(this.grenadeInv.getStack(1), world, user);
 
@@ -80,16 +83,30 @@ public class GrenadeLauncherItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        this.grenadeInv = new GrenadeLauncherInventory(stack);
-        GrenadeLauncherItem literallyThis = (GrenadeLauncherItem) stack.getItem();
-        ItemStack slot0 = literallyThis.grenadeInv.getStack(0);
-        ItemStack slot1 = literallyThis.grenadeInv.getStack(1);
-        if (!slot0.isEmpty()) {
-            tooltip.add(Text.literal(slot0.getItem().getTranslationKey() + ": " + slot0.getCount() + "/" + slot0.getMaxCount()));
-        }
-        if (!slot1.isEmpty()) {
-            tooltip.add(Text.literal(slot1.getItem().getTranslationKey() + ": " + slot1.getCount() + "/" + slot1.getMaxCount()));
-        }
+            // use Inventories nbt setup
+            NbtCompound nbt = stack.getOrCreateSubNbt(nbtTagName);
+            if (nbt.contains(listTagName, 9)) {
+                NbtList nbtList = nbt.getList(listTagName, 10);
+                for (int i = 0; i < nbtList.size(); i++) {
+                    NbtCompound nbtCompound = nbtList.getCompound(i);
+                    ItemStack grenadeStack = ItemStack.fromNbt(nbtCompound);
+                    if (!grenadeStack.isEmpty()) {
+                        tooltip.add(Text.literal( (i + 1) + ": " + grenadeStack.getItem().getTranslationKey() +
+                                ": " + grenadeStack.getCount() + "/" + grenadeStack.getMaxCount()));
+                    }
+
+                }
+            }
+
+            /*GrenadeLauncherItem literallyThis = (GrenadeLauncherItem) stack.getItem();
+            ItemStack slot0 = literallyThis.grenadeInv.getGrenadeList().get(0);
+            ItemStack slot1 = literallyThis.grenadeInv.getGrenadeList().get(1);
+            if (!slot0.isEmpty()) {
+                tooltip.add(Text.literal(slot0.getItem().getTranslationKey() + ": " + slot0.getCount() + "/" + slot0.getMaxCount()));
+            }
+            if (!slot1.isEmpty()) {
+                tooltip.add(Text.literal(slot1.getItem().getTranslationKey() + ": " + slot1.getCount() + "/" + slot1.getMaxCount()));
+            }*/
         super.appendTooltip(stack, world, tooltip, context);
     }
 
@@ -140,7 +157,7 @@ public class GrenadeLauncherItem extends Item {
         }
     }
 
-    private void saveListNBT(ItemStack stack){
+    private void saveListNBT(ItemStack stack) {
         this.grenadeInv.markDirty();
     }
 
