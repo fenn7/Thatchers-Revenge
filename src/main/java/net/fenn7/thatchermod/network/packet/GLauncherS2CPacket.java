@@ -12,7 +12,6 @@ public class GLauncherS2CPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
         IEntityDataSaver data = (IEntityDataSaver) client.player;
-        ThatcherMod.LOGGER.warn("COIL");
         data.getPersistentData().putBoolean("should_recoil", true);
     }
 }

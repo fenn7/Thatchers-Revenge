@@ -399,7 +399,13 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         return factory;
     }
 
-    protected void onBlockCollision(BlockState state) { if (state.getBlock().getHardness() >= 0) { /* add breaking later */ } super.onBlockCollision(state); }
+
+    protected void onBlockCollision(BlockState state) {
+        if (state.getBlock().getHardness() >= 0) { /* add breaking later */
+        }
+        super.onBlockCollision(state);
+    }
+
     protected SoundEvent getAmbientSound() { return SoundEvents.AMBIENT_NETHER_WASTES_MOOD; }
     protected SoundEvent getHurtSound(DamageSource source) { return SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK; }
     protected void playStepSound(BlockPos pos, BlockState state) { this.playSound(SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, 0.5f, 1.0f); }

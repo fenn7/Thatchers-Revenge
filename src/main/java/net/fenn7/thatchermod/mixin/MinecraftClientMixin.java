@@ -22,9 +22,7 @@ public abstract class MinecraftClientMixin {
     private void injectedAttackMethod(CallbackInfoReturnable cir) {
         if (player.getMainHandStack().isOf(ModItems.GRENADE_LAUNCHER)) {
             ClientPlayNetworking.send(ModPackets.GL_C2S_ID, PacketByteBufs.create());
-            ThatcherMod.LOGGER.warn("awooooooooooooga");
             cir.cancel();
         }
-        ThatcherMod.LOGGER.warn("call");
     }
 }

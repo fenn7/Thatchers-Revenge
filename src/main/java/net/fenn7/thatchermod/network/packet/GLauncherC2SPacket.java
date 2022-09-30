@@ -12,18 +12,20 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Hand;
 
 public class GLauncherC2SPacket {
 
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
         ItemStack mainStack = player.getMainHandStack();
-        if (mainStack.isOf(ModItems.GRENADE_LAUNCHER)) {
+        if (mainStack.isOf(ModItems.GRENADE_LAUNCHER) && !player.getItemCooldownManager().isCoolingDown(ModItems.GRENADE_LAUNCHER)) {
             GrenadeLauncherItem item = ((GrenadeLauncherItem) mainStack.getItem());
+            item.setInventory(player, Hand.MAIN_HAND);
             ItemStack grenadeStack = item.getList().get(0);
-            item.shootGrenade(grenadeStack, player.world, player);
-
-            ServerPlayNetworking.send(player, ModPackets.GL_S2C_ID, PacketByteBufs.create());
+            if (item.shootGrenade(grenadeStack, player.world, player)) {
+                ServerPlayNetworking.send(player, ModPackets.GL_S2C_ID, PacketByteBufs.create());
+            }
         }
     }
 }
