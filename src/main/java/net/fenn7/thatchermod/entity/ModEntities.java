@@ -16,9 +16,9 @@ public class ModEntities {
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, ThatcherEntity::new)
                     .dimensions(EntityDimensions.fixed(0.9f, 1.9f)).build());
 
-    public static final EntityType<ParamilitaryEntity> PARAMILITARY = Registry.register(
-            Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "paramilitary"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ParamilitaryEntity::new)
+    public static final EntityType<RoyalFencerEntity> ROYAL_FENCER = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "royal_fencer"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RoyalFencerEntity::new)
                     .dimensions(EntityDimensions.fixed(0.7f, 1.8f)).build());
 
     public static final EntityType<CursedMeteorEntity> CURSED_METEOR = Registry.register(

@@ -1,31 +1,31 @@
 package net.fenn7.thatchermod.entity.client;
 
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.entity.mobs.ParamilitaryEntity;
+import net.fenn7.thatchermod.entity.mobs.RoyalFencerEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-public class ParamilitaryModel extends AnimatedGeoModel<ParamilitaryEntity> {
+public class RoyalFencerModel extends AnimatedGeoModel<RoyalFencerEntity> {
     @Override
-    public Identifier getModelResource(ParamilitaryEntity object) {
-        return new Identifier(ThatcherMod.MOD_ID, "geo/paramilitary.geo.json");
+    public Identifier getModelResource(RoyalFencerEntity object) {
+        return new Identifier(ThatcherMod.MOD_ID, "geo/royal_fencer.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(ParamilitaryEntity object) {
-        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/paramilitary/paramilitary.png");
+    public Identifier getTextureResource(RoyalFencerEntity object) {
+        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/military/royal_fencer.png");
     }
 
     @Override
-    public Identifier getAnimationResource(ParamilitaryEntity animatable) {
-        return new Identifier(ThatcherMod.MOD_ID, "animations/paramilitary.animation.json");
+    public Identifier getAnimationResource(RoyalFencerEntity animatable) {
+        return new Identifier(ThatcherMod.MOD_ID, "animations/royal_fencer.animation.json");
     }
 
     @Override
-    public void setLivingAnimations(ParamilitaryEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
+    public void setLivingAnimations(RoyalFencerEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
 

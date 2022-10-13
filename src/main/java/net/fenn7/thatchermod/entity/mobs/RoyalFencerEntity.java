@@ -28,6 +28,7 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -37,7 +38,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.UUID;
 
-public class ParamilitaryEntity extends PathAwareEntity implements IAnimatable, Angerable {
+public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, Angerable {
     private static final double FOLLOW_RANGE = 32.0D;
     private final AnimationFactory factory = new AnimationFactory(this);
     private final EntityAttributeModifier DOUBLE_SPEED = new EntityAttributeModifier(
@@ -48,7 +49,7 @@ public class ParamilitaryEntity extends PathAwareEntity implements IAnimatable, 
     @Nullable private UUID angryAt;
     @Nullable private MobEntity owner;
 
-    public ParamilitaryEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public RoyalFencerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
         this.experiencePoints = 15;
         this.setPathfindingPenalty(PathNodeType.LAVA, 8.0F);
@@ -184,7 +185,7 @@ public class ParamilitaryEntity extends PathAwareEntity implements IAnimatable, 
     private void callBackup() {
         double d = this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
         Box box = Box.from(this.getPos()).expand(d, d * 0.5, d);
-        this.world.getEntitiesByClass(ParamilitaryEntity.class, box, EntityPredicates.EXCEPT_SPECTATOR).stream()
+        this.world.getEntitiesByClass(RoyalFencerEntity.class, box, EntityPredicates.EXCEPT_SPECTATOR).stream()
                 .filter((p) -> p != this)
                 .filter((p) -> p.getTarget() == null)
                 .filter((p) -> !p.isTeammate(this.getTarget()))
@@ -212,15 +213,24 @@ public class ParamilitaryEntity extends PathAwareEntity implements IAnimatable, 
     protected SoundEvent getDeathSound() { return SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR; }
 
     //animations
+    private <E extends IAnimatable> PlayState attackPred(AnimationEvent<E> event) {
+        if (this.handSwinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
+            event.getController().markNeedsReload();
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fencer.attack", false));
+            this.handSwinging = false;
+        }
+        return PlayState.CONTINUE;
+    }
+
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (this.getAttackTicksLeft() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.paramilitary.attack", false));
-        } else if (this.isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.paramilitary.walk_target", true));
+        /*if (this.getAttackTicksLeft() > 0) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fencer.attack", false));
+        } else*/ if (this.isAttacking()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fencer.targeting", true));
         } else if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.paramilitary.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.military.walk", true));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.paramilitary.idle", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.military.idle", false));
         }
         return PlayState.CONTINUE;
     }
@@ -228,6 +238,7 @@ public class ParamilitaryEntity extends PathAwareEntity implements IAnimatable, 
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+        animationData.addAnimationController(new AnimationController(this, "attack", 0, this::attackPred));
     }
 
     @Override
@@ -237,7 +248,7 @@ public class ParamilitaryEntity extends PathAwareEntity implements IAnimatable, 
 
     private class TrackOwnerTargetGoal extends TrackTargetGoal {
         private final TargetPredicate targetPredicate = TargetPredicate.createNonAttackable().ignoreVisibility().ignoreDistanceScalingFactor();
-        private MobEntity owner = ParamilitaryEntity.this.owner;
+        private MobEntity owner = RoyalFencerEntity.this.owner;
 
         public TrackOwnerTargetGoal(PathAwareEntity mob) { super(mob, false); }
 
@@ -246,7 +257,7 @@ public class ParamilitaryEntity extends PathAwareEntity implements IAnimatable, 
         }
 
         public void start() {
-            ParamilitaryEntity.this.setTarget(owner.getTarget());
+            RoyalFencerEntity.this.setTarget(owner.getTarget());
             super.start();
         }
     }

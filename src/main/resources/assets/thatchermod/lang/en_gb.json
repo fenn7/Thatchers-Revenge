@@ -12,8 +12,12 @@
   "item.thatchermod.thatcherite_chestplate": "Thatcherite Chestplate",
   "item.thatchermod.thatcherite_greaves": "Thatcherite Greaves",
   "item.thatchermod.thatcherite_boots": "Thatcherite Boots",
+  "item.thatchermod.grenade": "Grenade",
+  "item.thatchermod.grenade_fire": "Incendiary Grenade",
+  "item.thatchermod.grenade_smoke": "Smoke Grenade",
+  "item.thatchermod.grenade_launcher": "Grenade Launcher",
 
-  "item.thatchermod.paramilitary_spawn_egg": "Paramilitary Spawn Egg",
+  "item.thatchermod.fencer_spawn_egg": "Royal Fencer Spawn Egg",
 
   "effect.thatchermod.calcium_deficiency": "Hypocalcemia",
   "effect.thatchermod.static_buildup": "Static Buildup",

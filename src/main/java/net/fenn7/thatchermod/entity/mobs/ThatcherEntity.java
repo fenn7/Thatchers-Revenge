@@ -134,7 +134,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.targetSelector.add(1, (new RevengeGoal(this, new Class[0])).setGroupRevenge(new Class[0]));
         this.targetSelector.add(2, new ActiveTargetGoal(this, PlayerEntity.class, false));
         this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, false,
-                (entity) -> entity instanceof MobEntity && !(entity instanceof ParamilitaryEntity) && !(((MobEntity) entity).isUndead())));
+                (entity) -> entity instanceof MobEntity && !(entity instanceof RoyalFencerEntity) && !(((MobEntity) entity).isUndead())));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.6D));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));

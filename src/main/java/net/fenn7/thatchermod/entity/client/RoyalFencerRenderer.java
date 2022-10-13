@@ -1,7 +1,7 @@
 package net.fenn7.thatchermod.entity.client;
 
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.entity.mobs.ParamilitaryEntity;
+import net.fenn7.thatchermod.entity.mobs.RoyalFencerEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -14,27 +14,28 @@ import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
-public class ParamilitaryModelRenderer extends GeoEntityRenderer<ParamilitaryEntity> {
+public class RoyalFencerRenderer extends GeoEntityRenderer<RoyalFencerEntity> {
     private VertexConsumerProvider rtb;
     private Identifier whTexture;
     private boolean isAttacking;
 
-    public ParamilitaryModelRenderer(EntityRendererFactory.Context ctx) {
-        super(ctx, new ParamilitaryModel());
+    public RoyalFencerRenderer(EntityRendererFactory.Context ctx) {
+        super(ctx, new RoyalFencerModel());
     }
 
     @Override
-    public Identifier getTextureResource(ParamilitaryEntity instance) {
-        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/paramilitary/paramilitary.png");
+    public Identifier getTextureResource(RoyalFencerEntity instance) {
+
+        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/military/royal_fencer.png");
     }
 
     @Override
-    public Identifier getTexture(ParamilitaryEntity instance) {
-        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/paramilitary/paramilitary.png");
+    public Identifier getTexture(RoyalFencerEntity instance) {
+        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/military/royal_fencer.png");
     }
 
     @Override
-    public void renderEarly(ParamilitaryEntity animatable, MatrixStack stackIn, float ticks,
+    public void renderEarly(RoyalFencerEntity animatable, MatrixStack stackIn, float ticks,
                             VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                             int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.isAttacking = animatable.isAttacking();

@@ -30,7 +30,7 @@ public class ThatcherModClient implements ClientModInitializer {
         ScreenRegistry.register(ModScreenHandlers.GRENADE_LAUNCHER_SCREEN_HANDLER, GrenadeLauncherScreen::new);
 
         EntityRendererRegistry.register(ModEntities.THATCHER, ThatcherModelRenderer::new);
-        EntityRendererRegistry.register(ModEntities.PARAMILITARY, ParamilitaryModelRenderer::new);
+        EntityRendererRegistry.register(ModEntities.ROYAL_FENCER, RoyalFencerRenderer::new);
 
         EntityRendererRegistry.register(ModEntities.CURSED_METEOR, CursedMeteorRenderer::new);
         EntityRendererRegistry.register(ModEntities.CURSED_MISSILE, CursedMissileRenderer::new);

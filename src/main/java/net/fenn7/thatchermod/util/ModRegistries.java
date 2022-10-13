@@ -2,7 +2,7 @@ package net.fenn7.thatchermod.util;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fenn7.thatchermod.entity.ModEntities;
-import net.fenn7.thatchermod.entity.mobs.ParamilitaryEntity;
+import net.fenn7.thatchermod.entity.mobs.RoyalFencerEntity;
 import net.fenn7.thatchermod.entity.mobs.ThatcherEntity;
 
 public class ModRegistries {
@@ -13,6 +13,6 @@ public class ModRegistries {
 
     private static void registerAttributes() {
         FabricDefaultAttributeRegistry.register(ModEntities.THATCHER, ThatcherEntity.setAttributes());
-        FabricDefaultAttributeRegistry.register(ModEntities.PARAMILITARY, ParamilitaryEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(ModEntities.ROYAL_FENCER, RoyalFencerEntity.setAttributes());
     }
 }

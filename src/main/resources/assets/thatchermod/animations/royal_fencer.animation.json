@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.paramilitary.walk": {
+		"animation.military.walk": {
 			"animation_length": 0.66667,
 			"bones": {
 				"RightArm": {
@@ -34,7 +34,7 @@
 				}
 			}
 		},
-		"animation.paramilitary.idle": {
+		"animation.military.idle": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 60,
 			"bones": {
@@ -56,7 +56,7 @@
 				}
 			}
 		},
-		"animation.paramilitary.walk_target": {
+		"animation.fencer.targeting": {
 			"animation_length": 0.5,
 			"bones": {
 				"RightArm": {
@@ -82,7 +82,7 @@
 				}
 			}
 		},
-		"animation.paramilitary.attack": {
+		"animation.fencer.attack": {
 			"animation_length": 0.5,
 			"bones": {
 				"RightArm": {
@@ -101,6 +101,5 @@
 				}
 			}
 		}
-	},
-	"geckolib_format_version": 2
+	}
 }

@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.paramilitary_grenade.targeting": {
+		"animation.grenadier.targeting": {
 			"animation_length": 0.5,
 			"bones": {
 				"RightArm": {
@@ -37,7 +37,7 @@
 				}
 			}
 		},
-		"animation.paramilitary_grenade.attack": {
+		"animation.grenadier.attack": {
 			"animation_length": 0.75,
 			"bones": {
 				"RightArm": {
@@ -56,6 +56,13 @@
 				},
 				"RightHand": {
 					"rotation": [0, 0, 15]
+				},
+				"Head": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.375": [-30, 0, 0],
+						"0.75": [0, 0, 0]
+					}
 				}
 			}
 		}

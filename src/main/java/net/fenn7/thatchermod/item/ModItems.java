@@ -1,6 +1,5 @@
 package net.fenn7.thatchermod.item;
 
-import net.fabricmc.fabric.api.item.v1.CustomDamageHandler;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.ModEntities;
@@ -10,16 +9,11 @@ import net.fenn7.thatchermod.item.custom.grenade.GrenadeItem;
 import net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherItem;
 import net.fenn7.thatchermod.item.custom.grenade.SmokeGrenadeItem;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
-
-import java.util.function.Consumer;
 
 public class ModItems {
     public static final Item HEART_OF_THATCHER = registerItem("heart_of_thatcher",
@@ -71,8 +65,8 @@ public class ModItems {
             new GrenadeLauncherItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxCount(1)
                     .maxDamage(512).maxDamageIfAbsent(512)));
 
-    public static final Item PARAMILITARY_SPAWN_EGG = registerItem("paramilitary_spawn_egg",
-            new SpawnEggItem(ModEntities.PARAMILITARY, 0x000000, 0x78582F,
+    public static final Item PARAMILITARY_SPAWN_EGG = registerItem("fencer_spawn_egg",
+            new SpawnEggItem(ModEntities.ROYAL_FENCER, 0x000000, 0x78582F,
                     new FabricItemSettings().group(ModItemGroup.THATCHER)));
 
     public static void registerModItems(){
