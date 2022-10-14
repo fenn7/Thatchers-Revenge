@@ -30,6 +30,7 @@ import static net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherInventory
 import static net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherInventory.nbtTagName;
 
 public class GrenadeLauncherItem extends Item {
+    private static int COOLDOWN = 30;
     private GrenadeLauncherInventory grenadeInv;
 
     public GrenadeLauncherItem(Settings settings) {
@@ -40,12 +41,13 @@ public class GrenadeLauncherItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (user.getMainHandStack().isOf(this)) {
             setInventory(user, Hand.MAIN_HAND);
-
             boolean shouldrecoil = false;
             if (!user.isSneaking()) {
                 user.resetLastAttackedTicks();
                 shouldrecoil = shootGrenade(this.grenadeInv.getStack(1), world, user);
-            } else openScreen(user, user.getStackInHand(hand), this.grenadeInv);
+            } else {
+                openScreen(user, user.getStackInHand(hand), this.grenadeInv);
+            }
 
             if (shouldrecoil) {
                 IEntityDataSaver data = (IEntityDataSaver) user;
@@ -75,7 +77,7 @@ public class GrenadeLauncherItem extends Item {
     }
 
     private void openScreen(PlayerEntity user, ItemStack stack, GrenadeLauncherInventory grenadeInv) {
-        user.world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_BARREL_OPEN, SoundCategory.HOSTILE, 2.0F, 0.7F);
+        user.world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_BARREL_OPEN, SoundCategory.HOSTILE, 1.4F, 0.7F);
         user.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) ->
                 GrenadeLauncherScreenHandler.createHandler(i, playerInventory, grenadeInv), stack.getName()));
     }
@@ -88,7 +90,7 @@ public class GrenadeLauncherItem extends Item {
             grenadeEntity.setShouldBounce(false);
             grenadeEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2 * grenadeItem.getDefaultSpeed(), 0.0F);
             grenadeEntity.setPower(1.5F * grenadeEntity.getPower());
-            world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.HOSTILE, 2.0F, 0.5F);
+            world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.HOSTILE, 1.4F, 0.5F);
             world.spawnEntity(grenadeEntity);
             if (!user.isCreative() && !user.world.isClient()) {
                 grenadeStack.decrement(1);
@@ -97,7 +99,7 @@ public class GrenadeLauncherItem extends Item {
             markInvDirty();
             return true;
         } else {
-            world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_DISPENSER_FAIL, SoundCategory.HOSTILE, 2.0F, 0.5F);
+            world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_DISPENSER_FAIL, SoundCategory.HOSTILE, 1.4F, 0.5F);
             return false;
         }
     }

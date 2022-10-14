@@ -299,15 +299,15 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     public void handleStatus(byte status) { // required to handle particles
         if (status == 4) {
             this.attackTicksLeft = 10;
-            this.playSound(SoundEvents.AMBIENT_CAVE, 5.0F, 2.0F);
+            this.playSound(SoundEvents.AMBIENT_CAVE, 3.0F, 2.0F);
         }
         else if (status == 63) {
             this.world.addParticle(ParticleTypes.LAVA,
-                    this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 5.0D, 0.0D);
+                    this.getX(), this.getY() + 1.0D, this.getZ(), 0.0D, 2.5D, 0.0D);
             this.world.addParticle(ParticleTypes.LARGE_SMOKE,
                     this.getX(), this.getY(), this.getZ(), 0.0D, 0.1D, 0.0D);
             this.world.playSound(null, this.getBlockPos(), SoundEvents.ENTITY_BLAZE_BURN, SoundCategory.BLOCKS,
-                    5F, 0.5F);
+                    0.5F, 0.5F);
         }
         else {
             super.handleStatus(status);

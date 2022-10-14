@@ -21,6 +21,11 @@ public class ModEntities {
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RoyalFencerEntity::new)
                     .dimensions(EntityDimensions.fixed(0.7f, 1.8f)).build());
 
+    public static final EntityType<RoyalGrenadierEntity> ROYAL_GRENADIER = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "royal_grenadier"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RoyalGrenadierEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.7f, 1.8f)).build());
+
     public static final EntityType<CursedMeteorEntity> CURSED_METEOR = Registry.register(
             Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "cursed_meteor"),
             FabricEntityTypeBuilder.<CursedMeteorEntity>create(SpawnGroup.MISC, CursedMeteorEntity::new)

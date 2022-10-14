@@ -25,7 +25,6 @@ public class RoyalFencerRenderer extends GeoEntityRenderer<RoyalFencerEntity> {
 
     @Override
     public Identifier getTextureResource(RoyalFencerEntity instance) {
-
         return new Identifier(ThatcherMod.MOD_ID, "textures/entity/military/royal_fencer.png");
     }
 

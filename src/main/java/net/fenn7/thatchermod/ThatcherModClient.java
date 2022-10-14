@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod;
 
+import com.eliotlash.mclib.math.functions.classic.Mod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -31,6 +32,7 @@ public class ThatcherModClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(ModEntities.THATCHER, ThatcherModelRenderer::new);
         EntityRendererRegistry.register(ModEntities.ROYAL_FENCER, RoyalFencerRenderer::new);
+        EntityRendererRegistry.register(ModEntities.ROYAL_GRENADIER, RoyalGrenadierRenderer::new);
 
         EntityRendererRegistry.register(ModEntities.CURSED_METEOR, CursedMeteorRenderer::new);
         EntityRendererRegistry.register(ModEntities.CURSED_MISSILE, CursedMissileRenderer::new);

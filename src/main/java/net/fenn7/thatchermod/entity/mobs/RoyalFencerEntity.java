@@ -43,7 +43,6 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
     private final AnimationFactory factory = new AnimationFactory(this);
     private final EntityAttributeModifier DOUBLE_SPEED = new EntityAttributeModifier(
             "SPEED_BOOST", 1.0D, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
-    private int attackTicksLeft;
     private int angerTime;
     private int angerPassingCooldown;
     @Nullable private UUID angryAt;
@@ -120,10 +119,6 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
     }
 
     public void tickMovement() {
-        super.tickMovement();
-        if (this.attackTicksLeft > 0) {
-            --this.attackTicksLeft;
-        }
         EntityAttributeInstance speed = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
         if (this.hasAngerTime()) {
             if (this.getTarget() != null && !speed.hasModifier(DOUBLE_SPEED)) {
@@ -132,20 +127,22 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
         } else if (speed.hasModifier(DOUBLE_SPEED)) {
             speed.removeModifier(DOUBLE_SPEED);
         }
+        super.tickMovement();
     }
 
     public boolean tryAttack(Entity target) {
         if (!super.tryAttack(target)) return false;
         else {
-            this.attackTicksLeft = 10;
             this.world.sendEntityStatus(this, (byte) 4);
             return true;
         }
     }
 
     public void handleStatus(byte status) { // required to handle attack anim
-        if (status == 4) {
-            this.attackTicksLeft = 10;
+        if (status == 4 && this.getTarget() != null) {
+            LivingEntity target = this.getTarget();
+            this.world.addParticle(ParticleTypes.CRIT,
+                    target.getX(), target.getBodyY(0.75D), target.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -200,8 +197,6 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
         return owner;
     }
 
-    public int getAttackTicksLeft() { return this.attackTicksLeft; }
-
     public int getAngerTime() { return this.angerTime; }
     public void setAngerTime(int angerTime) { this.angerTime = angerTime; }
     public @Nullable UUID getAngryAt() { return this.angryAt; }
@@ -213,24 +208,22 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
     protected SoundEvent getDeathSound() { return SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR; }
 
     //animations
-    private <E extends IAnimatable> PlayState attackPred(AnimationEvent<E> event) {
-        if (this.handSwinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
-            event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fencer.attack", false));
-            this.handSwinging = false;
-        }
-        return PlayState.CONTINUE;
-    }
-
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        /*if (this.getAttackTicksLeft() > 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fencer.attack", false));
-        } else*/ if (this.isAttacking()) {
+        if (this.isAttacking()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fencer.targeting", true));
         } else if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.military.walk", true));
         } else {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.military.idle", false));
+        }
+        return PlayState.CONTINUE;
+    }
+
+    private <E extends IAnimatable> PlayState attackPred(AnimationEvent<E> event) {
+        if (this.handSwinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
+            event.getController().markNeedsReload();
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.fencer.attack", false));
+            this.handSwinging = false;
         }
         return PlayState.CONTINUE;
     }
