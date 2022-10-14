@@ -31,6 +31,7 @@ import static net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherInventory
 
 public class GrenadeLauncherItem extends Item {
     private static int COOLDOWN = 30;
+    public static String GL_COOLDOWN = "cooldown";
     private GrenadeLauncherInventory grenadeInv;
 
     public GrenadeLauncherItem(Settings settings) {
@@ -39,12 +40,14 @@ public class GrenadeLauncherItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (user.getMainHandStack().isOf(this)) {
+        ItemStack main = user.getMainHandStack();
+        if (main.isOf(this)) {
             setInventory(user, Hand.MAIN_HAND);
             boolean shouldrecoil = false;
+
             if (!user.isSneaking()) {
                 user.resetLastAttackedTicks();
-                shouldrecoil = shootGrenade(this.grenadeInv.getStack(1), world, user);
+                shouldrecoil = shootGrenade(main, this.grenadeInv.getStack(1), world, user);
             } else {
                 openScreen(user, user.getStackInHand(hand), this.grenadeInv);
             }
@@ -56,6 +59,17 @@ public class GrenadeLauncherItem extends Item {
         }
 
         return TypedActionResult.pass(user.getStackInHand(hand));
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+        int currentCD = nbt.getInt(GL_COOLDOWN);
+        if (!world.isClient() && currentCD > 0) {
+            nbt.putInt(GL_COOLDOWN, --currentCD);
+            ThatcherMod.LOGGER.warn("" + currentCD);
+        }
+        super.inventoryTick(stack, world, entity, slot, selected);
     }
 
     @Override
@@ -82,8 +96,8 @@ public class GrenadeLauncherItem extends Item {
                 GrenadeLauncherScreenHandler.createHandler(i, playerInventory, grenadeInv), stack.getName()));
     }
 
-    public boolean shootGrenade(ItemStack grenadeStack, World world, PlayerEntity user) {
-        if (!grenadeStack.isEmpty()) {
+    public boolean shootGrenade(ItemStack thisStack, ItemStack grenadeStack, World world, PlayerEntity user) {
+        if (!grenadeStack.isEmpty() && thisStack.getOrCreateNbt().getInt(GL_COOLDOWN) <= 0) {
             AbstractGrenadeItem grenadeItem = (AbstractGrenadeItem) grenadeStack.getItem();
             AbstractGrenadeEntity grenadeEntity = grenadeItem.createGrenadeAt(world, user);
             grenadeEntity.setItem(grenadeStack);
@@ -95,7 +109,7 @@ public class GrenadeLauncherItem extends Item {
             if (!user.isCreative() && !user.world.isClient()) {
                 grenadeStack.decrement(1);
             }
-            user.getItemCooldownManager().set(this, 20);
+            thisStack.getOrCreateNbt().putInt(GL_COOLDOWN, COOLDOWN);
             markInvDirty();
             return true;
         } else {
