@@ -1,6 +1,61 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
+		"animation.military.walk": {
+			"animation_length": 0.66667,
+			"bones": {
+				"RightArm": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.3333": [60, 0, 5],
+						"0.6667": [0, 0, 0]
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.3333": [-60, 0, -5],
+						"0.6667": [0, 0, 0]
+					}
+				},
+				"RightLeg": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.3333": [45, 0, 0],
+						"0.6667": [0, 0, 0]
+					}
+				},
+				"LeftLeg": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.3333": [-45, 0, 0],
+						"0.6667": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.military.idle": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 60,
+			"bones": {
+				"Head": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.375": [0, -20, 0]
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.375": [-135, -20, 0]
+					},
+					"scale": {
+						"0.0": [1, 1, 1],
+						"0.375": [0.9, 0.9, 0.9]
+					}
+				}
+			}
+		},
 		"animation.grenadier.targeting": {
 			"animation_length": 0.5,
 			"bones": {

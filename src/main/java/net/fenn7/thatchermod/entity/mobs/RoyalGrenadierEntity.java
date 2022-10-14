@@ -23,6 +23,12 @@ import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 import org.checkerframework.checker.units.qual.A;
+import software.bernie.geckolib3.core.AnimationState;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -36,7 +42,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
     }
 
     protected void initGoals() {
-        this.goalSelector.add(1, new GrenadeAttackGoal(this, 1.0D, 30, 24.0F));
+        this.goalSelector.add(1, new GrenadeAttackGoal(this, 1.0D, 30, 32.0F));
         this.goalSelector.add(0, new ActiveTargetGoal(this, CowEntity.class, false));
     }
 
@@ -52,18 +58,41 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
     }
 
     public void attack(LivingEntity target) {
+        this.handSwinging = true;
         GrenadeEntity grenade = new GrenadeEntity(this.world, this.getX(), this.getBodyY(0.7F), this.getZ());
         double d = target.getX() - this.getX();
-        double e = target.getBodyY(0.1D) - grenade.getY();
+        double e = target.getBodyY(0.2D) - grenade.getY();
         double f = target.getZ() - this.getZ();
         double g = Math.sqrt(d * d + f * f);
-        grenade.setVelocity(d, e + g * 0.2D, f, 1.0F, ThreadLocalRandom.current().nextFloat(1.0F, 3.0F));
+        grenade.setVelocity(d, e + g * 0.2D, f, 1.2F, ThreadLocalRandom.current().nextFloat(1.0F, 3.0F));
         this.world.spawnEntity(grenade);
+    }
+
+    // animations
+    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+        if (this.isAttacking()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grenadier.targeting", true));
+        } else if (event.isMoving()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.military.walk", true));
+        } else {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.military.idle", false));
+        }
+        return PlayState.CONTINUE;
+    }
+
+    private <E extends IAnimatable> PlayState attackPred(AnimationEvent<E> event) {
+        if (this.handSwinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
+            event.getController().markNeedsReload();
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grenadier.attack", false));
+            this.handSwinging = false;
+        }
+        return PlayState.CONTINUE;
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
-
+        animationData.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+        animationData.addAnimationController(new AnimationController(this, "attack", 0, this::attackPred));
     }
 
     @Override
@@ -88,10 +117,6 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
             this.attackInterval = attackInterval;
             this.squaredRange = range * range;
             this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
-        }
-
-        public void setAttackInterval(int attackInterval) {
-            this.attackInterval = attackInterval;
         }
 
         public boolean canStart() {
@@ -169,15 +194,12 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
 
                 if (canSee) {
                     --this.cooldown;
-                    //int i = this.grenadier.getItemUseTime();
                     if (this.cooldown <= 0) {
                         this.grenadier.attack(target);
                         this.cooldown = this.attackInterval;
                     }
                 }
-            } /*else if (--this.cooldown <= 0 && this.targetSeeingTicker >= -60) {
-                    this.grenadier.setCurrentHand(ProjectileUtil.getHandPossiblyHolding(this.grenadier, Items.BOW));
-                }*/
+            }
         }
     }
 }
