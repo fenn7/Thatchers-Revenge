@@ -84,7 +84,14 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
 
             List<LivingEntity> list = world.getNonSpectatingEntities(LivingEntity.class, smokeBox);
             list.stream().filter(e -> Math.sqrt(e.squaredDistanceTo(this.getX(), this.getY(), this.getZ())) <= this.power)
-                    .forEach(e -> e.setStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0, false, false, false), this));
+                    .forEach(e -> {
+                        if (!e.hasStatusEffect(StatusEffects.BLINDNESS)) {
+                            e.setStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0), this);
+                        }
+                        if (e.isOnFire()) {
+                            e.setOnFire(false);
+                        }
+                    });
         }
         else {
             super.handleStatus(status);

@@ -18,6 +18,7 @@ public class RoyalFencerRenderer extends GeoEntityRenderer<RoyalFencerEntity> {
     private VertexConsumerProvider rtb;
     private Identifier whTexture;
     private boolean isAttacking;
+    private boolean isHandSwinging;
 
     public RoyalFencerRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new RoyalFencerModel());
@@ -38,6 +39,7 @@ public class RoyalFencerRenderer extends GeoEntityRenderer<RoyalFencerEntity> {
                             VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                             int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.isAttacking = animatable.isAttacking();
+        this.isHandSwinging = animatable.handSwinging;
         this.rtb = renderTypeBuffer;
         this.whTexture = this.getTextureResource(animatable);
         super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
@@ -46,7 +48,7 @@ public class RoyalFencerRenderer extends GeoEntityRenderer<RoyalFencerEntity> {
     @Override
     public void renderRecursively(GeoBone bone, MatrixStack stack, VertexConsumer bufferIn, int packedLightIn,
                                   int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if (bone.getName().equals("RightHand") && this.isAttacking) {
+        if (bone.getName().equals("RightHand") && (this.isAttacking || this.isHandSwinging)) {
             stack.push();
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bone.getRotationX() - 80));
             stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY()));

@@ -11,6 +11,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -20,6 +21,8 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 import org.checkerframework.checker.units.qual.A;
@@ -36,14 +39,14 @@ import java.util.EnumSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
-    private final AnimationFactory factory = new AnimationFactory(this);
     public RoyalGrenadierEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
 
+    @Override
     protected void initGoals() {
         this.goalSelector.add(1, new GrenadeAttackGoal(this, 1.0D, 30, 32.0F));
-        this.goalSelector.add(0, new ActiveTargetGoal(this, CowEntity.class, false));
+        super.initGoals();
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {
@@ -64,8 +67,27 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
         double e = target.getBodyY(0.2D) - grenade.getY();
         double f = target.getZ() - this.getZ();
         double g = Math.sqrt(d * d + f * f);
-        grenade.setVelocity(d, e + g * 0.2D, f, 1.2F, ThreadLocalRandom.current().nextFloat(1.0F, 3.0F));
+        grenade.setOwner(this);
+        grenade.setShouldBounce(false);
+        grenade.setPower(1.5F * grenade.getPower());
+        grenade.setVelocity(d, e + g * 0.2D, f, 1.3F, ThreadLocalRandom.current().nextFloat(1.0F, 3.0F));
+        this.world.playSound(null, this.getBlockPos(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.HOSTILE, 1.4F, 0.5F);
         this.world.spawnEntity(grenade);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return this.hasAngerTime() ? SoundEvents.AMBIENT_WARPED_FOREST_ADDITIONS : SoundEvents.BLOCK_NOTE_BLOCK_GUITAR;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return SoundEvents.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ITEM_SHIELD_BREAK;
     }
 
     // animations
@@ -95,11 +117,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
         animationData.addAnimationController(new AnimationController(this, "attack", 0, this::attackPred));
     }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
-    }
-
+    // shooting
     private static class GrenadeAttackGoal extends Goal {
         private final RoyalGrenadierEntity grenadier;
         private final double speed;

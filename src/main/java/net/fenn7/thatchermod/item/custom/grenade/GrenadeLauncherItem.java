@@ -4,12 +4,14 @@ import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.projectiles.AbstractGrenadeEntity;
 import net.fenn7.thatchermod.screen.GrenadeLauncherScreenHandler;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
@@ -21,6 +23,7 @@ import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +33,7 @@ import static net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherInventory
 import static net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherInventory.nbtTagName;
 
 public class GrenadeLauncherItem extends Item {
-    private static int COOLDOWN = 30;
+    private static int COOLDOWN = 20;
     public static String GL_COOLDOWN = "cooldown";
     private GrenadeLauncherInventory grenadeInv;
 
@@ -88,6 +91,16 @@ public class GrenadeLauncherItem extends Item {
                 }
             }
         super.appendTooltip(stack, world, tooltip, context);
+    }
+
+    @Override
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return false;
+    }
+
+    @Override
+    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
+        return ingredient.isOf(Items.IRON_INGOT);
     }
 
     private void openScreen(PlayerEntity user, ItemStack stack, GrenadeLauncherInventory grenadeInv) {

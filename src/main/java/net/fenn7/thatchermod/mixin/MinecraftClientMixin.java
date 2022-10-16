@@ -18,7 +18,8 @@ public abstract class MinecraftClientMixin {
 
     @Shadow public ClientPlayerEntity player;
 
-    @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;swingHand(Lnet/minecraft/util/Hand;)V"), cancellable = true)
+    @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/hit/HitResult;getType()Lnet/minecraft/util/hit/HitResult$Type;"
+            /*"Lnet/minecraft/client/network/ClientPlayerEntity;swingHand(Lnet/minecraft/util/Hand;)V"*/), cancellable = true)
     private void injectedAttackMethod(CallbackInfoReturnable cir) {
         if (player.getMainHandStack().isOf(ModItems.GRENADE_LAUNCHER)) {
             ClientPlayNetworking.send(ModPackets.GL_C2S_ID, PacketByteBufs.create());

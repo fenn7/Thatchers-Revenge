@@ -38,42 +38,24 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.UUID;
 
-public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, Angerable {
-    private static final double FOLLOW_RANGE = 32.0D;
-    private final AnimationFactory factory = new AnimationFactory(this);
+public class RoyalFencerEntity extends AbstractMilitaryEntity {
     private final EntityAttributeModifier DOUBLE_SPEED = new EntityAttributeModifier(
             "SPEED_BOOST", 1.0D, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
-    private int angerTime;
-    private int angerPassingCooldown;
-    @Nullable private UUID angryAt;
-    @Nullable private MobEntity owner;
 
     public RoyalFencerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
-        this.experiencePoints = 15;
-        this.setPathfindingPenalty(PathNodeType.LAVA, 8.0F);
-        this.setPathfindingPenalty(PathNodeType.DAMAGE_FIRE, 3.0F);
     }
 
+    @Override
     protected void initGoals() {
-        this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, false));
-        this.targetSelector.add(1, (new RevengeGoal(this, new Class[]{ThatcherEntity.class})).setGroupRevenge(new Class[0]));
-        this.goalSelector.add(2, new TrackOwnerTargetGoal(this));
-        this.targetSelector.add(3, new ActiveTargetGoal(this, PlayerEntity.class, 10, true, false,
-                e -> this.shouldAngerAt((LivingEntity) e)));
-        this.targetSelector.add(3, new ActiveTargetGoal(this, HostileEntity.class, 5, true, false,
-                e -> !(e instanceof CreeperEntity || e instanceof ThatcherEntity)));
-        this.targetSelector.add(4, new UniversalAngerGoal(this, true));
-        this.goalSelector.add(7, new WanderAroundGoal(this, 1.0D, 10));
-        this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 1.0F));
-        this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 10.0F));
+        super.initGoals();
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {
-        return HostileEntity.createHostileAttributes()
+        return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 30.0D)
-                .add(EntityAttributes.GENERIC_ARMOR, 12.5D)
+                .add(EntityAttributes.GENERIC_ARMOR, 10.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6.0f)
                 .add(EntityAttributes.GENERIC_ATTACK_SPEED, 1.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f)
@@ -81,6 +63,7 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, FOLLOW_RANGE);
     }
 
+    @Override
     protected void initEquipment(Random random, LocalDifficulty localDifficulty) {
         super.initEquipment(random, localDifficulty);
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
@@ -94,26 +77,10 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
-        this.writeAngerToNbt(nbt);
-    }
-
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        this.readAngerFromNbt(this.world, nbt);
-    }
-
     protected void mobTick() {
-        this.tickAngerLogic((ServerWorld)this.world, true);
-        if (this.getTarget() != null) {
-            if (this.random.nextInt(100 + 1) == 0 && !world.isClient() && this.distanceTo(this.getTarget()) >= 6.6D) {
-                this.jumpAtTarget();
-            }
-            this.tickAngerPassing();
-        }
-        if (this.hasAngerTime()) {
-            this.playerHitTimer = this.age;
+        if (this.random.nextInt(100 + 1) == 0 && !world.isClient() &&
+                this.getTarget() != null && this.distanceTo(this.getTarget()) >= 6.6D) {
+            this.jumpAtTarget();
         }
         super.mobTick();
     }
@@ -146,14 +113,6 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
         }
     }
 
-    public boolean onKilledOther(ServerWorld world, LivingEntity other) {
-        if (other instanceof PlayerEntity player) {
-            this.forgive(player);
-            this.stopAnger();
-        }
-        return super.onKilledOther(world, other);
-    }
-
     private void jumpAtTarget() {
         Vec3d current = this.getVelocity();
         Vec3d updated = new Vec3d(this.getTarget().getX() - this.getX(), 0.0D, this.getTarget().getZ() - this.getZ());
@@ -163,49 +122,20 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
         this.setVelocity(1.75 * updated.x, 0.5D, 1.75 * updated.z);
     }
 
-    private void tickAngerPassing() {
-        if (this.angerPassingCooldown > 0) {
-            --this.angerPassingCooldown;
-        } else {
-            if (this.getVisibilityCache().canSee(this.getTarget()) && this.owner == null) {
-                this.world.playSound(null, this.getBlockPos(), SoundEvents.AMBIENT_WARPED_FOREST_ADDITIONS,
-                        SoundCategory.HOSTILE, 6.6F, 0.66F);
-                ParticleEffect anger = ParticleTypes.ANGRY_VILLAGER;
-                ((ServerWorld) this.world).spawnParticles(anger, this.getX(), this.getY() + 2.5D, this.getZ(), 3,
-                        0, 0, 0, 0);
-                this.callBackup();
-            }
-            this.angerPassingCooldown = 100;
-        }
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return this.hasAngerTime() ? SoundEvents.AMBIENT_WARPED_FOREST_ADDITIONS : SoundEvents.BLOCK_NOTE_BLOCK_SNARE;
     }
 
-    private void callBackup() {
-        double d = this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
-        Box box = Box.from(this.getPos()).expand(d, d * 0.5, d);
-        this.world.getEntitiesByClass(RoyalFencerEntity.class, box, EntityPredicates.EXCEPT_SPECTATOR).stream()
-                .filter((p) -> p != this)
-                .filter((p) -> p.getTarget() == null)
-                .filter((p) -> !p.isTeammate(this.getTarget()))
-                .forEach((p) -> p.setTarget(this.getTarget())
-        );
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return SoundEvents.ENTITY_ZOMBIE_ATTACK_IRON_DOOR;
     }
 
-    public void setOwner(MobEntity owner) {
-        this.owner = owner;
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR;
     }
-    public @Nullable MobEntity getOwner() {
-        return owner;
-    }
-
-    public int getAngerTime() { return this.angerTime; }
-    public void setAngerTime(int angerTime) { this.angerTime = angerTime; }
-    public @Nullable UUID getAngryAt() { return this.angryAt; }
-    public void setAngryAt(@Nullable UUID angryAt) { this.angryAt = angryAt; }
-    public void chooseRandomAngerTime() { this.setAngerTime(100); }
-
-    protected SoundEvent getAmbientSound() { return this.hasAngerTime() ? SoundEvents.AMBIENT_WARPED_FOREST_ADDITIONS : SoundEvents.BLOCK_NOTE_BLOCK_SNARE; }
-    protected SoundEvent getHurtSound(DamageSource source) { return SoundEvents.ENTITY_ZOMBIE_ATTACK_IRON_DOOR; }
-    protected SoundEvent getDeathSound() { return SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR; }
 
     //animations
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -232,26 +162,5 @@ public class RoyalFencerEntity extends PathAwareEntity implements IAnimatable, A
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
         animationData.addAnimationController(new AnimationController(this, "attack", 0, this::attackPred));
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
-    }
-
-    private class TrackOwnerTargetGoal extends TrackTargetGoal {
-        private final TargetPredicate targetPredicate = TargetPredicate.createNonAttackable().ignoreVisibility().ignoreDistanceScalingFactor();
-        private MobEntity owner = RoyalFencerEntity.this.owner;
-
-        public TrackOwnerTargetGoal(PathAwareEntity mob) { super(mob, false); }
-
-        public boolean canStart() {
-            return owner != null && owner.getTarget() != null && this.canTrack(owner.getTarget(), this.targetPredicate);
-        }
-
-        public void start() {
-            RoyalFencerEntity.this.setTarget(owner.getTarget());
-            super.start();
-        }
     }
 }
