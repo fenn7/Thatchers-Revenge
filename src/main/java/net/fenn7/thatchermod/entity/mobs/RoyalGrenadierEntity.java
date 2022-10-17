@@ -2,9 +2,11 @@ package net.fenn7.thatchermod.entity.mobs;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fenn7.thatchermod.ThatcherMod;
+import net.fenn7.thatchermod.entity.projectiles.AbstractGrenadeEntity;
 import net.fenn7.thatchermod.entity.projectiles.GrenadeEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.fenn7.thatchermod.entity.projectiles.SmokeGrenadeEntity;
+import net.fenn7.thatchermod.item.ModItems;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.Goal;
@@ -21,11 +23,16 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.checkerframework.checker.units.qual.A;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -36,43 +43,74 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
+    private boolean hasUsedSmoke = false;
+
     public RoyalGrenadierEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new GrenadeAttackGoal(this, 1.0D, 30, 32.0F));
+        this.goalSelector.add(1, new GrenadeAttackGoal(this, 1.0D, 30, (float) FOLLOW_RANGE));
         super.initGoals();
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 30.0D)
-                .add(EntityAttributes.GENERIC_ARMOR, 12.5D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6.0f)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 24.0D)
+                .add(EntityAttributes.GENERIC_ARMOR, 5.0D)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0f)
                 .add(EntityAttributes.GENERIC_ATTACK_SPEED, 1.0f)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.3D)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 24);
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.2D)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, FOLLOW_RANGE);
+    }
+
+    @Override
+    protected void initEquipment(Random random, LocalDifficulty localDifficulty) {
+        super.initEquipment(random, localDifficulty);
+        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(ModItems.GRENADE_LAUNCHER));
+        this.updateEnchantments(random, localDifficulty);
+    }
+
+    @Nullable
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        this.initEquipment(random, difficulty);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     public void attack(LivingEntity target) {
         this.handSwinging = true;
-        GrenadeEntity grenade = new GrenadeEntity(this.world, this.getX(), this.getBodyY(0.7F), this.getZ());
+        AbstractGrenadeEntity grenade;
+
+        if (!this.hasUsedSmoke) {
+            grenade = new SmokeGrenadeEntity(this.world, this.getX(), this.getBodyY(0.7F), this.getZ());
+            this.hasUsedSmoke = true;
+        } else {
+            grenade = new GrenadeEntity(this.world, this.getX(), this.getBodyY(0.7F), this.getZ());
+            grenade.setPower(1.5F * grenade.getPower());
+        }
+
         double d = target.getX() - this.getX();
         double e = target.getBodyY(0.2D) - grenade.getY();
         double f = target.getZ() - this.getZ();
         double g = Math.sqrt(d * d + f * f);
-        grenade.setOwner(this);
-        grenade.setShouldBounce(false);
-        grenade.setPower(1.5F * grenade.getPower());
+
         grenade.setVelocity(d, e + g * 0.2D, f, 1.3F, ThreadLocalRandom.current().nextFloat(1.0F, 3.0F));
+        grenade.setShouldBounce(false);
+        grenade.setOwner(this);
         this.world.playSound(null, this.getBlockPos(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.HOSTILE, 1.4F, 0.5F);
         this.world.spawnEntity(grenade);
+    }
+
+    @Override
+    public void endCombat() {
+        this.hasUsedSmoke = false;
     }
 
     @Override
@@ -148,6 +186,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
         public void start() {
             super.start();
             this.grenadier.setAttacking(true);
+            this.cooldown = this.attackInterval;
         }
 
         public void stop() {

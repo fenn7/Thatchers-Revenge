@@ -78,20 +78,13 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
                         ParticleEffect smoke2 = ParticleTypes.CAMPFIRE_SIGNAL_SMOKE;
                         double x = ThreadLocalRandom.current().nextDouble(-0.5D, 0.5D);
                         double z = ThreadLocalRandom.current().nextDouble(-0.5D, 0.5D);
-                        this.world.addParticle(smoke1, pos.getX() - x, pos.getY() + 0.4, pos.getZ() - z, 0, 0.05, 0);
-                        this.world.addParticle(smoke2, pos.getX() + x, pos.getY() - 0.4, pos.getZ() + z, 0, 0.05, 0);
+                        this.world.addParticle(smoke1, pos.getX() - x, pos.getY() + 0.4, pos.getZ() - z, 0, 0.01, 0);
+                        this.world.addParticle(smoke2, pos.getX() + x, pos.getY() - 0.4, pos.getZ() + z, 0, 0.01, 0);
                     });
 
             List<LivingEntity> list = world.getNonSpectatingEntities(LivingEntity.class, smokeBox);
             list.stream().filter(e -> Math.sqrt(e.squaredDistanceTo(this.getX(), this.getY(), this.getZ())) <= this.power)
-                    .forEach(e -> {
-                        if (!e.hasStatusEffect(StatusEffects.BLINDNESS)) {
-                            e.setStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0), this);
-                        }
-                        if (e.isOnFire()) {
-                            e.setOnFire(false);
-                        }
-                    });
+                    .forEach(e -> { if (e.isOnFire()) { e.setOnFire(false); } });
         }
         else {
             super.handleStatus(status);
