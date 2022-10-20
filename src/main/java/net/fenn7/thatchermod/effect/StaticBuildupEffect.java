@@ -13,10 +13,15 @@ import net.minecraft.sound.SoundEvents;
 
 public class StaticBuildupEffect extends StatusEffect {
     private int ticks;
+    private boolean shouldRemoveSafely = true;
 
     protected StaticBuildupEffect(StatusEffectCategory statusEffectCategory, int color) {
         super(statusEffectCategory, color);
         this.ticks = 0;
+    }
+
+    public StaticBuildupEffect() {
+        this(StatusEffectCategory.NEUTRAL, 0);
     }
 
     @Override
@@ -45,8 +50,8 @@ public class StaticBuildupEffect extends StatusEffect {
     }
 
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        for (int i = 0; i <= (amplifier); i++) {
-            if (!entity.world.isClient && !entity.hasStatusEffect(ModEffects.STATIC_BUILDUP)) {
+        if (!entity.world.isClient && !this.shouldRemoveSafely) {
+            for (int i = 0; i <= (amplifier); i++) {
                 entity.world.playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.BLOCKS, 8F, 0.75F);
                 LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, entity.world);
                 lightning.setPos(entity.getX(), entity.getY(), entity.getZ());
@@ -54,6 +59,10 @@ public class StaticBuildupEffect extends StatusEffect {
             }
         }
         super.onRemoved(entity, attributes, amplifier);
+    }
+
+    public void setShouldRemoveSafely(boolean safe) {
+        this.shouldRemoveSafely = safe;
     }
 }
 

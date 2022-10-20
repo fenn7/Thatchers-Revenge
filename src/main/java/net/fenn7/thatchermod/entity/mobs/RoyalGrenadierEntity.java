@@ -101,11 +101,15 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
         double f = target.getZ() - this.getZ();
         double g = Math.sqrt(d * d + f * f);
 
-        grenade.setVelocity(d, e + g * 0.2D, f, 1.3F, ThreadLocalRandom.current().nextFloat(1.0F, 3.0F));
+        grenade.setVelocity(d, e + g * 0.2D, f, 1.4F, ThreadLocalRandom.current().nextFloat(1.0F, 3.0F));
         grenade.setShouldBounce(false);
         grenade.setOwner(this);
         this.world.playSound(null, this.getBlockPos(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.HOSTILE, 1.4F, 0.5F);
         this.world.spawnEntity(grenade);
+    }
+
+    public boolean hasUsedSmoke() {
+        return this.hasUsedSmoke;
     }
 
     @Override

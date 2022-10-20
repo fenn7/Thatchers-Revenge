@@ -18,6 +18,7 @@
   "item.thatchermod.grenade_launcher": "Grenade Launcher",
 
   "item.thatchermod.fencer_spawn_egg": "Royal Fencer Spawn Egg",
+  "item.thatchermod.grenadier_spawn_egg": "Royal Grenadier Spawn Egg",
 
   "effect.thatchermod.calcium_deficiency": "Hypocalcemia",
   "effect.thatchermod.static_buildup": "Static Buildup",
@@ -39,6 +40,8 @@
   "block.thatchermod.thatcherism_altar": "Thatcherism Altar",
 
   "entity.thatchermod.thatcher": "MARGARET THATCHER",
+  "entity.thatchermod.royal_fencer": "Royal Fencer",
+  "entity.thatchermod.royal_grenadier": "Royal Grenadier",
   "entity.thatchermod.cursed_meteor": "Cursed Meteor",
   "entity.thatchermod.cursed_missile": "Cursed Missile",
   "entity.thatchermod.smoke_entity": "Rocket Smoke",

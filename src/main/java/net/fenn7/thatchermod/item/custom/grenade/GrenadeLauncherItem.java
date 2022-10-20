@@ -85,7 +85,7 @@ public class GrenadeLauncherItem extends Item {
                     NbtCompound nbtCompound = nbtList.getCompound(i);
                     ItemStack grenadeStack = ItemStack.fromNbt(nbtCompound);
                     if (!grenadeStack.isEmpty()) {
-                        tooltip.add(Text.literal( (i + 1) + ": " + grenadeStack.getItem().getTranslationKey() +
+                        tooltip.add(Text.literal( (i + 1) + ": " + grenadeStack.getItem().toString() +
                                 ": " + grenadeStack.getCount() + "/" + grenadeStack.getMaxCount()));
                     }
                 }

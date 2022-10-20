@@ -65,8 +65,11 @@ public class ModItems {
             new GrenadeLauncherItem(new FabricItemSettings().group(ModItemGroup.THATCHER).maxCount(1)
                     .maxDamage(512).maxDamageIfAbsent(512)));
 
-    public static final Item PARAMILITARY_SPAWN_EGG = registerItem("fencer_spawn_egg",
+    public static final Item FENCER_SPAWN_EGG = registerItem("fencer_spawn_egg",
             new SpawnEggItem(ModEntities.ROYAL_FENCER, 0x000000, 0x78582F,
+                    new FabricItemSettings().group(ModItemGroup.THATCHER)));
+    public static final Item GRENADIER_SPAWN_EGG = registerItem("grenadier_spawn_egg",
+            new SpawnEggItem(ModEntities.ROYAL_GRENADIER, 0x320000, 0xAA582F,
                     new FabricItemSettings().group(ModItemGroup.THATCHER)));
 
     public static void registerModItems(){
