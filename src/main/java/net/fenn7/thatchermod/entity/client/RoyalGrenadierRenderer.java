@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class RoyalGrenadierRenderer extends GeoEntityRenderer<RoyalGrenadierEntity> {
@@ -65,9 +64,9 @@ public class RoyalGrenadierRenderer extends GeoEntityRenderer<RoyalGrenadierEnti
         if (bone.getName().equals("LeftLeg")) {
             stack.push();
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bone.getRotationX()));
-            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY() - 90));
+            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY() - 85));
             stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(bone.getRotationZ()));
-            stack.translate(0.0D, 0.7D, 0.4D);
+            stack.translate(0.0D, 0.75D, 0.35D);
             stack.scale(0.75f, 0.75f, 0.75f);
             MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(ModItems.GRENADE),
                     ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.rtb, 0);
@@ -77,9 +76,9 @@ public class RoyalGrenadierRenderer extends GeoEntityRenderer<RoyalGrenadierEnti
         if (bone.getName().equals("RightLeg")) {
             stack.push();
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bone.getRotationX()));
-            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY() - 90));
+            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY() - 95));
             stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(bone.getRotationZ()));
-            stack.translate(0.0D, 0.7D, -0.3D);
+            stack.translate(0.0D, 0.75D, -0.25D);
             stack.scale(0.75f, 0.75f, 0.75f);
             MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(ModItems.GRENADE_SMOKE),
                     ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.rtb, 0);
