@@ -65,23 +65,23 @@ public class RoyalGrenadierRenderer extends GeoEntityRenderer<RoyalGrenadierEnti
         if (bone.getName().equals("LeftLeg")) {
             stack.push();
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bone.getRotationX()));
-            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY()));
+            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY() - 90));
             stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(bone.getRotationZ()));
-            stack.translate(0.32D, 0.30D, 0.74D);
+            stack.translate(0.0D, 0.7D, 0.4D);
             stack.scale(0.75f, 0.75f, 0.75f);
             MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(ModItems.GRENADE),
                     ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.rtb, 0);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
         }
-        if (bone.getName().equals("RightLeg") && !this.hasSmoked) {
+        if (bone.getName().equals("RightLeg")) {
             stack.push();
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bone.getRotationX()));
-            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY()));
+            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY() - 90));
             stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(bone.getRotationZ()));
-            stack.translate(0.32D, 0.30D, 0.74D);
+            stack.translate(0.0D, 0.7D, -0.3D);
             stack.scale(0.75f, 0.75f, 0.75f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(ModItems.GRENADE),
+            MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(ModItems.GRENADE_SMOKE),
                     ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.rtb, 0);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));

@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.effect;
 
+import net.fenn7.thatchermod.util.IEntityDataSaver;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
@@ -12,8 +13,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 
 public class StaticBuildupEffect extends StatusEffect {
+    public static final String SHOULD_STRIKE = "should.lightning.strike";
     private int ticks;
-    private boolean shouldRemoveSafely = true;
 
     protected StaticBuildupEffect(StatusEffectCategory statusEffectCategory, int color) {
         super(statusEffectCategory, color);
@@ -50,7 +51,8 @@ public class StaticBuildupEffect extends StatusEffect {
     }
 
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if (!entity.world.isClient && !this.shouldRemoveSafely) {
+        IEntityDataSaver data = (IEntityDataSaver) entity;
+        if (data.getPersistentData().getBoolean(SHOULD_STRIKE) && !entity.world.isClient) {
             for (int i = 0; i <= (amplifier); i++) {
                 entity.world.playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.BLOCKS, 8F, 0.75F);
                 LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, entity.world);
@@ -59,10 +61,6 @@ public class StaticBuildupEffect extends StatusEffect {
             }
         }
         super.onRemoved(entity, attributes, amplifier);
-    }
-
-    public void setShouldRemoveSafely(boolean safe) {
-        this.shouldRemoveSafely = safe;
     }
 }
 

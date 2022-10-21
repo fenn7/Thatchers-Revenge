@@ -113,8 +113,18 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
     }
 
     @Override
-    public void endCombat() {
+    public void setTarget(@Nullable LivingEntity target) {
         this.hasUsedSmoke = false;
+        super.setTarget(target);
+    }
+
+    @Override
+    public void onDeath(DamageSource damageSource) {
+        GrenadeEntity grenade = new GrenadeEntity(this.world, this.getX(), this.getBodyY(0.5), this.getZ());
+        grenade.setPower(grenade.getPower() * 1.5F);
+        grenade.setShouldBounce(false);
+        this.world.spawnEntity(grenade);
+        super.onDeath(damageSource);
     }
 
     @Override

@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.fenn7.thatchermod.effect.StaticBuildupEffect.SHOULD_STRIKE;
 import static net.fenn7.thatchermod.item.custom.CommunityChargebowItem.LIGHTNING_CHARGE;
 
 @Mixin(PersistentProjectileEntity.class)
@@ -37,19 +38,17 @@ public abstract class PersistentProjectileMixin extends Entity {
         Entity entity = entityHitResult.getEntity();
         PersistentProjectileEntity projectile = ((PersistentProjectileEntity) (Object) this);
         IEntityDataSaver projData = (IEntityDataSaver) projectile;
-
         if (projData.getPersistentData().getBoolean(LIGHTNING_CHARGE) && entity instanceof LivingEntity living) {
-            StaticBuildupEffect buildup = new StaticBuildupEffect();
             IEntityDataSaver entityData = (IEntityDataSaver) entity;
-
             int count = entityData.getPersistentData().getInt("times.hit.by.charged");
             if (count < 2) { // 1 less than the number of hits to spawn lightning!
-                living.addStatusEffect(new StatusEffectInstance(buildup, 1200, count, false, false));
                 entityData.getPersistentData().putInt("times.hit.by.charged", count + 1);
+                living.addStatusEffect(new StatusEffectInstance(ModEffects.STATIC_BUILDUP, 1200, count, false, false));
             } else {
-                buildup.setShouldRemoveSafely(false);
-                living.removeStatusEffect(buildup);
                 entityData.getPersistentData().putInt("times.hit.by.charged", 0);
+                entityData.getPersistentData().putBoolean(SHOULD_STRIKE, true);
+                living.removeStatusEffect(ModEffects.STATIC_BUILDUP);
+                entityData.getPersistentData().putBoolean(SHOULD_STRIKE, false);
             }
         }
 
