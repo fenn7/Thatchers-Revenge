@@ -1,4 +1,4 @@
-package net.fenn7.thatchermod.item;
+package net.fenn7.thatchermod.item.custom;
 
 import net.minecraft.item.TridentItem;
 

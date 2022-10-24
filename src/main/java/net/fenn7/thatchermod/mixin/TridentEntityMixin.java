@@ -18,6 +18,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,6 +29,8 @@ import net.fenn7.thatchermod.mixin.TridentInterface;
 
 @Mixin(TridentEntity.class)
 public abstract class TridentEntityMixin extends PersistentProjectileEntity implements TridentInterface {
+    @Shadow private ItemStack tridentStack;
+
     protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> type, World world) {
         super(type, world);
     }
@@ -35,7 +38,6 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
     @Inject(method = "onEntityHit", at = @At("TAIL"))
     public void injectOnHit(EntityHitResult entityHitResult, CallbackInfo ci) {
         TridentEntity trident = (TridentEntity) (Object) this;
-        ItemStack tridentStack = ((TridentInterface) this).callAsItemStack();
         Entity thrower = trident.getOwner();
         Entity target = entityHitResult.getEntity();
         if (thrower != null && target != null) {

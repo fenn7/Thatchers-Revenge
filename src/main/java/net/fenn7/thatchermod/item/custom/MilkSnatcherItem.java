@@ -50,10 +50,11 @@ public class MilkSnatcherItem extends SwordItem {
         boolean success = false;
 
         for (Entity entity: nearbyEntities) {
-            if (entity instanceof LivingEntity && entity != user) {
+            if (entity instanceof LivingEntity living && entity != user) {
                 spawnHitEffects(entity, world);
-                ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(ModEffects.CALCIUM_DEFICIENCY, 300), user);
-                ((LivingEntity) entity).setAttacker(user); ((LivingEntity) entity).setAttacking(user); // aggros mobs
+                living.addStatusEffect(new StatusEffectInstance(ModEffects.CALCIUM_DEFICIENCY, 300), user);
+                living.setAttacker(user);
+                living.setAttacking(user); // aggros mobs
                 user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability for each
                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 150,
                         (int) (nearbyEntities.size()/4)), user); // every 4 entities hit grants +1 level of strength
