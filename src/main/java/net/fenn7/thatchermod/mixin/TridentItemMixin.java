@@ -14,7 +14,6 @@ public abstract class TridentItemMixin {
 
     @Redirect(method = "onStoppedUsing", at = @At(value = "NEW", target = "net/minecraft/entity/projectile/TridentEntity"))
     private TridentEntity bruh(World world, LivingEntity owner, ItemStack stack) {
-
         return new TridentEntity(world, owner, stack);
     }
 }

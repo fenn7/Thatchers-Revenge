@@ -47,14 +47,11 @@ public class GrenadeLauncherItem extends Item {
         if (main.isOf(this)) {
             setInventory(user, Hand.MAIN_HAND);
             boolean shouldrecoil = false;
-
             if (!user.isSneaking()) {
-                user.resetLastAttackedTicks();
                 shouldrecoil = shootGrenade(main, this.grenadeInv.getStack(1), world, user);
             } else {
                 openScreen(user, user.getStackInHand(hand), this.grenadeInv);
             }
-
             if (shouldrecoil) {
                 IEntityDataSaver data = (IEntityDataSaver) user;
                 data.getPersistentData().putBoolean("should_recoil", true);
@@ -70,7 +67,6 @@ public class GrenadeLauncherItem extends Item {
         int currentCD = nbt.getInt(GL_COOLDOWN);
         if (!world.isClient() && currentCD > 0) {
             nbt.putInt(GL_COOLDOWN, --currentCD);
-            ThatcherMod.LOGGER.warn("" + currentCD);
         }
         super.inventoryTick(stack, world, entity, slot, selected);
     }
@@ -85,8 +81,9 @@ public class GrenadeLauncherItem extends Item {
                     NbtCompound nbtCompound = nbtList.getCompound(i);
                     ItemStack grenadeStack = ItemStack.fromNbt(nbtCompound);
                     if (!grenadeStack.isEmpty()) {
-                        tooltip.add(Text.literal( (i + 1) + ": " + grenadeStack.getName() +
-                                ": " + grenadeStack.getCount() + "/" + grenadeStack.getMaxCount()));
+                        tooltip.add(Text.literal( (i + 1) + ": ")
+                                .append(grenadeStack.getName().copy())
+                                .append(": " + grenadeStack.getCount() + "/" + grenadeStack.getMaxCount()));
                     }
                 }
             }
@@ -122,6 +119,7 @@ public class GrenadeLauncherItem extends Item {
             if (!user.isCreative() && !user.world.isClient()) {
                 grenadeStack.decrement(1);
             }
+            user.resetLastAttackedTicks();
             thisStack.getOrCreateNbt().putInt(GL_COOLDOWN, COOLDOWN);
             markInvDirty();
             return true;

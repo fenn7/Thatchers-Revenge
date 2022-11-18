@@ -122,7 +122,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
     public void onDeath(DamageSource damageSource) {
         super.onDeath(damageSource);
         GrenadeEntity grenade = new GrenadeEntity(this.world, this.getX(), this.getBodyY(0.5), this.getZ());
-        grenade.setPower(grenade.getPower() * 1.5F);
+        grenade.setPower(grenade.getPower() * 2.0F);
         grenade.setShouldBounce(false);
         this.world.spawnEntity(grenade);
     }

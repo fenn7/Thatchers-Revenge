@@ -42,6 +42,9 @@ public class ModItems {
     public static final Item COMMAND_SCEPTRE = registerItem("command_sceptre_3d",
             new CommandSceptreItem(new FabricItemSettings().group(ModItemGroup.THATCHER)
                     .fireproof().maxCount(1).maxDamage(405).maxDamageIfAbsent(405).rarity(Rarity.RARE)));
+    public static final Item TRICKLE_DOWN_TRIDENT = registerItem("trickle_down_trident",
+            new TrickleDownTridentItem(new FabricItemSettings().group(ModItemGroup.THATCHER)
+                    .fireproof().maxCount(1).maxDamage(405).maxDamageIfAbsent(405).rarity(Rarity.RARE)));
     public static final Item THATCHERITE_HELMET = registerItem("thatcherite_helmet",
             new ThatcheriteArmourItem(ModArmourMaterials.THATCHERITE, EquipmentSlot.HEAD,
                     new FabricItemSettings().group(ModItemGroup.THATCHER).fireproof().maxCount(1).rarity(Rarity.RARE)));

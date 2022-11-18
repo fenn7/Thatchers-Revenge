@@ -8,6 +8,7 @@
     "ElytraItemMixin",
     "ElytraRenderMixin",
     "MinecraftClientMixin",
+    "InGameHudMixin",
     "ModEntityDataSaver",
     "PersistentProjectileMixin",
     "PlayerEntityMixin",
