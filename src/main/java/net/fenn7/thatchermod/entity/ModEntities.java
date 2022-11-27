@@ -61,4 +61,10 @@ public class ModEntities {
             FabricEntityTypeBuilder.<SmokeGrenadeEntity>create(SpawnGroup.MISC, SmokeGrenadeEntity::new)
                     .dimensions(EntityDimensions.fixed(0.25F, 0.375F))
                     .trackRangeBlocks(48).trackedUpdateRate(10).build());
+
+    public static final EntityType<TrickleDownTridentEntity> TRICKLE_DOWN_TRIDENT_ENTITY = Registry.register(
+            Registry.ENTITY_TYPE, new Identifier(ThatcherMod.MOD_ID, "trickle_down_trident_entity"),
+            FabricEntityTypeBuilder.<TrickleDownTridentEntity>create(SpawnGroup.MISC, TrickleDownTridentEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.25F, 0.25F))
+                    .trackRangeBlocks(96).trackedUpdateRate(10).build());
 }

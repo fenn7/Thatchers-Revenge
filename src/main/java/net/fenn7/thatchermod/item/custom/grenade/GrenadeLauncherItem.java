@@ -73,20 +73,20 @@ public class GrenadeLauncherItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-            // uses GrenadeLauncherInventory nbt setup
-            NbtCompound nbt = stack.getOrCreateSubNbt(nbtTagName);
-            if (nbt.contains(listTagName, 9)) {
-                NbtList nbtList = nbt.getList(listTagName, 10);
-                for (int i = 0; i < nbtList.size(); i++) {
-                    NbtCompound nbtCompound = nbtList.getCompound(i);
-                    ItemStack grenadeStack = ItemStack.fromNbt(nbtCompound);
-                    if (!grenadeStack.isEmpty()) {
-                        tooltip.add(Text.literal( (i + 1) + ": ")
-                                .append(grenadeStack.getName().copy())
-                                .append(": " + grenadeStack.getCount() + "/" + grenadeStack.getMaxCount()));
-                    }
+        // uses GrenadeLauncherInventory nbt setup
+        NbtCompound nbt = stack.getOrCreateSubNbt(nbtTagName);
+        if (nbt.contains(listTagName, 9)) {
+            NbtList nbtList = nbt.getList(listTagName, 10);
+            for (int i = 0; i < nbtList.size(); i++) {
+                NbtCompound nbtCompound = nbtList.getCompound(i);
+                ItemStack grenadeStack = ItemStack.fromNbt(nbtCompound);
+                if (!grenadeStack.isEmpty()) {
+                    tooltip.add(Text.literal((i + 1) + ": ")
+                            .append(grenadeStack.getName().copy())
+                            .append(": " + grenadeStack.getCount() + "/" + grenadeStack.getMaxCount()));
                 }
             }
+        }
         super.appendTooltip(stack, world, tooltip, context);
     }
 
