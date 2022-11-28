@@ -50,7 +50,7 @@ public class TrickleDownTridentRenderer extends GeoProjectilesRenderer<TrickleDo
                 getTexture(entityIn));
 
         if (entityIn.isEnchanted()) {
-            int i = (ticks / 10);
+            int i = (ticks / 15);
             if (i > RAINBOW.size() - 1) {
                 i = 0;
                 ticks = 0;

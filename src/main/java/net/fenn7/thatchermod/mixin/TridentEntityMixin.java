@@ -2,6 +2,8 @@ package net.fenn7.thatchermod.mixin;
 
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.enchantments.ModEnchantments;
+import net.fenn7.thatchermod.entity.projectiles.TrickleDownTridentEntity;
+import net.fenn7.thatchermod.item.ModItems;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -30,6 +32,7 @@ import net.fenn7.thatchermod.mixin.TridentInterface;
 @Mixin(TridentEntity.class)
 public abstract class TridentEntityMixin extends PersistentProjectileEntity implements TridentInterface {
     @Shadow private ItemStack tridentStack;
+    @Shadow private boolean dealtDamage;
 
     protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> type, World world) {
         super(type, world);
@@ -62,6 +65,9 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
                     living.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 10, hungerPower - 1,  false, false, false));
                 }
             }
+        }
+        if (this.tridentStack.isOf(ModItems.TRICKLE_DOWN_TRIDENT)) {
+            this.dealtDamage = false;
         }
     }
 }

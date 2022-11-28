@@ -21,4 +21,7 @@ public interface TridentInterface {
 
     @Accessor("dealtDamage")
     boolean hasDealtDamage();
+
+    @Accessor("dealtDamage")
+    void setDealtDamage(boolean dealt);
 }
