@@ -2,35 +2,17 @@ package net.fenn7.thatchermod.entity.projectiles;
 
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.ModEntities;
-import net.fenn7.thatchermod.item.ModItems;
-import net.fenn7.thatchermod.item.custom.TrickleDownTridentItem;
-import net.fenn7.thatchermod.mixin.TridentInterface;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -42,12 +24,11 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
 
 public class TrickleDownTridentEntity extends TridentEntity implements IAnimatable {
     private final AnimationFactory factory = new AnimationFactory(this);
-    private float projectileDmg = 8.0F;
+    private final List<LivingEntity> previousTargets = new ArrayList<>();
+    private float bounceRange = 8.0F;
 
     public TrickleDownTridentEntity(EntityType<? extends TrickleDownTridentEntity> entityType, World world) {
         super(entityType, world);
@@ -61,31 +42,39 @@ public class TrickleDownTridentEntity extends TridentEntity implements IAnimatab
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
         BlockPos targetPos = entityHitResult.getEntity().getBlockPos();
-        Box rangeBox = new Box(targetPos).expand(projectileDmg);
-
+        Box rangeBox = new Box(targetPos).expand(this.bounceRange);
         List<LivingEntity> targets = new ArrayList<>();
         for (Entity entity : world.getOtherEntities(entityHitResult.getEntity(), rangeBox)) {
-            if (entity instanceof LivingEntity alive && entity != this.getOwner() &&
-                    Math.sqrt(entity.squaredDistanceTo(targetPos.getX(), targetPos.getY(), targetPos.getZ())) <= projectileDmg) {
+            if (entity instanceof LivingEntity alive && alive.canSee(this) && !this.previousTargets.contains(entity) &&
+                    Math.sqrt(entity.squaredDistanceTo(targetPos.getX(), targetPos.getY(), targetPos.getZ())) <= this.bounceRange) {
                 targets.add(alive);
             }
         }
-        ThatcherMod.LOGGER.warn(targets.toString());
-
-        LivingEntity yes = world.getClosestEntity(targets, TargetPredicate.createAttackable(),
+        LivingEntity nearestTarget = world.getClosestEntity(targets, TargetPredicate.createAttackable(),
                 (LivingEntity) this.getOwner(), targetPos.getX(), targetPos.getY(), targetPos.getZ());
-
-        if (yes != null) {
-            ThatcherMod.LOGGER.warn(yes.toString());
-            //Vec3d vec3d = new Vec3d(yes.getX() - this.getX(), yes.getBodyY(0.8D) - this.getY(), yes.getZ() - this.getZ()).normalize().multiply(0.67D);
-            double d = yes.getX() - this.getX();
-            double e = yes.getBodyY(0.4D) - this.getY();
-            double f = yes.getZ() - this.getZ();
+        if (nearestTarget != null) {
+            double d = nearestTarget.getX() - this.getX();
+            double e = nearestTarget.getBodyY(0.5D) - this.getY();
+            double f = nearestTarget.getZ() - this.getZ();
             double g = Math.sqrt(d * d + f * f);
-            this.setVelocity(d, e + g * 0.2D, f, 1.25F, 0.0F);
-            //this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-            //this.setVelocity(vec3d);
+            this.setVelocity(d, e + g * 0.2D, f, 1.0F, 0.0F);
+            this.playSound(SoundEvents.BLOCK_CHAIN_BREAK, 5.0F, 0.75F);
+            this.bounceRange /= 2;
+            this.previousTargets.add(nearestTarget);
+        } else {
+            this.previousTargets.clear();
+            this.bounceRange = 8.0F;
         }
+    }
+
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.bounceRange = nbt.getFloat("bounce.range");
+    }
+
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putFloat("bounce.range", this.bounceRange);
     }
 
     @Override
@@ -97,11 +86,12 @@ public class TrickleDownTridentEntity extends TridentEntity implements IAnimatab
         if (!this.inGround) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.trickle_down_trident.spin", true));
         } else {
-            event.getController().setAnimation(null);
+            event.getController().clearAnimationCache();
         }
         return PlayState.CONTINUE;
     }
 
+    @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController(this, "controller", 0, this::spinAnimation));
     }

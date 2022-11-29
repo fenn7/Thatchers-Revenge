@@ -43,13 +43,4 @@ public abstract class TridentItemMixin extends Item {
         }
         return entity;
     }
-
-    //@Inject(method = "<init>", at = @At(value = "TAIL"))
-    private void modifyAttributes(Settings settings, CallbackInfo ci) {
-        if (this.asItem() instanceof TrickleDownTridentItem) {
-            this.attributeModifiers.clear();
-            this.attributeModifiers.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Tool modifier", 10.0D, EntityAttributeModifier.Operation.ADDITION));
-            this.attributeModifiers.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Tool modifier", -2.70D, EntityAttributeModifier.Operation.ADDITION));
-        }
-    }
 }

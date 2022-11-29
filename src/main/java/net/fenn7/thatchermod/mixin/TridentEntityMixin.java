@@ -4,6 +4,7 @@ import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.entity.projectiles.TrickleDownTridentEntity;
 import net.fenn7.thatchermod.item.ModItems;
+import net.fenn7.thatchermod.item.custom.TrickleDownTridentItem;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -47,7 +48,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
             if (thrower.isWet()) {
                 int torpedoPower = EnchantmentHelper.getLevel(ModEnchantments.TORPEDO, tridentStack);
                 if (torpedoPower != 0) {
-                    world.createExplosion(null, target.getX(), target.getY(), target.getZ(), 1F + ((torpedoPower - 1) * 0.75F),
+                    world.createExplosion(null, target.getX(), target.getBodyY(0.5D), target.getZ(), 1F + ((torpedoPower - 1) * 0.75F),
                             Explosion.DestructionType.NONE);
                     target.damage(DamageSource.trident(trident, thrower), torpedoPower * 1.5F);
                 }
@@ -66,6 +67,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
                 }
             }
         }
+
         if (this.tridentStack.isOf(ModItems.TRICKLE_DOWN_TRIDENT)) {
             this.dealtDamage = false;
         }
