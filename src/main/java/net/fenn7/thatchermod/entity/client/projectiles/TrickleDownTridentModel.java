@@ -7,17 +7,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class TrickleDownTridentModel extends AnimatedGeoModel<TrickleDownTridentEntity> {
     @Override
-    public Identifier getModelResource(TrickleDownTridentEntity object) {
+    public Identifier getModelLocation(TrickleDownTridentEntity object) {
         return new Identifier(ThatcherMod.MOD_ID, "geo/trickle_down_trident.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(TrickleDownTridentEntity object) {
+    public Identifier getTextureLocation(TrickleDownTridentEntity object) {
         return new Identifier(ThatcherMod.MOD_ID, "textures/item/sceptre3d/trickle_down_trident_gold.png");
     }
 
     @Override
-    public Identifier getAnimationResource(TrickleDownTridentEntity animatable) {
+    public Identifier getAnimationFileLocation(TrickleDownTridentEntity animatable) {
         return new Identifier(ThatcherMod.MOD_ID, "animations/trickle_down_trident.animation.json");
     }
 }

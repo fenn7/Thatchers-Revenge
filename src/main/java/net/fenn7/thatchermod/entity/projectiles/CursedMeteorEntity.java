@@ -70,7 +70,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     }
 
     protected ParticleEffect getParticleType() {
-        return ParticleTypes.SCULK_SOUL;
+        return ParticleTypes.SOUL;
     }
 
     protected boolean isBurning() {

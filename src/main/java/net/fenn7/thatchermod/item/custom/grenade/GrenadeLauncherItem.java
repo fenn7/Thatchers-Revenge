@@ -3,6 +3,7 @@ package net.fenn7.thatchermod.item.custom.grenade;
 import net.fenn7.thatchermod.entity.projectiles.AbstractGrenadeEntity;
 import net.fenn7.thatchermod.screen.GrenadeLauncherScreenHandler;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
+import net.fenn7.thatchermod.util.ModText;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -77,7 +78,7 @@ public class GrenadeLauncherItem extends Item {
                 NbtCompound nbtCompound = nbtList.getCompound(i);
                 ItemStack grenadeStack = ItemStack.fromNbt(nbtCompound);
                 if (!grenadeStack.isEmpty()) {
-                    tooltip.add(Text.literal((i + 1) + ": ")
+                    tooltip.add(ModText.literal((i + 1) + ": ")
                             .append(grenadeStack.getName().copy())
                             .append(": " + grenadeStack.getCount() + "/" + grenadeStack.getMaxCount()));
                 }

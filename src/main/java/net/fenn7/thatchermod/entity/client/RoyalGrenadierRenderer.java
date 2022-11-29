@@ -27,7 +27,7 @@ public class RoyalGrenadierRenderer extends GeoEntityRenderer<RoyalGrenadierEnti
     }
 
     @Override
-    public Identifier getTextureResource(RoyalGrenadierEntity instance) {
+    public Identifier getTextureLocation(RoyalGrenadierEntity instance) {
         return new Identifier(ThatcherMod.MOD_ID, "textures/entity/military/royal_grenadier.png");
     }
 
@@ -41,7 +41,7 @@ public class RoyalGrenadierRenderer extends GeoEntityRenderer<RoyalGrenadierEnti
                             VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                             int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.rtb = renderTypeBuffer;
-        this.whTexture = this.getTextureResource(animatable);
+        this.whTexture = this.getTextureLocation(animatable);
         this.isShooting = animatable.isAttacking();
         this.hasSmoked = animatable.hasUsedSmoke();
         super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);

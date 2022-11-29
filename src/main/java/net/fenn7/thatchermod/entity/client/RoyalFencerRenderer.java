@@ -25,7 +25,7 @@ public class RoyalFencerRenderer extends GeoEntityRenderer<RoyalFencerEntity> {
     }
 
     @Override
-    public Identifier getTextureResource(RoyalFencerEntity instance) {
+    public Identifier getTextureLocation(RoyalFencerEntity animatable) {
         return new Identifier(ThatcherMod.MOD_ID, "textures/entity/military/royal_fencer.png");
     }
 
@@ -41,7 +41,7 @@ public class RoyalFencerRenderer extends GeoEntityRenderer<RoyalFencerEntity> {
         this.isAttacking = animatable.isAttacking();
         this.isHandSwinging = animatable.handSwinging;
         this.rtb = renderTypeBuffer;
-        this.whTexture = this.getTextureResource(animatable);
+        this.whTexture = this.getTextureLocation(animatable);
         super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
     }
 

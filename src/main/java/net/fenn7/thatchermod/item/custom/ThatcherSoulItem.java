@@ -1,6 +1,7 @@
 package net.fenn7.thatchermod.item.custom;
 
 import net.fenn7.thatchermod.particle.ModParticles;
+import net.fenn7.thatchermod.util.ModText;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -25,7 +26,7 @@ public class ThatcherSoulItem extends Item {
         ItemStack itemStack = super.finishUsing(stack, world, user);
         if (user instanceof PlayerEntity) {
             PlayerEntity player = ((PlayerEntity) user);
-            player.sendMessage(Text.literal("§4AERRRAUUUUGHAAAAAAAARRRRRRRRRRAGHHHHHHHHAAAAAAAAA!!!!!!!"), true);
+            player.sendMessage(ModText.literal("§4AERRRAUUUUGHAAAAAAAARRRRRRRRRRAGHHHHHHHHAAAAAAAAA!!!!!!!"), true);
             player.setOnFireFor(3);
             player.playSound(new SoundEvent(new Identifier("minecraft:block.glass.break")), 4, 1f);
             player.playSound(new SoundEvent(new Identifier("thatchermod:thatcher_possession")), 4, 0.75f);

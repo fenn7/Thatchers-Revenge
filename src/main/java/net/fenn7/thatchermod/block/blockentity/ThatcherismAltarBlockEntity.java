@@ -7,6 +7,7 @@ import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.item.inventory.ImplementedInventory;
 import net.fenn7.thatchermod.screen.ThatcherismAltarScreenHandler;
 import net.fenn7.thatchermod.util.CommonMethods;
+import net.fenn7.thatchermod.util.ModText;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
@@ -24,6 +25,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -90,7 +92,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
 
     @Override
     public Text getDisplayName() {
-        return Text.literal(displayName);
+        return ModText.literal(displayName);
     }
 
     @Nullable
@@ -139,7 +141,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
                                 strikePos, SpawnReason.TRIGGERED, true, true);
                         extinguishFire(strikePos, world);
                     }
-                    world.addParticle(ParticleTypes.SONIC_BOOM, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
+                    world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
                     world.addParticle(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
                 }
                 if (entity.channelingProgress == 170) { //should do this on the final major beat of the song
@@ -161,7 +163,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
             if (entity.progress < entity.maxProgress) {
                 entity.progress++;
                 if (entity.progress == entity.maxProgress) {
-                    world.playSound(null, pos, SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.BLOCKS, 5F, 1F);
+                    world.playSound(null, pos, SoundEvents.AMBIENT_CAVE, SoundCategory.BLOCKS, 5F, 1F);
                     ThatcherismAltarBlock.setIsPreparedTrue(world, pos, state);
                 }
             }

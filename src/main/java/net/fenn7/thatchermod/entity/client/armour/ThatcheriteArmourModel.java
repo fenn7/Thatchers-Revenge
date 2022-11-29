@@ -6,18 +6,19 @@ import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class ThatcheriteArmourModel extends AnimatedGeoModel<ThatcheriteArmourItem> {
+
     @Override
-    public Identifier getModelResource(ThatcheriteArmourItem object) {
+    public Identifier getModelLocation(ThatcheriteArmourItem object) {
         return new Identifier(ThatcherMod.MOD_ID, "geo/thatcherite_armour_black.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(ThatcheriteArmourItem object) {
+    public Identifier getTextureLocation(ThatcheriteArmourItem object) {
         return new Identifier(ThatcherMod.MOD_ID, "textures/models/armour/thatcherite_armour_texture.png");
     }
 
     @Override
-    public Identifier getAnimationResource(ThatcheriteArmourItem animatable) {
+    public Identifier getAnimationFileLocation(ThatcheriteArmourItem animatable) {
         return new Identifier(ThatcherMod.MOD_ID, "animations/thatcherite_armour_animation.json");
     }
 }

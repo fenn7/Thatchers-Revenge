@@ -30,7 +30,7 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
             ordinal = 2), cancellable = true)
     private void injectRightArmMethod(T entity, CallbackInfo info) {
         MinecraftClient client = MinecraftClient.getInstance();
-        ItemStack rightStack = client.options.getMainArm().getValue() == Arm.RIGHT ? entity.getMainHandStack() : entity.getOffHandStack();
+        ItemStack rightStack = client.options.mainArm == Arm.RIGHT ? entity.getMainHandStack() : entity.getOffHandStack();
 
         if (rightStack.getItem() instanceof GrenadeLauncherItem) {
             this.rightArm.pitch = -1.4F + this.head.pitch;
@@ -43,7 +43,7 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
             ordinal = 2), cancellable = true)
     private void injectLeftArmMethod(T entity, CallbackInfo info) {
         MinecraftClient client = MinecraftClient.getInstance();
-        ItemStack leftStack = client.options.getMainArm().getValue() == Arm.RIGHT ? entity.getOffHandStack() : entity.getMainHandStack();
+        ItemStack leftStack = client.options.mainArm == Arm.RIGHT ? entity.getOffHandStack() : entity.getMainHandStack();
 
         if (leftStack.getItem() instanceof GrenadeLauncherItem) {
             this.leftArm.pitch = -1.4F + this.head.pitch;

@@ -1,6 +1,7 @@
 package net.fenn7.thatchermod.item.custom;
 
 import net.fenn7.thatchermod.util.CommonMethods;
+import net.fenn7.thatchermod.util.ModText;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.client.item.TooltipContext;
@@ -130,10 +131,10 @@ public class CollieryCloserItem extends PickaxeItem {
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType == ClickType.RIGHT) { // right click in inventory to switch modes
             if (!isBreaking3x3(stack)) {
-                player.sendMessage(Text.literal("3x3x3 Breaking Mode Activated!"), true);
+                player.sendMessage(ModText.literal("3x3x3 Breaking Mode Activated!"), true);
                 setBreaking3x3(stack, true);
             } else {
-                player.sendMessage(Text.literal("3x3x3 Breaking Mode Disabled!"), true);
+                player.sendMessage(ModText.literal("3x3x3 Breaking Mode Disabled!"), true);
                 setBreaking3x3(stack, false);
             }
             return true;
@@ -155,9 +156,9 @@ public class CollieryCloserItem extends PickaxeItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (isBreaking3x3(stack)) {
-            tooltip.add(Text.literal("3x3x3 Mode: ENABLED"));
+            tooltip.add(ModText.literal("3x3x3 Mode: ENABLED"));
         } else {
-            tooltip.add(Text.literal("3x3x3 Mode: DISABLED"));
+            tooltip.add(ModText.literal("3x3x3 Mode: DISABLED"));
         }
     }
 }

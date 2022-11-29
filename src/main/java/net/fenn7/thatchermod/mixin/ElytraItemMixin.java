@@ -1,6 +1,7 @@
 package net.fenn7.thatchermod.mixin;
 
 import net.fenn7.thatchermod.enchantments.ModEnchantments;
+import net.fenn7.thatchermod.util.ModText;
 import net.fenn7.thatchermod.util.NBTInterface;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -28,9 +29,9 @@ public abstract class ElytraItemMixin extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (EnchantmentHelper.getLevel(ModEnchantments.AIR_ASSAULT, stack) != 0) {
             if (NBTInterface.isBombing(stack)) {
-                tooltip.add(Text.literal("§4ARMED"));
+                tooltip.add(ModText.literal("§4ARMED"));
             } else {
-                tooltip.add(Text.literal("Disarmed"));
+                tooltip.add(ModText.literal("Disarmed"));
             }
         }
     }

@@ -19,7 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ShriekParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -130,7 +130,7 @@ public class CommandSceptreItem extends Item {
                     ticks++;
                     if (ticks % 10 == 0) {
                         ticks = 0;
-                        world.addParticle(new ShriekParticleEffect(0), passive.getX(), passive.getY() + passive.getHeight(),
+                        world.addParticle(ParticleTypes.SOUL, passive.getX(), passive.getY() + passive.getHeight(),
                                 passive.getZ(), 0, 1, 0);
                     }
                 }
