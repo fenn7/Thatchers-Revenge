@@ -2,6 +2,7 @@ package net.fenn7.thatchermod.item.custom;
 
 import net.fenn7.thatchermod.util.CommonMethods;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
+import net.fenn7.thatchermod.util.ModText;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -160,10 +161,10 @@ public class CommunityChargebowItem extends BowItem {
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType == ClickType.RIGHT) { // right click in inventory to switch modes
             if (!isRapidFiring(stack)) {
-                player.sendMessage(Text.literal("Rapid-Fire Mode Activated!"), true);
+                player.sendMessage(ModText.literal("Rapid-Fire Mode Activated!"), true);
                 setRapidFiring(stack, true);
             } else {
-                player.sendMessage(Text.literal("Precision Mode Activated!"), true);
+                player.sendMessage(ModText.literal("Precision Mode Activated!"), true);
                 setRapidFiring(stack, false);
             }
             return true;
@@ -185,9 +186,9 @@ public class CommunityChargebowItem extends BowItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (isRapidFiring(stack)) {
-            tooltip.add(Text.literal("Rapid-Fire Mode"));
+            tooltip.add(ModText.literal("Rapid-Fire Mode"));
         } else {
-            tooltip.add(Text.literal("Precision Mode"));
+            tooltip.add(ModText.literal("Precision Mode"));
         }
     }
 }

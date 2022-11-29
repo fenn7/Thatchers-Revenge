@@ -10,17 +10,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class ThatcherModel extends AnimatedGeoModel<ThatcherEntity> {
     @Override
-    public Identifier getModelResource(ThatcherEntity object) {
+    public Identifier getModelLocation(ThatcherEntity object) {
         return new Identifier(ThatcherMod.MOD_ID, "geo/thatcher.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(ThatcherEntity object) {
+    public Identifier getTextureLocation(ThatcherEntity object) {
         return new Identifier(ThatcherMod.MOD_ID, "textures/entity/thatcher/thatcher.png");
     }
 
     @Override
-    public Identifier getAnimationResource(ThatcherEntity animatable) {
+    public Identifier getAnimationFileLocation(ThatcherEntity animatable) {
         return new Identifier(ThatcherMod.MOD_ID, "animations/thatcher.animation.json");
     }
 

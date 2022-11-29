@@ -16,7 +16,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -55,16 +54,16 @@ public class RoyalFencerEntity extends AbstractMilitaryEntity {
     }
 
     @Override
-    protected void initEquipment(Random random, LocalDifficulty localDifficulty) {
-        super.initEquipment(random, localDifficulty);
+    protected void initEquipment(LocalDifficulty localDifficulty) {
+        super.initEquipment(localDifficulty);
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
-        this.updateEnchantments(random, localDifficulty);
+        this.updateEnchantments(localDifficulty);
     }
 
     @Nullable
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        this.initEquipment(random, difficulty);
+        this.initEquipment(difficulty);
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 

@@ -1,6 +1,7 @@
 package net.fenn7.thatchermod.effect;
 
 import net.fenn7.thatchermod.util.IEntityDataSaver;
+import net.fenn7.thatchermod.util.ModText;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -29,7 +31,7 @@ public class LastStandEffect extends StatusEffect {
         this.ticks = 0;
         this.maxTicks = 120;
         this.fightMsg = "";
-        this.bossBar = (ServerBossBar) (new ServerBossBar(Text.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.PROGRESS)).setDarkenSky(true);
+        this.bossBar = (ServerBossBar) (new ServerBossBar(ModText.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
 
     public LastStandEffect(StatusEffectCategory statusEffectCategory, int color, int maxTicks) {
@@ -48,7 +50,7 @@ public class LastStandEffect extends StatusEffect {
                 adjustModifierAmount(0, modifier);
             }
         }
-        entity.setCustomName(Text.literal("§4LAST STAND ACTIVE"));
+        entity.setCustomName(ModText.literal("§4LAST STAND ACTIVE"));
         entity.setGlowing(true);
         entity.setInvulnerable(true);
         entity.setCustomNameVisible(true);
@@ -62,7 +64,7 @@ public class LastStandEffect extends StatusEffect {
             if (this.ticks % 40 == 0) {
                 player.world.playSound(null, player.getBlockPos(), new SoundEvent(new Identifier("thatchermod:last_heartbeat")),
                         SoundCategory.HOSTILE, 80, 1.25F);
-                player.sendMessage(Text.literal(this.fightMsg), true);
+                player.sendMessage(ModText.literal(this.fightMsg), true);
             }
             if (!player.world.isClient) {
                 this.ticks++;

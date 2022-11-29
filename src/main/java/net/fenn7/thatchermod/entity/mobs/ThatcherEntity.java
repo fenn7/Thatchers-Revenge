@@ -2,6 +2,7 @@ package net.fenn7.thatchermod.entity.mobs;
 
 import net.fenn7.thatchermod.entity.projectiles.CursedMeteorEntity;
 import net.fenn7.thatchermod.entity.projectiles.CursedMissileEntity;
+import net.fenn7.thatchermod.util.ModText;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -28,6 +29,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -72,7 +74,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, 0.0F);
         this.setPathfindingPenalty(PathNodeType.DAMAGE_FIRE, 0.0F);
         this.experiencePoints = 750;
-        this.bossBar = (ServerBossBar) (new ServerBossBar(Text.literal("§1" + this.getDisplayName().getString()), BossBar.Color.BLUE, BossBar.Style.PROGRESS)).setDarkenSky(true);
+        this.bossBar = (ServerBossBar) (new ServerBossBar(ModText.literal("§1" + this.getDisplayName().getString()), BossBar.Color.BLUE, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
 
     @Override
@@ -243,7 +245,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private void chainLightningAttack(Entity target) {
         if (!this.world.isClient()) {
             for (int i = 0; i < 3; i++) {
-                EntityType.LIGHTNING_BOLT.spawn((ServerWorld) this.world, null, null, null, target.getSteppingPos(),
+                EntityType.LIGHTNING_BOLT.spawn((ServerWorld) this.world, null, null, null, target.getBlockPos(),
                         SpawnReason.TRIGGERED, true, true);
             }
         }
@@ -251,11 +253,13 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     private void rapidFireAttack(Entity target) {
         for (int i = 0; i < 6; i++) {
+            double d = this.squaredDistanceTo(target);
             double e = target.getX() - this.getX();
-            double f = target.getBodyY(0.5D) - (this.getBodyY(0.5D) + 0.5D);
+            double f = target.getBodyY(0.5) - this.getBodyY(0.5);
             double g = target.getZ() - this.getZ();
+            double h = Math.sqrt(Math.sqrt(d)) * 0.5;
 
-            CursedMissileEntity fireBall = new CursedMissileEntity(this.world, this, this.getRandom().nextTriangular(e, 2.5D), f, this.getRandom().nextTriangular(g, 2.5D));
+            CursedMissileEntity fireBall = new CursedMissileEntity(this.world, this, e + this.getRandom().nextGaussian() * h, f, g + this.getRandom().nextGaussian() * h);
             fireBall.setPosition(fireBall.getX() + ThreadLocalRandom.current().nextDouble(-1, 1 + 1), this.getBodyY(0.5D) + 0.5D, fireBall.getZ() + ThreadLocalRandom.current().nextDouble(-1, 1 + 1));
             this.world.spawnEntity(fireBall);
         }
@@ -282,7 +286,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.setPosition(target.getX(), target.getY(), target.getZ());
         ((LivingEntity) target).setStatusEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 1), this);
         ((LivingEntity) target).setStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 60, 9), this);
-        world.playSound(null, target.getSteppingPos(), SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.BLOCKS, 12.5F, 2.0F);
+        world.playSound(null, target.getBlockPos(), SoundEvents.AMBIENT_CAVE, SoundCategory.BLOCKS, 12.5F, 2.0F);
     }
 
     private void activateRageMode() {
@@ -369,7 +373,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         if (this.ticksSinceDeath < 100) {
             this.ticksSinceDeath++;
             if (this.ticksSinceDeath == 100) {
-                this.emitGameEvent(GameEvent.ENTITY_DIE);
+                this.emitGameEvent(GameEvent.ENTITY_KILLED);
                 this.remove(RemovalReason.KILLED);
                 this.ticksSinceDeath = 0;
                 this.ticksSinceTracked = 0;
@@ -395,7 +399,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             float healthRatio = this.getHealth() / this.getMaxHealth();
             if (!target.getWorld().isClient() && healthRatio <= 0.25) {
                 damageShield(10);
-                EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null, target.getSteppingPos(),
+                EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null, target.getBlockPos(),
                         SpawnReason.TRIGGERED, true, true);
                 double x = target.getX() - this.getX();
                 double z = target.getZ() - this.getZ();
@@ -445,7 +449,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK;
+        return SoundEvents.AMBIENT_CAVE;
     }
 
     protected void playStepSound(BlockPos pos, BlockState state) {

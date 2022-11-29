@@ -127,7 +127,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     @Override
-    public boolean onKilledOther(ServerWorld world, LivingEntity other) {
+    public void onKilledOther(ServerWorld world, LivingEntity other) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         if (player.hasStatusEffect(ModEffects.LAST_STAND)) {
             LastStandEffect.setStatusOnRemove(player, true);
@@ -140,9 +140,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             player.setHealth(newHealth);
 
             LastStandEffect.setStatusOnRemove(player, false);
-            player.playSound(SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.HOSTILE, 100F, 2.0F);
+            player.playSound(SoundEvents.AMBIENT_CAVE, SoundCategory.HOSTILE, 100F, 2.0F);
         }
-        return super.onKilledOther(world, other);
+        super.onKilledOther(world, other);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
@@ -189,7 +189,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
         if (playerData.getPersistentData().getBoolean("should_recoil") && player.world.isClient()) {
             if (this.recoilTicks == 0) {
-                Vec3d vel = Vec3d.fromPolar(player.getPitch(), player.getBodyYaw());
+                Vec3d vel = Vec3d.fromPolar(player.getPitch(), player.getYaw());
                 player.takeKnockback(0.2D, vel.getX(), vel.getZ());
             }
 

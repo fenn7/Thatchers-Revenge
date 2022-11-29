@@ -123,12 +123,12 @@ public abstract class AbstractMilitaryEntity extends PathAwareEntity implements 
     }
 
     @Override
-    public boolean onKilledOther(ServerWorld world, LivingEntity other) {
+    public void onKilledOther(ServerWorld world, LivingEntity other) {
         if (other instanceof PlayerEntity player) {
             this.forgive(player);
             this.stopAnger();
         }
-        return super.onKilledOther(world, other);
+        super.onKilledOther(world, other);
     }
 
     public void setOwner(@Nullable MobEntity owner) {

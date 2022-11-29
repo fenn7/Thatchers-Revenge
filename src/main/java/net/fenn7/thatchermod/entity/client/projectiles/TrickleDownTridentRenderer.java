@@ -32,7 +32,7 @@ public class TrickleDownTridentRenderer extends GeoProjectilesRenderer<TrickleDo
     @Override
     public void render(TrickleDownTridentEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
                        VertexConsumerProvider bufferIn, int packedLightIn) {
-        GeoModel model = modelProvider.getModel(modelProvider.getModelResource(entityIn));
+        GeoModel model = modelProvider.getModel(modelProvider.getModelLocation(entityIn));
         matrixStackIn.push();
         matrixStackIn.multiply(Vec3f.POSITIVE_Y
                 .getDegreesQuaternion(MathHelper.lerp(partialTicks, entityIn.prevYaw, entityIn.getYaw()) - 90.0F));

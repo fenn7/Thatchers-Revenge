@@ -10,17 +10,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class RoyalFencerModel extends AnimatedGeoModel<RoyalFencerEntity> {
     @Override
-    public Identifier getModelResource(RoyalFencerEntity object) {
+    public Identifier getModelLocation(RoyalFencerEntity object) {
         return new Identifier(ThatcherMod.MOD_ID, "geo/royal_fencer.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(RoyalFencerEntity object) {
+    public Identifier getTextureLocation(RoyalFencerEntity object) {
         return new Identifier(ThatcherMod.MOD_ID, "textures/entity/military/royal_fencer.png");
     }
 
     @Override
-    public Identifier getAnimationResource(RoyalFencerEntity animatable) {
+    public Identifier getAnimationFileLocation(RoyalFencerEntity animatable) {
         return new Identifier(ThatcherMod.MOD_ID, "animations/royal_fencer.animation.json");
     }
 
