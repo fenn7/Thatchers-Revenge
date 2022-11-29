@@ -39,7 +39,7 @@ public class ThatcherismAltarScreen extends HandledScreen<ThatcherismAltarScreen
         }
     }
 
-    public void setImgPath(String imagePath){
+    public void setImgPath(String imagePath) {
         imgPath = imagePath;
     }
 

@@ -17,17 +17,17 @@ import net.minecraft.util.registry.Registry;
 public class ModBlocks {
     public static final Block THATCHERISM_ALTAR = registerBlock("thatcherism_altar",
             new ThatcherismAltarBlock(FabricBlockSettings.of(Material.STONE)
-                    .strength(42.0F,1337.0F).requiresTool()
+                    .strength(42.0F, 1337.0F).requiresTool()
                     .luminance((state) ->
                             (state.get(ThatcherismAltarBlock.IS_CHANNELING) || state.get(ThatcherismAltarBlock.IS_PREPARED))
                                     ? 15 : 0)), ModItemGroup.THATCHER);
 
-    private static Block registerBlock(String name, Block block, ItemGroup group){
+    private static Block registerBlock(String name, Block block, ItemGroup group) {
         registerBlockAsItem(name, block, group);
         return Registry.register(Registry.BLOCK, new Identifier(ThatcherMod.MOD_ID, name), block);
     }
 
-    private static Item registerBlockAsItem(String name, Block block, ItemGroup group){
+    private static Item registerBlockAsItem(String name, Block block, ItemGroup group) {
         return Registry.register(Registry.ITEM, new Identifier(ThatcherMod.MOD_ID, name), new BlockItem(block,
                 new FabricItemSettings().group(group).fireproof().rarity(Rarity.EPIC)));
     }

@@ -2,7 +2,6 @@ package net.fenn7.thatchermod.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherItem;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -11,7 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class GrenadeLauncherScreen extends HandledScreen<GrenadeLauncherScreenHandler> {
-    private static String imgPath = "textures/gui/grenade_launcher_gui.png";
+    private static final String imgPath = "textures/gui/grenade_launcher_gui.png";
     private static final Identifier TEXTURE = new Identifier(ThatcherMod.MOD_ID, imgPath);
 
     public GrenadeLauncherScreen(GrenadeLauncherScreenHandler handler, PlayerInventory inventory, Text title) {

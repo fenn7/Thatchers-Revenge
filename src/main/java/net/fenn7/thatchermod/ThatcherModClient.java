@@ -1,14 +1,16 @@
 package net.fenn7.thatchermod;
 
-import com.eliotlash.mclib.math.functions.classic.Mod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fenn7.thatchermod.entity.ModEntities;
-import net.fenn7.thatchermod.entity.client.*;
+import net.fenn7.thatchermod.entity.client.RoyalFencerRenderer;
+import net.fenn7.thatchermod.entity.client.RoyalGrenadierRenderer;
+import net.fenn7.thatchermod.entity.client.ThatcherModelRenderer;
 import net.fenn7.thatchermod.entity.client.armour.ThatcheriteArmourRenderer;
 import net.fenn7.thatchermod.entity.client.projectiles.*;
+import net.fenn7.thatchermod.event.KeyInputs;
 import net.fenn7.thatchermod.item.ModItems;
 import net.fenn7.thatchermod.network.ModPackets;
 import net.fenn7.thatchermod.particle.ModParticles;
@@ -17,7 +19,6 @@ import net.fenn7.thatchermod.particle.custom.ThatcherJumpParticle;
 import net.fenn7.thatchermod.screen.GrenadeLauncherScreen;
 import net.fenn7.thatchermod.screen.ModScreenHandlers;
 import net.fenn7.thatchermod.screen.ThatcherismAltarScreen;
-import net.fenn7.thatchermod.event.KeyInputs;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 public class ThatcherModClient implements ClientModInitializer {

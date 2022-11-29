@@ -1,24 +1,14 @@
 package net.fenn7.thatchermod.mixin;
 
-import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.effect.ModEffects;
-import net.fenn7.thatchermod.effect.StaticBuildupEffect;
-import net.fenn7.thatchermod.enchantments.ModEnchantments;
-import net.fenn7.thatchermod.item.ModItems;
-import net.fenn7.thatchermod.item.custom.CommunityChargebowItem;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.SpectralArrowEntity;
-import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.item.TridentItem;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,7 +1,6 @@
 package net.fenn7.thatchermod.entity.client;
 
 import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.entity.mobs.RoyalFencerEntity;
 import net.fenn7.thatchermod.entity.mobs.RoyalGrenadierEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.model.AnimatedGeoModel;

@@ -12,9 +12,13 @@ public class StealthEnchantment extends Enchantment {
     }
 
     @Override
-    public int getMaxLevel() { return 1; }
+    public int getMaxLevel() {
+        return 1;
+    }
 
-    public int getMinPower(int level) { return level * 15; }
+    public int getMinPower(int level) {
+        return level * 15;
+    }
 
     public int getMaxPower(int level) {
         return this.getMinPower(level) + 30;

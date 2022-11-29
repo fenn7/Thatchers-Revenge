@@ -16,9 +16,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BipedEntityModel.class)
 public abstract class BipedModelMixin<T extends LivingEntity> {
-    @Shadow @Final public ModelPart rightArm;
-    @Shadow @Final public ModelPart leftArm;
-    @Shadow @Final public ModelPart head;
+    @Shadow
+    @Final
+    public ModelPart rightArm;
+    @Shadow
+    @Final
+    public ModelPart leftArm;
+    @Shadow
+    @Final
+    public ModelPart head;
 
     @Inject(method = "positionRightArm", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/ModelPart;pitch:F",
             ordinal = 2), cancellable = true)

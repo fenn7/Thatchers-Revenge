@@ -32,13 +32,13 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
 
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
-        if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult)hitResult).getEntity())) {
+        if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult) hitResult).getEntity())) {
             if (!this.world.isClient) {
                 List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(2.0D, 2.0D, 2.0D));
                 if (!list.isEmpty()) {
                     Iterator var5 = list.iterator();
-                    while(var5.hasNext()) {
-                        LivingEntity livingEntity = (LivingEntity)var5.next();
+                    while (var5.hasNext()) {
+                        LivingEntity livingEntity = (LivingEntity) var5.next();
                         livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 100, 2));
                     }
                 }
@@ -56,14 +56,32 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
 
     @Override
     public void tick() {
-        if (isFalling) { this.powerY -= 0.03; }
-        if (this.age >= maximumAgeTicks) { this.discard(); }
+        if (isFalling) {
+            this.powerY -= 0.03;
+        }
+        if (this.age >= maximumAgeTicks) {
+            this.discard();
+        }
         super.tick();
     }
 
-    public void setFalling(boolean shouldFall) { isFalling = shouldFall; }
-    protected ParticleEffect getParticleType() { return ParticleTypes.SCULK_SOUL; }
-    protected boolean isBurning() { return false; }
-    public boolean collides() { return true; }
-    public boolean hasNoGravity() { return false; }
+    public void setFalling(boolean shouldFall) {
+        isFalling = shouldFall;
+    }
+
+    protected ParticleEffect getParticleType() {
+        return ParticleTypes.SCULK_SOUL;
+    }
+
+    protected boolean isBurning() {
+        return false;
+    }
+
+    public boolean collides() {
+        return true;
+    }
+
+    public boolean hasNoGravity() {
+        return false;
+    }
 }

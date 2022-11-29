@@ -17,7 +17,7 @@ public class SmokeGrenadeRenderer extends GeoProjectilesRenderer<SmokeGrenadeEnt
 
     @Override
     public boolean shouldRender(SmokeGrenadeEntity entity, Frustum frustum, double x, double y, double z) {
-       // this.isSmoking = entity.isSmoking();
+        // this.isSmoking = entity.isSmoking();
         return super.shouldRender(entity, frustum, x, y, z);
     }
 

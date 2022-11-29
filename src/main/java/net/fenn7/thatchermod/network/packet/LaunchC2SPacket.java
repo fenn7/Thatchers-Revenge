@@ -1,8 +1,8 @@
 package net.fenn7.thatchermod.network.packet;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fenn7.thatchermod.entity.projectiles.SmokeEntity;
 import net.fenn7.thatchermod.enchantments.ModEnchantments;
+import net.fenn7.thatchermod.entity.projectiles.SmokeEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ElytraItem;

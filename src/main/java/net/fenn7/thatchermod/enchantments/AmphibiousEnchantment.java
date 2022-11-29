@@ -8,7 +8,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.*;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.TridentItem;
 
 public class AmphibiousEnchantment extends Enchantment {
     protected AmphibiousEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot[] slotTypes) {
@@ -36,7 +39,7 @@ public class AmphibiousEnchantment extends Enchantment {
     public void onTargetDamaged(LivingEntity user, Entity target, int level) {
         if (user.isWet()) {
             target.damage(DamageSource.GENERIC, level * 2.5F);
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 10,1, false, false, false));
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 10, 1, false, false, false));
         }
         super.onTargetDamaged(user, target, level);
     }

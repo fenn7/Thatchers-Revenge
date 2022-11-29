@@ -824,6 +824,9 @@
 			}
 		}
 	],
+	"overrides": [
+		{"predicate": {"minecraft:trident.pulling": 1}, "model": "thatchermod:item/trickle_down_trident_pull"}
+	],
 	"display": {
 		"thirdperson_righthand": {
 			"translation": [0, -5.5, 1.25]

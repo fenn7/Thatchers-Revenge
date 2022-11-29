@@ -1,6 +1,5 @@
 package net.fenn7.thatchermod.entity.projectiles;
 
-import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.item.ModItems;
 import net.minecraft.block.Block;
@@ -18,9 +17,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -55,8 +52,7 @@ public class GrenadeEntity extends AbstractGrenadeEntity implements IAnimatable 
                 this.world.addParticle(effect, this.getX(), this.getY(), this.getZ(),
                         this.power + x, 2 * this.power, this.power + z);
             }
-        }
-        else {
+        } else {
             super.handleStatus(status);
         }
     }

@@ -1,8 +1,6 @@
 package net.fenn7.thatchermod.item.custom.grenade;
 
-import net.fenn7.thatchermod.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.item.inventory.ImplementedInventory;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -97,15 +95,13 @@ import java.util.List;
     }
 }*/
 
-public class GrenadeLauncherInventory implements ImplementedInventory
-{
+public class GrenadeLauncherInventory implements ImplementedInventory {
     protected static final String nbtTagName = "Grenades";
     protected static final String listTagName = "Items.List";
     private final ItemStack stack;
     private final DefaultedList<ItemStack> grenadeList = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
-    public GrenadeLauncherInventory(ItemStack stack)
-    {
+    public GrenadeLauncherInventory(ItemStack stack) {
         this.stack = stack;
         NbtCompound nbt = stack.getSubNbt(nbtTagName);
         if (nbt != null) {

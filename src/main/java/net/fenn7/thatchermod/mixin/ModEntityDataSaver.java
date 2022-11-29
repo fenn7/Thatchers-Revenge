@@ -15,7 +15,7 @@ public abstract class ModEntityDataSaver implements IEntityDataSaver {
 
     @Override
     public NbtCompound getPersistentData() {
-        if(this.nbtC == null) {
+        if (this.nbtC == null) {
             this.nbtC = new NbtCompound();
         }
         return nbtC;

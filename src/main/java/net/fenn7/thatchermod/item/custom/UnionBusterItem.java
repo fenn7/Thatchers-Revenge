@@ -55,7 +55,9 @@ public class UnionBusterItem extends ModAxeItem {
                 double length = entity.getX() - user.getX();
                 double width = entity.getZ() - user.getZ();
                 double distanceFromUser = (Math.sqrt((length * length) + (width * width))); //pythagoras theorem
-                if (distanceFromUser < 1) { distanceFromUser = 1; }
+                if (distanceFromUser < 1) {
+                    distanceFromUser = 1;
+                }
                 double displacement = (2 / distanceFromUser * 15 + 6); // maximum displacement is 21 blocks
 
                 boolean blockFound = false;
@@ -63,7 +65,7 @@ public class UnionBusterItem extends ModAxeItem {
                 for (int i = 0; i < displacement; i++) {
                     pos = pos.offset(Direction.UP, 1);
                     if (!world.getBlockState(pos).isAir()) { // stop on the first NON-AIR block
-                        if (pos.getY()%2 == 1) { // correction needed for odd Y values otherwise they will shoot through block
+                        if (pos.getY() % 2 == 1) { // correction needed for odd Y values otherwise they will shoot through block
                             pos = pos.offset(Direction.DOWN, 1);
                         }
                         blockFound = true;
@@ -72,13 +74,17 @@ public class UnionBusterItem extends ModAxeItem {
                     i++;
                 }
 
-                if (blockFound) { entity.setPosition(entity.getX(), pos.getY() - entity.getHeight(), entity.getZ()); }
-                else { entity.setPosition(entity.getX(), pos.getY(), entity.getZ()); }
+                if (blockFound) {
+                    entity.setPosition(entity.getX(), pos.getY() - entity.getHeight(), entity.getZ());
+                } else {
+                    entity.setPosition(entity.getX(), pos.getY(), entity.getZ());
+                }
 
-                ((LivingEntity) entity).setAttacker(user); ((LivingEntity) entity).setAttacking(user); // aggros mobs
+                ((LivingEntity) entity).setAttacker(user);
+                ((LivingEntity) entity).setAttacking(user); // aggros mobs
                 user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability
                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 150,
-                        (int) (nearbyEntities.size()/4)), user); // every 4 entities hit grants +1 level of resistance
+                        nearbyEntities.size() / 4), user); // every 4 entities hit grants +1 level of resistance
                 user.heal(2);
                 success = true;
             }
@@ -92,7 +98,7 @@ public class UnionBusterItem extends ModAxeItem {
     }
 
     private void spawnHitEffects(Entity entity, World world) {
-        if(!entity.world.isClient) {
+        if (!entity.world.isClient) {
             CommonMethods.summonDustParticles(world, 1, 1.0f, 0.6f, 0.3f, 2,
                     entity.getX(), entity.getY() + 0.5D, entity.getZ(), 0, 0, 0);
         }

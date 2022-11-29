@@ -1,7 +1,5 @@
 package net.fenn7.thatchermod.entity.projectiles;
 
-import net.fenn7.thatchermod.ThatcherMod;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -11,10 +9,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -22,8 +18,6 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class AbstractGrenadeEntity extends ThrownItemEntity implements IAnimatable {
     protected final AnimationFactory factory = new AnimationFactory(this);
@@ -46,7 +40,7 @@ public abstract class AbstractGrenadeEntity extends ThrownItemEntity implements 
     public void tick() {
         if (this.age == 1) {
             world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.HOSTILE,
-                        1.0F, 1.0F, true);
+                    1.0F, 1.0F, true);
         }
         if (this.age >= this.maxAgeTicks) {
             explode(this.power);
@@ -61,12 +55,17 @@ public abstract class AbstractGrenadeEntity extends ThrownItemEntity implements 
             Vec3d velocity = this.getVelocity().multiply(0.65F);
 
             switch (hitSide) {
-                case "up", "down": this.setVelocity(velocity.getX(), -velocity.getY(), velocity.getZ()); break;
-                case "east", "west": this.setVelocity(-velocity.getX(), velocity.getY(), velocity.getZ()); break;
-                case "north", "south": this.setVelocity(velocity.getX(), velocity.getY(), -velocity.getZ()); break;
+                case "up", "down":
+                    this.setVelocity(velocity.getX(), -velocity.getY(), velocity.getZ());
+                    break;
+                case "east", "west":
+                    this.setVelocity(-velocity.getX(), velocity.getY(), velocity.getZ());
+                    break;
+                case "north", "south":
+                    this.setVelocity(velocity.getX(), velocity.getY(), -velocity.getZ());
+                    break;
             }
-        }
-        else {
+        } else {
             this.world.sendEntityStatus(this, (byte) 3);
             explode(this.power);
         }
@@ -112,7 +111,9 @@ public abstract class AbstractGrenadeEntity extends ThrownItemEntity implements 
         this.power = power;
     }
 
-    public float getPower() { return this.power; }
+    public float getPower() {
+        return this.power;
+    }
 
     protected <E extends IAnimatable> PlayState flyingAnimation(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grenade.flying", true));

@@ -1,22 +1,13 @@
 package net.fenn7.thatchermod.event;
 
-import com.eliotlash.mclib.math.functions.limit.Min;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.effect.ModEffects;
-import net.fenn7.thatchermod.util.IEntityDataSaver;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-
-import java.util.List;
 
 public class RenderEvents implements WorldRenderEvents.End {
     private static final Identifier LAST_STAND_OVERLAY = new Identifier(ThatcherMod.MOD_ID, "textures/misc/last_stand.png");

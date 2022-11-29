@@ -7,7 +7,10 @@ import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.*;
+import net.minecraft.entity.mob.Angerable;
+import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleEffect;
@@ -31,8 +34,10 @@ public abstract class AbstractMilitaryEntity extends PathAwareEntity implements 
     private final AnimationFactory factory = new AnimationFactory(this);
     private int angerTime;
     private int angerPassingCooldown;
-    @Nullable private UUID angryAt;
-    @Nullable private MobEntity owner;
+    @Nullable
+    private UUID angryAt;
+    @Nullable
+    private MobEntity owner;
 
     protected AbstractMilitaryEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
@@ -126,14 +131,33 @@ public abstract class AbstractMilitaryEntity extends PathAwareEntity implements 
         return super.onKilledOther(world, other);
     }
 
-    public void setOwner(@Nullable MobEntity owner) { this.owner = owner; }
-    public @Nullable MobEntity getOwner() { return this.owner; }
+    public void setOwner(@Nullable MobEntity owner) {
+        this.owner = owner;
+    }
 
-    public int getAngerTime() { return this.angerTime; }
-    public void setAngerTime(int angerTime) { this.angerTime = angerTime; }
-    public @Nullable UUID getAngryAt() { return this.angryAt; }
-    public void setAngryAt(@Nullable UUID angryAt) { this.angryAt = angryAt; }
-    public void chooseRandomAngerTime() { this.setAngerTime(100); }
+    public @Nullable MobEntity getOwner() {
+        return this.owner;
+    }
+
+    public int getAngerTime() {
+        return this.angerTime;
+    }
+
+    public void setAngerTime(int angerTime) {
+        this.angerTime = angerTime;
+    }
+
+    public @Nullable UUID getAngryAt() {
+        return this.angryAt;
+    }
+
+    public void setAngryAt(@Nullable UUID angryAt) {
+        this.angryAt = angryAt;
+    }
+
+    public void chooseRandomAngerTime() {
+        this.setAngerTime(100);
+    }
 
     // animations
     @Override
@@ -147,9 +171,11 @@ public abstract class AbstractMilitaryEntity extends PathAwareEntity implements 
     // attack its owner's target
     protected class TrackOwnerTargetGoal extends TrackTargetGoal {
         private final TargetPredicate targetPredicate = TargetPredicate.createNonAttackable().ignoreVisibility().ignoreDistanceScalingFactor();
-        private MobEntity owner = AbstractMilitaryEntity.this.owner;
+        private final MobEntity owner = AbstractMilitaryEntity.this.owner;
 
-        public TrackOwnerTargetGoal(PathAwareEntity mob) { super(mob, false); }
+        public TrackOwnerTargetGoal(PathAwareEntity mob) {
+            super(mob, false);
+        }
 
         public boolean canStart() {
             return owner != null && owner.getTarget() != null && this.canTrack(owner.getTarget(), this.targetPredicate);

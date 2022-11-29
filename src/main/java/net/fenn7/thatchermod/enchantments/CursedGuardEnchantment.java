@@ -7,8 +7,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
 
 public class CursedGuardEnchantment extends Enchantment {
     protected CursedGuardEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot[] slotTypes) {
@@ -16,7 +14,9 @@ public class CursedGuardEnchantment extends Enchantment {
     }
 
     @Override
-    public int getMaxLevel() { return 3; }
+    public int getMaxLevel() {
+        return 3;
+    }
 
     public int getMinPower(int level) {
         return level * 10;

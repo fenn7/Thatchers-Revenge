@@ -1,19 +1,13 @@
 package net.fenn7.thatchermod.screen;
 
 import net.fenn7.thatchermod.item.custom.grenade.GrenadeLauncherInventory;
-import net.fenn7.thatchermod.item.custom.grenade.GrenadeNBTSaver;
 import net.fenn7.thatchermod.screen.slot.ModGrenadeSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.util.collection.DefaultedList;
 
 public class GrenadeLauncherScreenHandler extends ScreenHandler {
     private final GrenadeLauncherInventory grenadeInv;

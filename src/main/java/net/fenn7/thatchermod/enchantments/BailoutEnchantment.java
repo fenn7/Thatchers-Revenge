@@ -10,10 +10,14 @@ public class BailoutEnchantment extends Enchantment {
     }
 
     @Override
-    public int getMaxLevel() { return 1; }
+    public int getMaxLevel() {
+        return 1;
+    }
 
     @Override
-    public boolean isTreasure() { return true; }
+    public boolean isTreasure() {
+        return true;
+    }
 
     public int getMinPower(int level) {
         return level * 25;

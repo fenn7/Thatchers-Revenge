@@ -1,19 +1,11 @@
 package net.fenn7.thatchermod.entity.projectiles;
 
-import com.eliotlash.mclib.math.functions.classic.Mod;
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.item.ModItems;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.BlazeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
@@ -24,16 +16,11 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -67,8 +54,7 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
         if (status == 3) {
             this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_GENERIC_BURN, SoundCategory.HOSTILE,
                     3.0F, 0.8F, true);
-        }
-        else if (status == 33) {
+        } else if (status == 33) {
             Box smokeBox = new Box(this.getBlockPos()).expand(this.power, this.power, this.power);
             Stream<BlockPos> posStream = BlockPos.stream(smokeBox);
             posStream.filter(pos -> Math.sqrt(pos.getSquaredDistance(this.getPos())) <= this.power)
@@ -84,9 +70,12 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
 
             List<LivingEntity> list = world.getNonSpectatingEntities(LivingEntity.class, smokeBox);
             list.stream().filter(e -> Math.sqrt(e.squaredDistanceTo(this.getX(), this.getY(), this.getZ())) <= this.power)
-                    .forEach(e -> { if (e.isOnFire()) { e.setOnFire(false); } });
-        }
-        else {
+                    .forEach(e -> {
+                        if (e.isOnFire()) {
+                            e.setOnFire(false);
+                        }
+                    });
+        } else {
             super.handleStatus(status);
         }
     }
@@ -126,8 +115,7 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
                     BlockState blockState = this.world.getBlockState(pos);
                     if (blockState.getProperties().contains(Properties.LIT)) {
                         world.setBlockState(pos, blockState.with(Properties.LIT, false), 11);
-                    }
-                    else if (this.world.getBlockState(pos).isIn(BlockTags.FIRE)) {
+                    } else if (this.world.getBlockState(pos).isIn(BlockTags.FIRE)) {
                         world.removeBlock(pos, false);
                     }
                 });

@@ -1,6 +1,5 @@
 package net.fenn7.thatchermod.effect;
 
-import net.fenn7.thatchermod.particle.ModParticles;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -22,12 +21,14 @@ public class DiscontentEffect extends StatusEffect {
         entity.setInPowderSnow(true);
         entity.setFrozenTicks(140);
         if (!entity.world.isClient) {
-            ((ServerWorld)entity.world).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, iceBlock.getDefaultState()),
+            ((ServerWorld) entity.world).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, iceBlock.getDefaultState()),
                     entity.getX(), entity.getY() + 0.5D, entity.getZ(), 1,
                     0, 0, 0, 0);
         }
     }
 
     @Override
-    public boolean canApplyUpdateEffect(int duration, int amplifier) { return true; }
+    public boolean canApplyUpdateEffect(int duration, int amplifier) {
+        return true;
+    }
 }

@@ -2,7 +2,6 @@ package net.fenn7.thatchermod.entity.client.projectiles;
 
 import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.projectiles.TrickleDownTridentEntity;
-import net.fenn7.thatchermod.entity.projectiles.TrickleDownTridentEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 

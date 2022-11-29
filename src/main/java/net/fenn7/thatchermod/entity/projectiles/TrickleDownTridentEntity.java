@@ -1,6 +1,5 @@
 package net.fenn7.thatchermod.entity.projectiles;
 
-import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.ModEntities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

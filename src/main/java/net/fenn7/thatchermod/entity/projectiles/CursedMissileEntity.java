@@ -26,7 +26,7 @@ public class CursedMissileEntity extends ExplosiveProjectileEntity {
 
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
-        if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult)hitResult).getEntity())) {
+        if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult) hitResult).getEntity())) {
             this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
             this.discard();
         }
@@ -41,14 +41,30 @@ public class CursedMissileEntity extends ExplosiveProjectileEntity {
 
     @Override
     public void tick() {
-        if (this.age >= maximumAgeTicks) { this.discard(); }
+        if (this.age >= maximumAgeTicks) {
+            this.discard();
+        }
         super.tick();
     }
 
-    protected ParticleEffect getParticleType() { return ParticleTypes.SOUL_FIRE_FLAME; }
-    protected boolean isBurning() { return false; }
-    public boolean collides() { return false; }
-    public boolean hasNoGravity() { return true; }
-    public boolean isPushable() { return false; }
+    protected ParticleEffect getParticleType() {
+        return ParticleTypes.SOUL_FIRE_FLAME;
+    }
+
+    protected boolean isBurning() {
+        return false;
+    }
+
+    public boolean collides() {
+        return false;
+    }
+
+    public boolean hasNoGravity() {
+        return true;
+    }
+
+    public boolean isPushable() {
+        return false;
+    }
 }
 

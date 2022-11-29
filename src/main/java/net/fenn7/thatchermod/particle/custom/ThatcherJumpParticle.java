@@ -2,33 +2,13 @@ package net.fenn7.thatchermod.particle.custom;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.client.particle.ParticleTextureSheet;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider.Immediate;
-import net.minecraft.client.render.entity.ElderGuardianEntityRenderer;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.render.entity.model.GuardianEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 
 public class ThatcherJumpParticle extends SpriteBillboardParticle {
     protected ThatcherJumpParticle(ClientWorld level, double xCoord, double yCoord, double zCoord,
-                              SpriteProvider spriteSet, double xd, double yd, double zd) {
+                                   SpriteProvider spriteSet, double xd, double yd, double zd) {
         super(level, xCoord, yCoord, zCoord, xd, yd, zd);
 
         this.velocityMultiplier = 0.6F;
@@ -51,7 +31,7 @@ public class ThatcherJumpParticle extends SpriteBillboardParticle {
     }
 
     private void fadeOut() {
-        this.alpha = (-(1/(float)maxAge) * age + 1);
+        this.alpha = (-(1 / (float) maxAge) * age + 1);
     }
 
     @Override

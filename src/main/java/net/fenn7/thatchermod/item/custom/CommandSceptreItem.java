@@ -39,6 +39,7 @@ import java.util.List;
 public class CommandSceptreItem extends Item {
     public static final int METEOR_DURATION = 200;
     private int ticks;
+
     public CommandSceptreItem(Settings settings) {
         super(settings);
         this.ticks = 0;
@@ -51,8 +52,7 @@ public class CommandSceptreItem extends Item {
             if (!user.isSneaking()) {
                 launchMissileEntity(world, user);
                 user.getMainHandStack().damage(1, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
-            }
-            else {
+            } else {
                 CommonMethods.summonDustParticles(world, 1, 0.0F, 0.0F, 0.33F, 3,
                         user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
                 world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_SKELETON_HORSE_DEATH, SoundCategory.HOSTILE, 8F, 0.75F);
@@ -80,20 +80,29 @@ public class CommandSceptreItem extends Item {
         HitResult hitResult = user.raycast(24, 0, true);
         BlockPos pos;
         switch (hitResult.getType()) {
-            case ENTITY -> { pos = ((EntityHitResult) hitResult).getEntity().getBlockPos(); break; }
-            case BLOCK -> { pos = ((BlockHitResult) hitResult).getBlockPos(); break; }
-            default -> { pos = new BlockPos(hitResult.getPos()); break; }
+            case ENTITY -> {
+                pos = ((EntityHitResult) hitResult).getEntity().getBlockPos();
+                break;
+            }
+            case BLOCK -> {
+                pos = ((BlockHitResult) hitResult).getBlockPos();
+                break;
+            }
+            default -> {
+                pos = new BlockPos(hitResult.getPos());
+                break;
+            }
         }
 
         BlockPos impactPos = CommonMethods.findFirstNonAirBlockDown(world, pos);
         CommonMethods.summonDustParticles(world, 10, 0, 0, 0.33F, 2,
-                impactPos.getX() + 0.5D, impactPos.getY() + 1.5D, impactPos.getZ() + 0.5D,0 ,0 ,0);
+                impactPos.getX() + 0.5D, impactPos.getY() + 1.5D, impactPos.getZ() + 0.5D, 0, 0, 0);
 
         boolean blockFound = false;
         for (int i = 0; i < 16; i++) {
             pos = impactPos.offset(Direction.UP, i + 1);
             if (!world.getBlockState(pos).isAir()) { // stop on the first NON-AIR block
-                if (pos.getY()%2 == 1) { // correction needed for odd Y values otherwise meteor will spawn in block
+                if (pos.getY() % 2 == 1) { // correction needed for odd Y values otherwise meteor will spawn in block
                     pos = pos.offset(Direction.DOWN, 1);
                 }
                 blockFound = true;
@@ -102,8 +111,11 @@ public class CommandSceptreItem extends Item {
             i++;
         }
 
-        if (blockFound) { meteorEntity.setPos(pos.getX() + 0.5, pos.getY() - 1, pos.getZ() + 0.5); }
-        else { meteorEntity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5); }
+        if (blockFound) {
+            meteorEntity.setPos(pos.getX() + 0.5, pos.getY() - 1, pos.getZ() + 0.5);
+        } else {
+            meteorEntity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        }
         meteorEntity.setVelocity(0, -64, 0, 0F, 0.0F);
         world.spawnEntity(meteorEntity);
     }
@@ -112,11 +124,13 @@ public class CommandSceptreItem extends Item {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof PlayerEntity player && player.getOffHandStack().getItem() == this) {
             List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(player, 6, 3, 6, -6, -3, -6, world);
-            for (Entity mobs: nearbyEntities) {
+            for (Entity mobs : nearbyEntities) {
                 if (mobs instanceof PassiveEntity passive) {
-                    lurePassiveEntity(passive, player); ticks++;
-                    if (ticks%10 == 0) { ticks = 0;
-                        world.addParticle(new ShriekParticleEffect(0), passive.getX(), passive.getY()+passive.getHeight(),
+                    lurePassiveEntity(passive, player);
+                    ticks++;
+                    if (ticks % 10 == 0) {
+                        ticks = 0;
+                        world.addParticle(new ShriekParticleEffect(0), passive.getX(), passive.getY() + passive.getHeight(),
                                 passive.getZ(), 0, 1, 0);
                     }
                 }
@@ -126,7 +140,7 @@ public class CommandSceptreItem extends Item {
 
     private void lurePassiveEntity(PassiveEntity passive, PlayerEntity player) {
         passive.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 20, 0, false, false, false));
-        passive.getLookControl().lookAt(player, (float)(passive.getMaxHeadRotation() + 20), (float)passive.getMaxLookPitchChange());
+        passive.getLookControl().lookAt(player, (float) (passive.getMaxHeadRotation() + 20), (float) passive.getMaxLookPitchChange());
         Path pathToPlayer = passive.getNavigation().findPathTo(player, 6);
         if (passive.distanceTo(player) > 1.5F) {
             if (!(passive instanceof TameableEntity tamable && tamable.isInSittingPose())) {
@@ -140,7 +154,8 @@ public class CommandSceptreItem extends Item {
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         if (entity instanceof TameableEntity tameable) {
             if (!tameable.isTamed()) {
-                tameable.setTamed(true); tameable.setOwner(user);
+                tameable.setTamed(true);
+                tameable.setOwner(user);
                 stack.damage(3, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
         }
@@ -166,7 +181,7 @@ public class CommandSceptreItem extends Item {
 
     public static boolean getTicksDivisibleBy(ItemStack stack, int divisor) {
         NbtCompound nbtCompound = stack.getNbt();
-        return (nbtCompound != null) && (nbtCompound.getInt("ticks")%divisor == 0);
+        return (nbtCompound != null) && (nbtCompound.getInt("ticks") % divisor == 0);
     }
 
     public static void setTicks(ItemStack stack, int ticks) {

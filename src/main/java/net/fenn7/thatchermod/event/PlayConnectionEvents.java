@@ -8,13 +8,12 @@ import net.fenn7.thatchermod.util.IEntityDataSaver;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.text.Text;
 
 public class PlayConnectionEvents implements ServerPlayConnectionEvents.Join, ServerPlayConnectionEvents.Disconnect {
 
     @Override
     public void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-        IEntityDataSaver player = (IEntityDataSaver) ((PlayerEntity) handler.getPlayer());
+        IEntityDataSaver player = (IEntityDataSaver) handler.getPlayer();
 
         handler.getPlayer().getItemCooldownManager().set(ModItems.UNION_BUSTER, player.getPersistentData().getInt("union.buster.cd"));
         handler.getPlayer().getItemCooldownManager().set(ModItems.MILK_SNATCHER, player.getPersistentData().getInt("milk.snatcher.cd"));
@@ -25,7 +24,7 @@ public class PlayConnectionEvents implements ServerPlayConnectionEvents.Join, Se
 
     @Override
     public void onPlayDisconnect(ServerPlayNetworkHandler handler, MinecraftServer server) {
-        IEntityDataSaver player = ((IEntityDataSaver) ((PlayerEntity) handler.getPlayer()));
+        IEntityDataSaver player = ((IEntityDataSaver) handler.getPlayer());
         int unionBusterCD = (int) (UnionBusterItem.DURATION * handler.getPlayer().getItemCooldownManager().
                 getCooldownProgress(ModItems.UNION_BUSTER, 0));
         int milkSnatcherCD = (int) (MilkSnatcherItem.DURATION * handler.getPlayer().getItemCooldownManager().

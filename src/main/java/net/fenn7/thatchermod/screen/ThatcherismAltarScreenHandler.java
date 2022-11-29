@@ -36,7 +36,7 @@ public class ThatcherismAltarScreenHandler extends ScreenHandler {
         addProperties(pDelegate);
     }
 
-    public boolean isPrepared(){
+    public boolean isPrepared() {
         return propertyDelegate.get(0) > 0;
     }
 

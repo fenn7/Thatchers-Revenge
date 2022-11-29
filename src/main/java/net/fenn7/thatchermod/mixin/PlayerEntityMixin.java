@@ -1,30 +1,30 @@
 package net.fenn7.thatchermod.mixin;
 
-import com.eliotlash.mclib.math.functions.classic.Mod;
-import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.effect.LastStandEffect;
 import net.fenn7.thatchermod.effect.ModEffects;
 import net.fenn7.thatchermod.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.item.custom.ThatcheriteArmourItem;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
 import net.fenn7.thatchermod.util.NBTInterface;
-import net.minecraft.block.Block;
-import net.minecraft.client.render.entity.feature.ElytraFeatureRenderer;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
+import net.minecraft.item.ElytraItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
@@ -36,12 +36,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
-    @Shadow public abstract void playSound(SoundEvent sound, float volume, float pitch);
+    @Shadow
+    public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
     private int recoilTicks = 0;
 
@@ -72,13 +72,13 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         if (source.getAttacker() instanceof LivingEntity attacker && attacker != player) {
             if (ThatcheriteArmourItem.hasLegs(player)) {
                 attacker.setStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40,
-                        (int) (amount/4) - 1), player);
+                        (int) (amount / 4) - 1), player);
             }
             if (ThatcheriteArmourItem.hasBoots(player)) {
                 Direction enemyDirection = attacker.getMovementDirection();
                 Direction playerDirection = player.getMovementDirection();
                 if (enemyDirection == playerDirection.getOpposite()) {
-                    attacker.damage(DamageSource.GENERIC, amount/3);
+                    attacker.damage(DamageSource.GENERIC, amount / 3);
                     amount -= (amount / 5);
                 }
             }
@@ -133,8 +133,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             LastStandEffect.setStatusOnRemove(player, true);
             player.removeStatusEffect(ModEffects.LAST_STAND);
 
-            float newHealth = other.getMaxHealth()/2;
-            if (newHealth > 10) { newHealth = 10; }
+            float newHealth = other.getMaxHealth() / 2;
+            if (newHealth > 10) {
+                newHealth = 10;
+            }
             player.setHealth(newHealth);
 
             LastStandEffect.setStatusOnRemove(player, false);
@@ -160,7 +162,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                         break;
                     }
                 }
-                world.createExplosion(player, player.getX(), pos.getY() + 1, player.getZ(), (float) aaLevel/2,
+                world.createExplosion(player, player.getX(), pos.getY() + 1, player.getZ(), (float) aaLevel / 2,
                         Explosion.DestructionType.NONE);
             }
             if (stLevel != 0) {
@@ -194,8 +196,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             this.recoilTicks++;
             if (this.recoilTicks <= 5) {
                 player.setPitch(player.getPitch() - 3.2F);
-            }
-            else {
+            } else {
                 playerData.getPersistentData().putBoolean("should_recoil", false);
                 this.recoilTicks = 0;
             }

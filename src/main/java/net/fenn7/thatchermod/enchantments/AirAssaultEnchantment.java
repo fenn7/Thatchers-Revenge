@@ -12,12 +12,18 @@ public class AirAssaultEnchantment extends Enchantment {
     }
 
     @Override
-    public int getMaxLevel() { return 4; }
+    public int getMaxLevel() {
+        return 4;
+    }
 
     @Override
-    public boolean isTreasure() { return true; }
+    public boolean isTreasure() {
+        return true;
+    }
 
-    public int getMinPower(int level) { return level * 20; }
+    public int getMinPower(int level) {
+        return level * 20;
+    }
 
     public int getMaxPower(int level) {
         return this.getMinPower(level) + 40;

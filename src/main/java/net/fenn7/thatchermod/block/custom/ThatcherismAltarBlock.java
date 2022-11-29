@@ -31,8 +31,8 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
     public static BooleanProperty IS_CHANNELING = BooleanProperty.of("is_channeling");
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(new Property[]{ IS_PREPARED });
-        builder.add(new Property[]{ IS_CHANNELING });
+        builder.add(IS_PREPARED);
+        builder.add(IS_CHANNELING);
     }
 
     public ThatcherismAltarBlock(Settings settings) {
@@ -59,8 +59,8 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof ThatcherismAltarBlockEntity) {
-                ItemScatterer.spawn(world, pos, (ThatcherismAltarBlockEntity)blockEntity);
-                world.updateComparators(pos,this);
+                ItemScatterer.spawn(world, pos, (ThatcherismAltarBlockEntity) blockEntity);
+                world.updateComparators(pos, this);
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }
@@ -103,7 +103,7 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
     }
 
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return (Boolean)state.get(IS_PREPARED) ? 15 : 0;
+        return state.get(IS_PREPARED) ? 15 : 0;
     }
 
     @Nullable

@@ -4,32 +4,22 @@ import net.fenn7.thatchermod.entity.ModEntities;
 import net.fenn7.thatchermod.item.ModItems;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -70,8 +60,7 @@ public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimata
                 this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.HOSTILE,
                         2.0F, 0.675F, true);
             }
-        }
-        else {
+        } else {
             super.handleStatus(status);
         }
     }
@@ -109,7 +98,7 @@ public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimata
     @Override
     protected void explode(float power) {
         BlockPos impactPos = this.getBlockPos();
-        Box impactBox = new Box(impactPos).expand(power, power/ 2, power);
+        Box impactBox = new Box(impactPos).expand(power, power / 2, power);
 
         Stream<BlockPos> posStream = BlockPos.stream(impactBox);
         posStream.filter(pos -> Math.sqrt(pos.getSquaredDistance(impactPos)) <= power)

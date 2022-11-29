@@ -1,23 +1,15 @@
 package net.fenn7.thatchermod.enchantments;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentTarget;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
 
 public class InterceptorEnchantment extends Enchantment {
     protected InterceptorEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot[] slotTypes) {
@@ -25,10 +17,14 @@ public class InterceptorEnchantment extends Enchantment {
     }
 
     @Override
-    public int getMaxLevel() { return 3; }
+    public int getMaxLevel() {
+        return 3;
+    }
 
     @Override
-    public boolean isTreasure() { return true; }
+    public boolean isTreasure() {
+        return true;
+    }
 
     public int getMinPower(int level) {
         return level * 15;

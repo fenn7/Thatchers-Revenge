@@ -75,11 +75,11 @@ public class ModItems {
             new SpawnEggItem(ModEntities.ROYAL_GRENADIER, 0x320000, 0xAA582F,
                     new FabricItemSettings().group(ModItemGroup.THATCHER)));
 
-    public static void registerModItems(){
+    public static void registerModItems() {
         ThatcherMod.LOGGER.debug("Registering Items for " + ThatcherMod.MOD_ID + " ...");
     }
 
-    private static Item registerItem(String name, Item item){
+    private static Item registerItem(String name, Item item) {
         return Registry.register(Registry.ITEM, new Identifier(ThatcherMod.MOD_ID, name), item);
     }
 }

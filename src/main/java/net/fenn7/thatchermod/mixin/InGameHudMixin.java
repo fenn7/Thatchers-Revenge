@@ -4,9 +4,7 @@ import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.effect.ModEffects;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.HitResult;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,8 +18,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class InGameHudMixin {
     private static final Identifier LAST_STAND_OVERLAY = new Identifier(ThatcherMod.MOD_ID, "textures/misc/last_stand.png");
 
-    @Shadow protected abstract void renderOverlay(Identifier texture, float opacity);
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    protected abstract void renderOverlay(Identifier texture, float opacity);
+
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getLastFrameDuration()F"))
     private void injectLastStandEffectRender(CallbackInfo ci) {

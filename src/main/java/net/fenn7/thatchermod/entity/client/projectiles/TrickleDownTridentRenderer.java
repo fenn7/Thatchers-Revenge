@@ -1,16 +1,11 @@
 package net.fenn7.thatchermod.entity.client.projectiles;
 
-import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.entity.projectiles.TrickleDownTridentEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.core.IAnimatableModel;
@@ -21,13 +16,12 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class TrickleDownTridentRenderer extends GeoProjectilesRenderer<TrickleDownTridentEntity> {
-    public static final List<Color> RAINBOW = Arrays.asList(Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.ofRGB(130,200,230), Color.ofRGB(100,100,180), Color.ofRGB(70,0,130));
+    public static final List<Color> RAINBOW = Arrays.asList(Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.ofRGB(130, 200, 230), Color.ofRGB(100, 100, 180), Color.ofRGB(70, 0, 130));
     private final AnimatedGeoModel<TrickleDownTridentEntity> modelProvider = new TrickleDownTridentModel();
     private int ticks = 0;
 

@@ -9,7 +9,9 @@ import net.minecraft.util.Identifier;
 public class SmokeRenderer extends EntityRenderer<SmokeEntity> {
     private static final Identifier TEXTURE = new Identifier(ThatcherMod.MOD_ID, "textures/entity/thatcher/cursed_missile.png");
 
-    public SmokeRenderer(EntityRendererFactory.Context ctx) { super(ctx); }
+    public SmokeRenderer(EntityRendererFactory.Context ctx) {
+        super(ctx);
+    }
 
     @Override
     public Identifier getTexture(SmokeEntity entity) {

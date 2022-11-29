@@ -11,9 +11,13 @@ public class JetAssistEnchantment extends Enchantment {
         super(weight, type, slotTypes);
     }
 
-    public int getMaxLevel() { return 5; }
+    public int getMaxLevel() {
+        return 5;
+    }
 
-    public int getMinPower(int level) { return level * 10; }
+    public int getMinPower(int level) {
+        return level * 10;
+    }
 
     public int getMaxPower(int level) {
         return super.getMinPower(level) + 25;

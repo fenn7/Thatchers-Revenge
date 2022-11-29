@@ -1,7 +1,6 @@
 package net.fenn7.thatchermod.network.packet;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fenn7.thatchermod.ThatcherMod;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

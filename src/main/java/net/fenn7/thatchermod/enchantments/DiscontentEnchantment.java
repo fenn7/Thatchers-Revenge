@@ -7,7 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 
 public class DiscontentEnchantment extends Enchantment {
     protected DiscontentEnchantment(Rarity weight, EnchantmentTarget type, EquipmentSlot[] slotTypes) {
@@ -15,7 +14,9 @@ public class DiscontentEnchantment extends Enchantment {
     }
 
     @Override
-    public int getMaxLevel() { return 2; }
+    public int getMaxLevel() {
+        return 2;
+    }
 
     public int getMinPower(int level) {
         return level * 10;
@@ -30,7 +31,7 @@ public class DiscontentEnchantment extends Enchantment {
         attacker.setFrozenTicks(240);
         if (attacker instanceof LivingEntity living && attacker != user) {
             living.addStatusEffect(new StatusEffectInstance(ModEffects.DISCONTENT, (level + 1) * 20, level - 1
-            , false, false, true));
+                    , false, false, true));
         }
         super.onUserDamaged(user, attacker, level);
     }

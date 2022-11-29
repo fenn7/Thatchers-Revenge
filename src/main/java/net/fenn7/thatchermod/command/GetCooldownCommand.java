@@ -20,7 +20,7 @@ public class GetCooldownCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        IEntityDataSaver player = (IEntityDataSaver) ((PlayerEntity) context.getSource().getPlayer());
+        IEntityDataSaver player = (IEntityDataSaver) context.getSource().getPlayer();
         int unionBusterCD = (int) (UnionBusterItem.DURATION * context.getSource().getPlayer().getItemCooldownManager().
                 getCooldownProgress(ModItems.UNION_BUSTER, 0));
 
@@ -28,7 +28,7 @@ public class GetCooldownCommand {
 
         // this is for testing only.
         context.getSource().sendFeedback(Text.literal("All Cooldowns Recorded!"), true);
-        context.getSource().sendFeedback(Text.literal("Union Buster: " + unionBusterCD/20 + " seconds"), true);
+        context.getSource().sendFeedback(Text.literal("Union Buster: " + unionBusterCD / 20 + " seconds"), true);
         return 1;
     }
 }

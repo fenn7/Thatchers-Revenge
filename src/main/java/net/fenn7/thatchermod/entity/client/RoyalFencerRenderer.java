@@ -59,8 +59,7 @@ public class RoyalFencerRenderer extends GeoEntityRenderer<RoyalFencerEntity> {
                     packedLightIn, packedOverlayIn, stack, this.rtb, 0);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
-        }
-        else if (bone.getName().equals("Body") && !this.isAttacking) {
+        } else if (bone.getName().equals("Body") && !this.isAttacking) {
             stack.push();
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bone.getRotationX()));
             stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY()));

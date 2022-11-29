@@ -47,7 +47,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     private int progress = 0;
     private int maxProgress = 28;
     private int channelingProgress = 0;
-    private int maxChannelingProgress = 179;
+    private final int maxChannelingProgress = 179;
 
     public ThatcherismAltarBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.THATCHERISM_ALTAR, pos, state);
@@ -55,17 +55,24 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
             @Override
             public int get(int index) {
                 switch (index) {
-                    case 0: return progress;
-                    case 1: return maxProgress;
-                    default: return 0;
+                    case 0:
+                        return progress;
+                    case 1:
+                        return maxProgress;
+                    default:
+                        return 0;
                 }
             }
 
             @Override
             public void set(int index, int value) {
                 switch (index) {
-                    case 0: ThatcherismAltarBlockEntity.this.progress = value; break;
-                    case 1: ThatcherismAltarBlockEntity.this.maxProgress = value; break;
+                    case 0:
+                        ThatcherismAltarBlockEntity.this.progress = value;
+                        break;
+                    case 1:
+                        ThatcherismAltarBlockEntity.this.maxProgress = value;
+                        break;
                 }
             }
 
@@ -77,7 +84,9 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     }
 
     @Override
-    public DefaultedList<ItemStack> getGrenadeList() { return inventory; }
+    public DefaultedList<ItemStack> getGrenadeList() {
+        return inventory;
+    }
 
     @Override
     public Text getDisplayName() {
@@ -180,10 +189,21 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         Direction direction = player.getMovementDirection();
         List<BlockPos> posList;
         switch (direction) {
-            default -> { posList = Arrays.asList(N, NE, E, SE, S, SW, W, NW); break; }
-            case EAST -> { posList = Arrays.asList(E, SE, S, SW, W, NW, N, NE); break; }
-            case SOUTH -> { posList = Arrays.asList(S, SW, W, NW, N, NE, E, SE); break; }
-            case WEST -> { posList = Arrays.asList(W, NW, N, NE, E, SE, S, SW); break;
+            default -> {
+                posList = Arrays.asList(N, NE, E, SE, S, SW, W, NW);
+                break;
+            }
+            case EAST -> {
+                posList = Arrays.asList(E, SE, S, SW, W, NW, N, NE);
+                break;
+            }
+            case SOUTH -> {
+                posList = Arrays.asList(S, SW, W, NW, N, NE, E, SE);
+                break;
+            }
+            case WEST -> {
+                posList = Arrays.asList(W, NW, N, NE, E, SE, S, SW);
+                break;
             }
         }
 
@@ -196,14 +216,10 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
     }
 
     private static boolean hasRecipe(ThatcherismAltarBlockEntity entity) {
-        boolean hasRecipe = false;
-        if ((entity.getStack(0).getItem() == ModItems.HEART_OF_THATCHER &&
+        boolean hasRecipe = (entity.getStack(0).getItem() == ModItems.HEART_OF_THATCHER &&
                 entity.getStack(1).getItem() == ModItems.SOUL_OF_THATCHER) ||
                 (entity.getStack(0).getItem() == ModItems.SOUL_OF_THATCHER &&
-                        entity.getStack(1).getItem() == ModItems.HEART_OF_THATCHER)) {
-
-            hasRecipe = true;
-        }
+                        entity.getStack(1).getItem() == ModItems.HEART_OF_THATCHER);
         return hasRecipe;
     }
 

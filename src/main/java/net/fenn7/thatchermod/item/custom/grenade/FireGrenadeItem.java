@@ -2,9 +2,7 @@ package net.fenn7.thatchermod.item.custom.grenade;
 
 import net.fenn7.thatchermod.entity.projectiles.AbstractGrenadeEntity;
 import net.fenn7.thatchermod.entity.projectiles.FireGrenadeEntity;
-import net.fenn7.thatchermod.entity.projectiles.GrenadeEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;

@@ -17,7 +17,9 @@ public class HungeringStrikeEnchantment extends Enchantment {
         super(weight, type, slotTypes);
     }
 
-    public int getMinPower(int level) {return 10 + 10 * (level - 1); }
+    public int getMinPower(int level) {
+        return 10 + 10 * (level - 1);
+    }
 
     public int getMaxPower(int level) {
         return super.getMinPower(level) + 45;

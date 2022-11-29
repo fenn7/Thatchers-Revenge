@@ -40,7 +40,7 @@ public class MilkSnatcherItem extends SwordItem {
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (target.hasStatusEffect(ModEffects.CALCIUM_DEFICIENCY)) {
-            target.damage(DamageSource.MAGIC, this.getAttackDamage()/3);
+            target.damage(DamageSource.MAGIC, this.getAttackDamage() / 3);
         }
         return super.postHit(stack, target, attacker);
     }
@@ -49,7 +49,7 @@ public class MilkSnatcherItem extends SwordItem {
         List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(user, -4, -4, -4, 4, 4, 4, world);
         boolean success = false;
 
-        for (Entity entity: nearbyEntities) {
+        for (Entity entity : nearbyEntities) {
             if (entity instanceof LivingEntity living && entity != user) {
                 spawnHitEffects(entity, world);
                 living.addStatusEffect(new StatusEffectInstance(ModEffects.CALCIUM_DEFICIENCY, 300), user);
@@ -57,7 +57,7 @@ public class MilkSnatcherItem extends SwordItem {
                 living.setAttacking(user); // aggros mobs
                 user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability for each
                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 150,
-                        (int) (nearbyEntities.size()/4)), user); // every 4 entities hit grants +1 level of strength
+                        nearbyEntities.size() / 4), user); // every 4 entities hit grants +1 level of strength
                 success = true;
             }
         }

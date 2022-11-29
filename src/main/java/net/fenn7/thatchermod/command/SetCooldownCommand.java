@@ -1,6 +1,5 @@
 package net.fenn7.thatchermod.command;
 
-import com.eliotlash.mclib.math.functions.classic.Mod;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -19,14 +18,14 @@ public class SetCooldownCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        IEntityDataSaver player = (IEntityDataSaver) ((PlayerEntity) context.getSource().getPlayer());
+        IEntityDataSaver player = (IEntityDataSaver) context.getSource().getPlayer();
         int unionBusterCD = player.getPersistentData().getInt("union.buster.cd");
 
         context.getSource().getPlayer().getItemCooldownManager().set(ModItems.UNION_BUSTER, unionBusterCD);
 
         // for testing purposes
         context.getSource().sendFeedback(Text.literal("All Cooldowns Set!"), true);
-        context.getSource().sendFeedback(Text.literal("Union Buster: " + unionBusterCD/20 + " seconds"), true);
+        context.getSource().sendFeedback(Text.literal("Union Buster: " + unionBusterCD / 20 + " seconds"), true);
         return 1;
     }
 }

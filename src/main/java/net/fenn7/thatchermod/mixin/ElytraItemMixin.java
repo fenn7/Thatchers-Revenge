@@ -27,8 +27,11 @@ public abstract class ElytraItemMixin extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (EnchantmentHelper.getLevel(ModEnchantments.AIR_ASSAULT, stack) != 0) {
-            if (NBTInterface.isBombing(stack)) { tooltip.add(Text.literal("§4ARMED")); }
-            else { tooltip.add(Text.literal("Disarmed")); }
+            if (NBTInterface.isBombing(stack)) {
+                tooltip.add(Text.literal("§4ARMED"));
+            } else {
+                tooltip.add(Text.literal("Disarmed"));
+            }
         }
     }
 
@@ -36,10 +39,10 @@ public abstract class ElytraItemMixin extends Item {
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType == ClickType.RIGHT && EnchantmentHelper.getLevel(ModEnchantments.AIR_ASSAULT, stack) != 0) {
             // right click in inventory to arm/disarm bombs
-            if (NBTInterface.isBombing(stack)) { NBTInterface.setBombing(stack, false); }
-            else { NBTInterface.setBombing(stack, true); }
+            NBTInterface.setBombing(stack, !NBTInterface.isBombing(stack));
             return true;
+        } else {
+            return false;
         }
-        else { return false; }
     }
 }

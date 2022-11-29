@@ -5,9 +5,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
@@ -51,10 +48,12 @@ public class ThatcheriteArmourItem extends ArmorItem implements IAnimatable {
         ItemStack chest = player.getInventory().getArmorStack(2);
         return !chest.isEmpty() && chest.getItem().equals(ModItems.THATCHERITE_CHESTPLATE);
     }
+
     public static boolean hasLegs(PlayerEntity player) {
         ItemStack legs = player.getInventory().getArmorStack(1);
         return !legs.isEmpty() && legs.getItem().equals(ModItems.THATCHERITE_GREAVES);
     }
+
     public static boolean hasBoots(PlayerEntity player) {
         ItemStack boots = player.getInventory().getArmorStack(0);
         return !boots.isEmpty() && boots.getItem().equals(ModItems.THATCHERITE_BOOTS);

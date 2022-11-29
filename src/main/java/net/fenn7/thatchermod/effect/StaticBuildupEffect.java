@@ -30,9 +30,9 @@ public class StaticBuildupEffect extends StatusEffect {
         if (!entity.world.isClient) {
             for (int i = 0; i <= (amplifier); i++) {
                 ((ServerWorld) entity.world).spawnParticles(ParticleTypes.ELECTRIC_SPARK,
-                        entity.getX(), entity.getY() + 1 + entity.getHeight() + (float) ((i+1)/2), entity.getZ(), 1,
+                        entity.getX(), entity.getY() + 1 + entity.getHeight() + (float) ((i + 1) / 2), entity.getZ(), 1,
                         0, 0, 0, 0);
-                if (ticks%20 == 0) {
+                if (ticks % 20 == 0) {
                     ((ServerWorld) entity.world).spawnParticles(ParticleTypes.END_ROD,
                             entity.getX(), entity.getY() + 1 + entity.getHeight() + (float) ((i + 1) / 2), entity.getZ(), 1,
                             0, 0, 0, 0);
@@ -42,7 +42,10 @@ public class StaticBuildupEffect extends StatusEffect {
                 }
             }
         }
-        this.ticks++; if (this.ticks >= 19) { this.ticks = 0; }
+        this.ticks++;
+        if (this.ticks >= 19) {
+            this.ticks = 0;
+        }
         super.applyUpdateEffect(entity, amplifier);
     }
 

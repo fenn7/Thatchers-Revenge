@@ -1,12 +1,7 @@
 package net.fenn7.thatchermod.effect;
 
-import com.eliotlash.mclib.math.functions.classic.Mod;
-import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.sound.ModSounds;
 import net.fenn7.thatchermod.util.IEntityDataSaver;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -15,11 +10,9 @@ import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -29,14 +22,14 @@ public class LastStandEffect extends StatusEffect {
     private int ticks;
     private int maxTicks;
     private String fightMsg;
-    private ServerBossBar bossBar;
+    private final ServerBossBar bossBar;
 
     protected LastStandEffect(StatusEffectCategory statusEffectCategory, int color) {
         super(statusEffectCategory, color);
         this.ticks = 0;
         this.maxTicks = 120;
         this.fightMsg = "";
-        this.bossBar = (ServerBossBar)(new ServerBossBar(Text.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.PROGRESS)).setDarkenSky(true);
+        this.bossBar = (ServerBossBar) (new ServerBossBar(Text.literal("§0LAST STAND ACTIVE"), BossBar.Color.RED, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
 
     public LastStandEffect(StatusEffectCategory statusEffectCategory, int color, int maxTicks) {
@@ -84,11 +77,21 @@ public class LastStandEffect extends StatusEffect {
         String message = "§4";
         int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
         switch (random) {
-            case 1: message += "FIGHT OR BE FORGOTTEN"; break;
-            case 2: message += "IT'S KILL OR BE KILLED"; break;
-            case 3: message += "DROWN THEM IN A SEA OF BLOOD"; break;
-            case 4: message += "DEATH IS ONLY THE END FOR THEM"; break;
-            case 5: message += "RENEWAL IS PAID FOR IN FLESH"; break;
+            case 1:
+                message += "FIGHT OR BE FORGOTTEN";
+                break;
+            case 2:
+                message += "IT'S KILL OR BE KILLED";
+                break;
+            case 3:
+                message += "DROWN THEM IN A SEA OF BLOOD";
+                break;
+            case 4:
+                message += "DEATH IS ONLY THE END FOR THEM";
+                break;
+            case 5:
+                message += "RENEWAL IS PAID FOR IN FLESH";
+                break;
         }
         return message;
     }
@@ -120,8 +123,7 @@ public class LastStandEffect extends StatusEffect {
                         new SoundEvent(new Identifier("thatchermod:heart_overload")), SoundCategory.HOSTILE, 100, 1);
             }
             this.bossBar.removePlayer((ServerPlayerEntity) player);
-        }
-        else if (!shouldLiveOnRemove(entity)) {
+        } else if (!shouldLiveOnRemove(entity)) {
             entity.kill();
         }
 
