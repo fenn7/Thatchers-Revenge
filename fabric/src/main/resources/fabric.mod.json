@@ -1,0 +1,40 @@
+{
+    "schemaVersion": 1,
+    "id": "thatchermod",
+    "version": "${version}",
+    "name": "Thatcher Mod",
+    "description": "https://www.youtube.com/watch?v=ILvd5buCEnU",
+    "authors": [
+        "fenn7"
+    ],
+    "contributors": [
+        "ShaksterNano"
+    ],
+    "contact": {
+        "homepage": "https://github.com/fenn7/Thatchers-Revenge",
+        "sources": "https://github.com/fenn7/Thatchers-Revenge",
+        "issues": "https://github.com/fenn7/Thatchers-Revenge/issues"
+    },
+    "license": "CC0-1.0",
+    "icon": "assets/thatchermod/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "net.fenn7.thatchermod.commonside.fabric.ThatcherModFabric"
+        ],
+        "client": [
+            "net.fenn7.thatchermod.client.fabric.ThatcherModFabricClient"
+        ]
+    },
+    "mixins": [
+        "thatchermod-common.mixins.json",
+        "thatchermod-fabric.mixins.json"
+    ],
+    "depends": {
+        "minecraft": ">=1.18",
+        "java": ">=17",
+        "fabric": ">=0.67.0",
+        "architectury": ">=4.9.0",
+        "geckolib3": ">=3.0.0"
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "is_prepared=false,is_channeling=false": { "model": "thatchermod:block/thatcherism_altar" },
+    "is_prepared=true,is_channeling=false": { "model": "thatchermod:block/thatcherism_altar_prepared" },
+    "is_prepared=false,is_channeling=true": { "model": "thatchermod:block/thatcherism_altar_channeling" },
+    "is_prepared=true,is_channeling=true": { "model": "thatchermod:block/thatcherism_altar_channeling" }
+  }
+}

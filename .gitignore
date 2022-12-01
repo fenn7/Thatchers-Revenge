@@ -1,25 +1,24 @@
-# gradle
+# Gradle
 
 .gradle/
 build/
 out/
 classes/
 
-# eclipse
+# Eclipse
 
 *.launch
 
-# idea
+# IntelliJ IDEA
 
 .idea/
 *.iml
 *.ipr
 *.iws
 
-# vscode
+# Visual Studio Code
 
 .settings/
-.vscode/
 bin/
 .classpath
 .project
@@ -28,6 +27,9 @@ bin/
 
 *.DS_Store
 
-# fabric
+# Other
 
+.architectury-transformer/
 run/
+remappedSrc/
+logs/

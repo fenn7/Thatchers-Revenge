@@ -1,0 +1,58 @@
+{
+  "item.thatchermod.heart_of_thatcher": "Helbound Heart",
+  "item.thatchermod.soul_of_thatcher": "Hellborne Soul",
+  "item.thatchermod.hardened_flesh_of_thatcher": "Hardened Flesh of Thatcher",
+  "item.thatchermod.essence_of_thatcher": "Essence of Thatcher",
+  "item.thatchermod.union_buster": "Union Buster",
+  "item.thatchermod.milk_snatcher": "Milk Snatcher",
+  "item.thatchermod.colliery_closer": "Colliery Closer",
+  "item.thatchermod.command_sceptre": "Imperial Sceptre",
+  "item.thatchermod.community_chargebow": "Community Chargebow",
+  "item.thatchermod.thatcherite_helmet": "Thatcherite Helmet",
+  "item.thatchermod.thatcherite_chestplate": "Thatcherite Chestplate",
+  "item.thatchermod.thatcherite_greaves": "Thatcherite Greaves",
+  "item.thatchermod.thatcherite_boots": "Thatcherite Boots",
+  "item.thatchermod.grenade": "Grenade",
+  "item.thatchermod.grenade_fire": "Incendiary Grenade",
+  "item.thatchermod.grenade_smoke": "Smoke Grenade",
+  "item.thatchermod.grenade_launcher": "Grenade Launcher",
+
+  "item.thatchermod.fencer_spawn_egg": "Royal Fencer Spawn Egg",
+  "item.thatchermod.grenadier_spawn_egg": "Royal Grenadier Spawn Egg",
+
+  "effect.thatchermod.calcium_deficiency": "Hypocalcemia",
+  "effect.thatchermod.static_buildup": "Static Buildup",
+  "effect.thatchermod.last_stand": "LAST STAND",
+  "effect.thatchermod.discontent": "Discontent",
+
+  "enchantment.thatchermod.bailout": "Bailout",
+  "enchantment.thatchermod.torpedo": "Torpedo",
+  "enchantment.thatchermod.air_assault": "Air Assault",
+  "enchantment.thatchermod.interceptor": "Interceptor",
+  "enchantment.thatchermod.stealth": "Stealth",
+  "enchantment.thatchermod.jet_assist": "Jet Assist",
+  "enchantment.thatchermod.privatisation": "Privatisation",
+  "enchantment.thatchermod.amphibious": "Amphibious",
+  "enchantment.thatchermod.hungering_strike": "Hungering Strike",
+  "enchantment.thatchermod.cursed_guard": "Cursed Guard",
+  "enchantment.thatchermod.discontent": "Discontent",
+
+  "block.thatchermod.thatcherism_altar": "Thatcherism Altar",
+
+  "entity.thatchermod.thatcher": "MARGARET THATCHER",
+  "entity.thatchermod.royal_fencer": "Royal Fencer",
+  "entity.thatchermod.royal_grenadier": "Royal Grenadier",
+  "entity.thatchermod.cursed_meteor": "Cursed Meteor",
+  "entity.thatchermod.cursed_missile": "Cursed Missile",
+  "entity.thatchermod.smoke_entity": "Rocket Smoke",
+
+  "thatchermod.thatcher_possession": "PAY THE COMMUNITY CHARGE",
+  "thatchermod.thatcher_summoning": "...",
+  "thatchermod.last_heartbeat": "The noblest end of all...",
+  "thatchermod.heart_overload": "FLATLINE",
+
+  "key.thatchermod.category": "Thatcher's Revenge",
+  "key.thatchermod.launch": "Jet-Assisted Launch",
+
+  "itemGroup.thatchermod.thatcher": "Thatcher's Revenge"
+}

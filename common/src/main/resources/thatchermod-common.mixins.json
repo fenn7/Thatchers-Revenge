@@ -1,0 +1,26 @@
+{
+    "required": true,
+    "package": "net.fenn7.thatchermod.mixin.commonloader",
+    "minVersion": "0.8",
+    "compatibilityLevel": "JAVA_17",
+    "mixins": [
+        "ElytraItemMixin",
+        "ModEntityDataSaver",
+        "PersistentProjectileMixin",
+        "PlayerEntityMixin",
+        "TridentEntityMixin",
+        "TridentInterface",
+        "TridentItemMixin"
+    ],
+    "client": [
+        "BipedModelMixin",
+        "ElytraRenderMixin",
+        "InGameHudMixin",
+        "MinecraftClientMixin",
+        "ModEntityDataSaver",
+        "WorldRendererMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
