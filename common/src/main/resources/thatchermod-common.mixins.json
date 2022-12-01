@@ -16,8 +16,7 @@
         "client.BipedModelMixin",
         "client.ElytraRenderMixin",
         "client.InGameHudMixin",
-        "client.MinecraftClientMixin",
-        "client.WorldRendererMixin"
+        "client.MinecraftClientMixin"
     ],
     "injectors": {
         "defaultRequire": 1
