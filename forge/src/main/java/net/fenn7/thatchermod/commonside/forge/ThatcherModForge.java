@@ -1,8 +1,8 @@
 package net.fenn7.thatchermod.commonside.forge;
 
 import dev.architectury.platform.forge.EventBuses;
-import net.fenn7.thatchermod.ThatcherMod;
-import net.fenn7.thatchermod.ThatcherModClient;
+import net.fenn7.thatchermod.client.ThatcherModClient;
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.Mod;
