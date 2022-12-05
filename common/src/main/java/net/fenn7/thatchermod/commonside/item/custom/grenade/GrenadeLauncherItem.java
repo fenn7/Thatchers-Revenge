@@ -7,6 +7,7 @@ import net.fenn7.thatchermod.commonside.util.ModText;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -115,6 +116,7 @@ public class GrenadeLauncherItem extends Item {
             world.spawnEntity(grenadeEntity);
             if (!user.isCreative() && !user.world.isClient()) {
                 grenadeStack.decrement(1);
+                thisStack.damage(1, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
             user.resetLastAttackedTicks();
             thisStack.getOrCreateNbt().putInt(GL_COOLDOWN, COOLDOWN);

@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smithing",
   "addition": {
-    "item": "thatchermod:essence_of_thatcher"
+    "item": "thatchermod:hardened_flesh_of_thatcher"
   },
   "base": {
     "item": "minecraft:netherite_pickaxe"

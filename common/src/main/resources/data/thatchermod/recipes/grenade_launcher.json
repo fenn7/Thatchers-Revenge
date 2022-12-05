@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "minecraft:barrel"
+    },
+    "A": {
+      "item": "minecraft:anvil"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "L": {
+      "item": "minecraft:spruce_log"
+    }
+  },
+  "pattern": [
+    "I  ",
+    "ABI",
+    " IL"
+  ],
+  "result": {
+    "item": "thatchermod:grenade_launcher"
+  }
+}

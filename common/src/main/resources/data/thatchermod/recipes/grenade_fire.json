@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:fire_charge",
+    },
+    {
+      "item": "minecraft:flint",
+    },
+    {
+      "item": "minecraft:blaze_powder",
+      "count": 2
+    }
+  ],
+  "result": {
+    "item": "thatchermod:grenade_fire",
+    "count": 3
+  }
+}
