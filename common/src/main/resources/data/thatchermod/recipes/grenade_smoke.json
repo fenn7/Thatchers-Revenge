@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:gunpowder",
+      "item": "minecraft:gunpowder"
     },
     {
       "item": "minecraft:ink_sac",
       "count": 3
-    },
+    }
   ],
   "result": {
     "item": "thatchermod:grenade",
