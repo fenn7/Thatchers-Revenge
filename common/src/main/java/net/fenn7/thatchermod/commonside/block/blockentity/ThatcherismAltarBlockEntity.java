@@ -133,7 +133,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
             world.setBlockState(pos, state.with(IS_PREPARED, false));
             if (entity.channelingProgress < entity.maxChannelingProgress) {
                 if (entity.channelingProgress % 20 == 0 && entity.channelingProgress <= 140) {
-                    if (!world.isClient() && !entity.positions.isEmpty()) { // at 20TPS this will occur every second
+                    if (!world.isClient() && entity.positions != null && !entity.positions.isEmpty()) { // at 20TPS this will occur every second
                         BlockPos strikePos = entity.positions.get(entity.channelingProgress / 20);
                         world.addParticle(ParticleTypes.LARGE_SMOKE, strikePos.getX(), strikePos.getY(), strikePos.getZ(), 0, 2, 0);
                         EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null,
