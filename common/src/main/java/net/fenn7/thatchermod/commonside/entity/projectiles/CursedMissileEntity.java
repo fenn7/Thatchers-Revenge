@@ -27,7 +27,7 @@ public class CursedMissileEntity extends ExplosiveProjectileEntity {
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
         if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult) hitResult).getEntity())) {
-            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
+            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.DESTROY);
             this.discard();
         }
     }

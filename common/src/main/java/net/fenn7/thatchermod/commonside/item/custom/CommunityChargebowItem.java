@@ -18,6 +18,8 @@ import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -74,8 +76,7 @@ public class CommunityChargebowItem extends BowItem {
                             arrowEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 1.6F * originalF * 3.0F, 1.0F);
                         } else {
                             arrowEntity.setPos(user.getX(), user.getBodyY(0.7D), user.getZ());
-                            arrowEntity.setPierceLevel((byte) 2);
-                            if ((this.getMaxUseTime(stack) - remainingUseTicks) >= 27) { // 20 x number of seconds to zone in fully
+                            if ((this.getMaxUseTime(stack) - remainingUseTicks) >= 30) { // 20 x number of seconds to zone in fully
                                 arrowEntity.setCritical(true);
                                 arrowEntity.setNoGravity(true);
                                 arrowEntity.setDamage(arrowEntity.getDamage() * 1.25);
@@ -117,43 +118,6 @@ public class CommunityChargebowItem extends BowItem {
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
                 }
             }
-        }
-    }
-
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (user.isSneaking()) {
-            boolean success = false;
-            List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(user, 5, 4, 5, -5, -4, -5, world);
-            {
-                for (Entity entity : nearbyEntities) {
-                    if (entity instanceof LivingEntity alive && entity != user) {
-                        if (!world.isClient) {
-                            CommonMethods.summonDustParticles(world, 1, 0f, 0.33f, 0f, 2,
-                                    alive.getX(), alive.getY() + 0.5D, alive.getZ(), 0, 0, 0);
-                        }
-                        alive.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 200, 1));
-                        alive.setAttacker(user);
-                        alive.setAttacking(user); // aggros mobs
-                        user.getMainHandStack().damage(1, user, (p) -> p.sendToolBreakStatus(hand)); // -1 durability for each
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 150, 1));
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 150,
-                                nearbyEntities.size() / 4), user); // every 4 entities hit grants +1 level of speed
-                        success = true;
-                    }
-                }
-            }
-            if (success && !world.isClient) {
-                CommonMethods.summonDustParticles(world, 1, 0.0f, 0.33f, 0.0f, 3,
-                        user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
-                world.playSound(null, user.getBlockPos(), SoundEvents.PARTICLE_SOUL_ESCAPE, SoundCategory.HOSTILE, 45F, 1.5F);
-                user.getItemCooldownManager().set(this, DURATION);
-                return TypedActionResult.fail(this.getDefaultStack());
-            } else {
-                return super.use(world, user, hand);
-            }
-        } else {
-            return super.use(world, user, hand);
         }
     }
 

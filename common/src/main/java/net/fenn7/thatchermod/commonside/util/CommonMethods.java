@@ -4,6 +4,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -29,6 +31,15 @@ public interface CommonMethods {
                                     double x, double y, double z, double velX, double velY, double velZ) {
         DustParticleEffect dust = new DustParticleEffect(new Vec3f(red, green, blue), size);
         ((ServerWorld) world).spawnParticles(dust, x, y, z, number, velX, velY, velZ, 0);
+    }
+
+    static void spawnParticleCircle(World world, ParticleEffect particle, double x, double y, double z, double radius) {
+        for (double angle = 0; angle < 360; angle += 24) {
+            double radians = Math.toRadians(angle);
+            double particleX = Math.round(x + radius * Math.cos(radians));
+            double particleY = Math.round(y + radius * Math.sin(radians));
+            ((ServerWorld) world).spawnParticles(particle, particleX, particleY, z, 1,0, 0.1, 0, 0);
+        }
     }
 
     static BlockPos findFirstNonAirBlockDown(World world, BlockPos pos) {

@@ -72,7 +72,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, 0.0F);
         this.setPathfindingPenalty(PathNodeType.DAMAGE_FIRE, 0.0F);
         this.experiencePoints = 750;
-        this.bossBar = (ServerBossBar) (new ServerBossBar(ModText.literal("§1" + this.getDisplayName().getString()), BossBar.Color.BLUE, BossBar.Style.PROGRESS)).setDarkenSky(true);
+        this.bossBar = (ServerBossBar) (new ServerBossBar(ModText.literal(this.getDisplayName().getString()), BossBar.Color.BLUE, BossBar.Style.PROGRESS)).setDarkenSky(true);
     }
 
     @Override
@@ -275,8 +275,9 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     private void meteorAttack(Entity target) {
         CursedMeteorEntity meteor = new CursedMeteorEntity(this.world, this, 0, 0, 0);
-        meteor.setPosition(target.getX(), target.getY() + 15, target.getZ());
+        meteor.setPosition(target.getX(), target.getY() + 32, target.getZ());
         meteor.setFalling(true);
+        meteor.setLowestNoClipY(target.getBodyY(1.0D));
         world.spawnEntity(meteor);
     }
 

@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.commonside.entity.projectiles;
 
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +21,8 @@ import java.util.List;
 public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     private static final float explosionPower = 2.5F;
     private static final int maximumAgeTicks = 300;
-    private static boolean isFalling = false;
+    private boolean isFalling = false;
+    private double lowestNoClipY = 0;
 
     public CursedMeteorEntity(EntityType<? extends CursedMeteorEntity> entityType, World world) {
         super(entityType, world);
@@ -31,6 +33,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     }
 
     protected void onCollision(HitResult hitResult) {
+        ThatcherMod.LOGGER.warn("Collided with power: " + this.powerY);
         super.onCollision(hitResult);
         if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult) hitResult).getEntity())) {
             if (!this.world.isClient) {
@@ -43,7 +46,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
                     }
                 }
             }
-            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
+            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.DESTROY);
             this.discard();
         }
     }
@@ -56,8 +59,13 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
 
     @Override
     public void tick() {
-        if (isFalling) {
-            this.powerY -= 0.03;
+        if (this.getY() > this.lowestNoClipY) {
+            this.noClip = true;
+        } else {
+            this.noClip = false;
+        }
+        if (this.isFalling) {
+            this.powerY -= 0.02;
         }
         if (this.age >= maximumAgeTicks) {
             this.discard();
@@ -65,8 +73,15 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
         super.tick();
     }
 
+    @Override
+    public boolean isCollidable() {
+        return this.getY() <= this.lowestNoClipY;
+    }
+
+    public void setLowestNoClipY(double lowestY) { this.lowestNoClipY = lowestY; }
+
     public void setFalling(boolean shouldFall) {
-        isFalling = shouldFall;
+        this.isFalling = shouldFall;
     }
 
     protected ParticleEffect getParticleType() {
@@ -78,7 +93,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     }
 
     public boolean collides() {
-        return true;
+        return !this.noClip;
     }
 
     public boolean hasNoGravity() {

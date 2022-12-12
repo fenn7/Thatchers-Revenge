@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.commonside.item.custom;
 
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
 import net.fenn7.thatchermod.commonside.entity.projectiles.CursedMeteorEntity;
 import net.fenn7.thatchermod.commonside.entity.projectiles.CursedMissileEntity;
@@ -18,6 +19,7 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
@@ -34,7 +36,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CommandSceptreItem extends Item {
     public static final int METEOR_DURATION = 200;
@@ -47,6 +51,9 @@ public class CommandSceptreItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if (user.getInventory().containsAny(Set.of(Items.LAPIS_LAZULI))) {
+            ThatcherMod.LOGGER.warn("RRRRRRRRRRRRRRRR WOWOWOWOWOWOI");
+        }
         if (!world.isClient() && hand == Hand.MAIN_HAND) {
             user.swingHand(hand, true);
             if (!user.isSneaking()) {
@@ -76,6 +83,7 @@ public class CommandSceptreItem extends Item {
         CursedMeteorEntity meteorEntity = new CursedMeteorEntity(ModEntities.CURSED_METEOR.get(), world);
         meteorEntity.setOwner(user);
         meteorEntity.setFalling(true);
+        meteorEntity.setLowestNoClipY(user.getBodyY(1.0F));
 
         HitResult hitResult = user.raycast(24, 0, true);
         BlockPos pos;
