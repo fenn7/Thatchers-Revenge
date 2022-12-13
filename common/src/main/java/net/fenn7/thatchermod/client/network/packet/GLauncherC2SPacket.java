@@ -7,9 +7,7 @@ import net.fenn7.thatchermod.commonside.item.custom.grenade.GrenadeLauncherItem;
 import net.fenn7.thatchermod.commonside.network.ModPackets;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 
@@ -24,8 +22,7 @@ public class GLauncherC2SPacket {
             ItemStack grenadeStack = item.getList().get(0);
             if (item.shootGrenade(mainStack, grenadeStack, player.world, player)) {
                 ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
-                Packet<?> packet = new CustomPayloadS2CPacket(ModPackets.GL_S2C_ID, new PacketByteBuf(Unpooled.buffer()));
-                serverPlayer.networkHandler.sendPacket(packet);
+                NetworkManager.sendToPlayer(serverPlayer, ModPackets.GL_S2C_ID, new PacketByteBuf(Unpooled.buffer()));
             }
         }
     }
