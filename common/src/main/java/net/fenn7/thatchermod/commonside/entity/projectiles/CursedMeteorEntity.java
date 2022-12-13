@@ -33,7 +33,6 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     }
 
     protected void onCollision(HitResult hitResult) {
-        ThatcherMod.LOGGER.warn("Collided with power: " + this.powerY);
         super.onCollision(hitResult);
         if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult) hitResult).getEntity())) {
             if (!this.world.isClient) {
@@ -59,13 +58,9 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
 
     @Override
     public void tick() {
-        if (this.getY() > this.lowestNoClipY) {
-            this.noClip = true;
-        } else {
-            this.noClip = false;
-        }
-        if (this.isFalling) {
-            this.powerY -= 0.02;
+        this.noClip = this.getY() > this.lowestNoClipY;
+        if (this.isFalling && this.powerY < -1) {
+            this.powerY -= 0.025;
         }
         if (this.age >= maximumAgeTicks) {
             this.discard();

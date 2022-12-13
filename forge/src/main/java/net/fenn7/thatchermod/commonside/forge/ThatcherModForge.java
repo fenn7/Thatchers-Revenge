@@ -26,6 +26,7 @@ public class ThatcherModForge {
 
     @OnlyIn(Dist.CLIENT)
     private static void clientInit() {
+        ThatcherMod.LOGGER.warn("FORGE IT UP");
         ThatcherModClient.init();
     }
 }

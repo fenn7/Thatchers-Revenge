@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.mixin.commonloader.commonside;
 
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.effect.LastStandEffect;
 import net.fenn7.thatchermod.commonside.effect.ModEffects;
 import net.fenn7.thatchermod.commonside.enchantments.ModEnchantments;
@@ -55,9 +56,13 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     // LEGS: Apply a slowness effect to the attacker (level increases the higher the damage taken).
     // BOOTS: Reduce damage by 20%, and reflect 33% of it, if moving in the opposite direction as the attacker.
 
-    @Inject(method = "damage", at = @At("HEAD"))
+    @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void injectDamageMethod(DamageSource source, float amount, CallbackInfoReturnable cir) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
+        if (player.hasStatusEffect(ModEffects.LAST_STAND.get())) {
+            amount -= amount;
+            cir.cancel();
+        }
         if (source.isExplosive()) {
             if (ThatcheriteArmourItem.hasChest(player)) {
                 player.setStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 60, 1), player);
@@ -75,9 +80,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                         (int) (amount / 4) - 1), player);
             }
             if (ThatcheriteArmourItem.hasBoots(player)) {
-                Direction enemyDirection = attacker.getMovementDirection();
-                Direction playerDirection = player.getMovementDirection();
-                if (enemyDirection == playerDirection.getOpposite()) {
+                if (player.canSee(attacker)) {
                     attacker.damage(DamageSource.GENERIC, amount / 3);
                     amount -= (amount / 5);
                 }

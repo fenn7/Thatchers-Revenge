@@ -50,7 +50,6 @@ public class LastStandEffect extends StatusEffect {
         }
         entity.setCustomName(ModText.literal("§4LAST STAND ACTIVE"));
         entity.setGlowing(true);
-        entity.setInvulnerable(true);
         entity.setCustomNameVisible(true);
 
         if (entity instanceof PlayerEntity player) {
@@ -61,7 +60,7 @@ public class LastStandEffect extends StatusEffect {
             player.addExhaustion(-1);
             if (this.ticks % 40 == 0) {
                 player.world.playSound(null, player.getBlockPos(), new SoundEvent(new Identifier("thatchermod:last_heartbeat")),
-                        SoundCategory.HOSTILE, 80, 1.25F);
+                        SoundCategory.HOSTILE, 120, 1.25F);
                 player.sendMessage(ModText.literal(this.fightMsg), true);
             }
             if (!player.world.isClient) {
@@ -75,22 +74,16 @@ public class LastStandEffect extends StatusEffect {
 
     public String generateMessage() {
         String message = "§4";
-        int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+        int random = ThreadLocalRandom.current().nextInt(0, 3 + 1);
         switch (random) {
             case 1:
                 message += "FIGHT OR BE FORGOTTEN";
                 break;
             case 2:
-                message += "IT'S KILL OR BE KILLED";
+                message += "YOU OWE A DEBT OF 1 LIFE.";
                 break;
             case 3:
-                message += "DROWN THEM IN A SEA OF BLOOD";
-                break;
-            case 4:
-                message += "DEATH IS ONLY THE END FOR THEM";
-                break;
-            case 5:
-                message += "RENEWAL IS PAID FOR IN FLESH";
+                message += "SO NEARLY FREE";
                 break;
         }
         return message;
@@ -120,7 +113,7 @@ public class LastStandEffect extends StatusEffect {
             if (!player.isSpectator() && !player.isCreative() && !shouldLiveOnRemove(entity)) {
                 entity.kill();
                 player.world.playSound(null, player.getBlockPos(),
-                        new SoundEvent(new Identifier("thatchermod:heart_overload")), SoundCategory.HOSTILE, 100, 1);
+                        new SoundEvent(new Identifier("thatchermod:heart_overload")), SoundCategory.HOSTILE, 150, 1);
             }
             this.bossBar.removePlayer((ServerPlayerEntity) player);
         } else if (!shouldLiveOnRemove(entity)) {
@@ -129,7 +122,6 @@ public class LastStandEffect extends StatusEffect {
 
         this.ticks = 0;
         entity.setGlowing(false);
-        entity.setInvulnerable(false);
         entity.setCustomNameVisible(false);
 
         super.onRemoved(entity, attributes, amplifier);

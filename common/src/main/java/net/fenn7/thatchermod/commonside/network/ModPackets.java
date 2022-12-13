@@ -1,6 +1,7 @@
 package net.fenn7.thatchermod.commonside.network;
 
 import dev.architectury.networking.NetworkManager;
+import net.fenn7.thatchermod.client.network.ModPacketsClient;
 import net.fenn7.thatchermod.client.network.packet.GLauncherC2SPacket;
 import net.fenn7.thatchermod.client.network.packet.LaunchC2SPacket;
 import net.fenn7.thatchermod.commonside.ThatcherMod;
@@ -14,5 +15,6 @@ public class ModPackets {
     public static void registerC2SPackets() {
         NetworkManager.registerReceiver(NetworkManager.c2s(), LAUNCH_ID, LaunchC2SPacket::receive);
         NetworkManager.registerReceiver(NetworkManager.c2s(), GL_C2S_ID, GLauncherC2SPacket::receive);
+        ModPacketsClient.registerS2CPackets();
     }
 }

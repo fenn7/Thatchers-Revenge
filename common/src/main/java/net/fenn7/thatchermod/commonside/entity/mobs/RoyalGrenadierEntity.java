@@ -126,6 +126,8 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
         return SoundEvents.ITEM_SHIELD_BREAK;
     }
 
+    //public int getAttackTicksLeft() { return this.attackTicksLeft; }
+
     // animations
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.isAttacking()) {
@@ -139,7 +141,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
     }
 
     private <E extends IAnimatable> PlayState attackPred(AnimationEvent<E> event) {
-        if (this.handSwinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
+        if (this.handSwinging) {
             event.getController().markNeedsReload();
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grenadier.attack", false));
             this.handSwinging = false;

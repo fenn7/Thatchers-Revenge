@@ -10,7 +10,8 @@
         "commonside.PlayerEntityMixin",
         "commonside.TridentEntityMixin",
         "commonside.TridentInterface",
-        "commonside.TridentItemMixin"
+        "commonside.TridentItemMixin",
+        "commonside.LivingEntityMixin"
     ],
     "client": [
         "client.BipedModelMixin",

@@ -23,6 +23,6 @@ public class TrickleDownTridentItem extends TridentItem {
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return this.attributeModifiers;
+        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : ImmutableMultimap.of();
     }
 }

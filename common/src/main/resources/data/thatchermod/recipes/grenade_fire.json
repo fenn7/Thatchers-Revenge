@@ -8,8 +8,10 @@
       "item": "minecraft:flint"
     },
     {
-      "item": "minecraft:blaze_powder",
-      "count": 2
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:blaze_powder"
     }
   ],
   "result": {
