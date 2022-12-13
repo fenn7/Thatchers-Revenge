@@ -36,7 +36,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

@@ -1,20 +1,16 @@
 package net.fenn7.thatchermod.client.event.forge;
 
-import net.fenn7.thatchermod.client.ThatcherModClient;
 import net.fenn7.thatchermod.client.event.RenderEvents;
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
-public class ClientEvents {
-
-    @SubscribeEvent
-    public static void registerRenderers(EntityRenderersEvent.AddLayers event) {
-        ThatcherModClient.registerGeoArmorRenderers();
-    }
+@Mod.EventBusSubscriber(modid = ThatcherMod.MOD_ID,value = Dist.CLIENT)
+public class ClientForgeEvents {
 
     @SubscribeEvent
     public static void renderEvents(RenderLevelStageEvent event) {

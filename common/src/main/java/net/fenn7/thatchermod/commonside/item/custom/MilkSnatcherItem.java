@@ -1,10 +1,7 @@
 package net.fenn7.thatchermod.commonside.item.custom;
 
 import net.fenn7.thatchermod.commonside.effect.ModEffects;
-import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.util.CommonMethods;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -21,8 +18,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
