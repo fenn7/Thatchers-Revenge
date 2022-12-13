@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.commonside.block.blockentity;
 
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.block.ModBlockEntities;
 import net.fenn7.thatchermod.commonside.block.custom.ThatcherismAltarBlock;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
@@ -140,7 +141,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
                                 strikePos, SpawnReason.TRIGGERED, true, true);
                         extinguishFire(strikePos, world);
                     }
-                    world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
+                    world.addParticle(ParticleTypes.SOUL, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 5, 0);
                     world.addParticle(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
                 }
                 if (entity.channelingProgress == 170) { //should do this on the final major beat of the song

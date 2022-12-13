@@ -18,7 +18,6 @@ public class TrickleDownTridentItem extends TridentItem {
         builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Tool modifier", 10.0D, EntityAttributeModifier.Operation.ADDITION));
         builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Tool modifier", -2.70D, EntityAttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
-        ThatcherMod.LOGGER.warn(attributeModifiers.toString());
     }
 
     @Override

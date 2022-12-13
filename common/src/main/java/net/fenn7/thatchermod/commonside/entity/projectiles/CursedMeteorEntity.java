@@ -59,7 +59,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     @Override
     public void tick() {
         this.noClip = this.getY() > this.lowestNoClipY;
-        if (this.isFalling && this.powerY < -1) {
+        if (this.isFalling && this.powerY >= -1) {
             this.powerY -= 0.025;
         }
         if (this.age >= maximumAgeTicks) {

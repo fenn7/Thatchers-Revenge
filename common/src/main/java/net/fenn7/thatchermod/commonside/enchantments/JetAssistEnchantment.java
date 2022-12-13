@@ -12,7 +12,7 @@ public class JetAssistEnchantment extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 5;
+        return 4;
     }
 
     public int getMinPower(int level) {

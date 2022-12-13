@@ -30,7 +30,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimatable {
-    private static final float FIRE_RANGE = 2.8F;
+    private static final float FIRE_RANGE = 3.0F;
     private boolean shouldDiscard = false;
     private boolean shouldLinger = false;
     private int postExplosionTicks = 0;
@@ -126,7 +126,7 @@ public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimata
         }
     }
 
-    public boolean shouldSetOnFire(World world, BlockPos firePos) {
+    private boolean shouldSetOnFire(World world, BlockPos firePos) {
         for (double x = Math.min(firePos.getX(), this.getX()); x <= Math.max(firePos.getX(), this.getX()); x++) {
             for (double y = Math.min(firePos.getY(), this.getY()); y <= Math.max(firePos.getY(), this.getY()); y++) {
                 for (double z = Math.min(firePos.getZ(), this.getZ()); z <= Math.max(firePos.getZ(), this.getZ()); z++) {

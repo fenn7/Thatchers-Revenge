@@ -25,10 +25,13 @@ public abstract class InGameHudMixin {
     @Final
     private MinecraftClient client;
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getLastFrameDuration()F"))
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getLastFrameDuration()F", shift = At.Shift.AFTER))
     private void injectLastStandEffectRender(CallbackInfo ci) {
+        ThatcherMod.LOGGER.warn("i am injektin");
         if (this.client.player.hasStatusEffect(ModEffects.LAST_STAND.get())) {
-            this.renderOverlay(LAST_STAND_OVERLAY, ThreadLocalRandom.current().nextFloat(0.525F, 0.575F));
+            float f = ThreadLocalRandom.current().nextFloat(0.525F, 0.575F);
+            ThatcherMod.LOGGER.warn("" + f);
+            this.renderOverlay(LAST_STAND_OVERLAY, f);
         }
     }
 }
