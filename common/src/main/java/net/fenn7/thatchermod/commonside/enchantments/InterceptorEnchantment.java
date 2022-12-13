@@ -23,7 +23,7 @@ public class InterceptorEnchantment extends Enchantment {
 
     @Override
     public boolean isTreasure() {
-        return true;
+        return false;
     }
 
     public int getMinPower(int level) {
@@ -37,21 +37,5 @@ public class InterceptorEnchantment extends Enchantment {
     @Override
     public boolean isAcceptableItem(ItemStack stack) {
         return (stack.getItem() instanceof ElytraItem);
-    }
-
-    @Override
-    public void onUserDamaged(LivingEntity user, Entity attacker, int level) {
-        if (attacker != user && user.distanceTo(attacker) >= 2.0F) {
-            PersistentProjectileEntity arrow = ProjectileUtil.createArrowProjectile(user, new ItemStack(Items.ARROW), 1.0F);
-            arrow.pickupType = PersistentProjectileEntity.PickupPermission.DISALLOWED;
-            arrow.setDamage(arrow.getDamage() + (double) level * 0.5D + 0.5);
-            double velX = attacker.getX() - user.getX();
-            double velY = attacker.getBodyY((double) 1 / 3) - arrow.getY();
-            double velZ = attacker.getZ() - user.getZ();
-            double g = Math.sqrt(Math.pow(velX, 2) + Math.pow(velZ, 2));
-            arrow.setVelocity(velX, velY + g * 0.2D, velZ, 1.6F, 2.0F);
-            user.world.spawnEntity(arrow);
-        }
-        super.onUserDamaged(user, attacker, level);
     }
 }

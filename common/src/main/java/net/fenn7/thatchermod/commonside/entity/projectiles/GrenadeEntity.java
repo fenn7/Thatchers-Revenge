@@ -14,6 +14,7 @@ import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -66,7 +67,11 @@ public class GrenadeEntity extends AbstractGrenadeEntity implements IAnimatable 
         if (!this.world.isClient()) {
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(this.power, this.power, this.power));
             list.stream().forEach(e -> e.damage(DamageSource.thrownProjectile(this, this.getOwner()), 3.0F));
-            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), power, Explosion.DestructionType.DESTROY);
+            if (!world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && this.isMobSpawned) {
+                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), power, Explosion.DestructionType.NONE);
+            } else {
+                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), power, Explosion.DestructionType.DESTROY);
+            }
         }
         this.discard();
     }

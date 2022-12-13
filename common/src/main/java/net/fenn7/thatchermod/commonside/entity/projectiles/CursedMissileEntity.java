@@ -9,12 +9,14 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
 public class CursedMissileEntity extends ExplosiveProjectileEntity {
     private static final float explosionPower = 1.25F;
     private static final int maximumAgeTicks = 200;
+    protected boolean isMobSpawned = false;
 
     public CursedMissileEntity(EntityType<? extends CursedMissileEntity> entityType, World world) {
         super(entityType, world);
@@ -27,7 +29,11 @@ public class CursedMissileEntity extends ExplosiveProjectileEntity {
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
         if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult) hitResult).getEntity())) {
-            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.DESTROY);
+            if (!world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && this.isMobSpawned) {
+                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
+            } else {
+                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.DESTROY);
+            }
             this.discard();
         }
     }
@@ -66,5 +72,9 @@ public class CursedMissileEntity extends ExplosiveProjectileEntity {
     public boolean isPushable() {
         return false;
     }
+
+    public void setMobSpawned(boolean isMobSpawned) { this.isMobSpawned = isMobSpawned; }
+
+    public boolean isMobSpawned() { return this.isMobSpawned; }
 }
 

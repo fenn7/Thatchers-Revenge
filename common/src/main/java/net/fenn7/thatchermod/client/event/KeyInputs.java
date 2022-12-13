@@ -52,7 +52,7 @@ public class KeyInputs {
                         k *= n / m;
                         l *= n / m;
                         player.addVelocity(h, k, l);
-                        chest.damage(10, player, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.CHEST));
+                        chest.damage(20, player, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.CHEST));
                         NetworkManager.sendToServer(ModPackets.LAUNCH_ID, new PacketByteBuf(Unpooled.buffer()));
                     }
                 }

@@ -23,6 +23,7 @@ public abstract class AbstractGrenadeEntity extends ThrownItemEntity implements 
     protected final AnimationFactory factory = new AnimationFactory(this);
     protected int maxAgeTicks = 100;
     protected boolean shouldBounce = true;
+    protected boolean isMobSpawned = false;
     protected float power;
 
     public AbstractGrenadeEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
@@ -114,6 +115,10 @@ public abstract class AbstractGrenadeEntity extends ThrownItemEntity implements 
     public float getPower() {
         return this.power;
     }
+
+    public void setMobSpawned(boolean isMobSpawned) { this.isMobSpawned = isMobSpawned; }
+
+    public boolean isMobSpawned() { return this.isMobSpawned; }
 
     protected <E extends IAnimatable> PlayState flyingAnimation(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grenade.flying", true));

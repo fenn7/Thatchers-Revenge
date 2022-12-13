@@ -14,7 +14,6 @@ import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = ThatcherMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModBusEvents {
-
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.AddLayers event) {
         GeoArmorRenderer.registerArmorRenderer(ThatcheriteArmourItem.class, () -> {

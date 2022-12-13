@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.commonside.entity.mobs;
 
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.entity.projectiles.AbstractGrenadeEntity;
 import net.fenn7.thatchermod.commonside.entity.projectiles.GrenadeEntity;
 import net.fenn7.thatchermod.commonside.entity.projectiles.SmokeGrenadeEntity;
@@ -32,6 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
     private boolean hasUsedSmoke = false;
+    private int attackTicksLeft;
 
     public RoyalGrenadierEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
@@ -70,8 +72,9 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
 
     public void attack(LivingEntity target) {
         this.handSwinging = true;
+        this.attackTicksLeft = 10;
+        this.world.sendEntityStatus(this, (byte) 4);
         AbstractGrenadeEntity grenade;
-
         if (!this.hasUsedSmoke) {
             grenade = new SmokeGrenadeEntity(this.world, this.getX(), this.getBodyY(0.7F), this.getZ());
             this.hasUsedSmoke = true;
@@ -79,7 +82,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
             grenade = new GrenadeEntity(this.world, this.getX(), this.getBodyY(0.7F), this.getZ());
             grenade.setPower(1.5F * grenade.getPower());
         }
-
+        grenade.setMobSpawned(true);
         double d = target.getX() - this.getX();
         double e = target.getBodyY(0.2D) - grenade.getY();
         double f = target.getZ() - this.getZ();
@@ -105,10 +108,24 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
     @Override
     public void onDeath(DamageSource damageSource) {
         super.onDeath(damageSource);
-        GrenadeEntity grenade = new GrenadeEntity(this.world, this.getX(), this.getBodyY(0.5), this.getZ());
-        grenade.setPower(grenade.getPower() * 2.0F);
+        SmokeGrenadeEntity grenade = new SmokeGrenadeEntity(this.world, this.getX(), this.getBodyY(0.5), this.getZ());
+        grenade.setMobSpawned(true);
+        grenade.setPower(grenade.getPower() * 1.5F);
         grenade.setShouldBounce(false);
         this.world.spawnEntity(grenade);
+    }
+
+    public void tickMovement() {
+        super.tickMovement();
+        if (this.attackTicksLeft > 0) {
+            --this.attackTicksLeft;
+        }
+    }
+
+    public void handleStatus(byte status) { // required to handle attack
+        if (status == 4) {
+            this.attackTicksLeft = 10;
+        }
     }
 
     @Override
@@ -126,7 +143,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
         return SoundEvents.ITEM_SHIELD_BREAK;
     }
 
-    //public int getAttackTicksLeft() { return this.attackTicksLeft; }
+    public int getAttackTicksLeft() { return this.attackTicksLeft; }
 
     // animations
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -141,8 +158,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
     }
 
     private <E extends IAnimatable> PlayState attackPred(AnimationEvent<E> event) {
-        if (this.handSwinging) {
-            event.getController().markNeedsReload();
+        if (this.isAttacking() && this.getAttackTicksLeft() > 0) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grenadier.attack", false));
             this.handSwinging = false;
         }

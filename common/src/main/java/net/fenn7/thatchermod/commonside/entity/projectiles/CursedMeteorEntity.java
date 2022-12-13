@@ -12,6 +12,7 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
@@ -22,6 +23,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     private static final float explosionPower = 2.5F;
     private static final int maximumAgeTicks = 300;
     private boolean isFalling = false;
+    private boolean isMobSpawned = false;
     private double lowestNoClipY = 0;
 
     public CursedMeteorEntity(EntityType<? extends CursedMeteorEntity> entityType, World world) {
@@ -45,7 +47,11 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
                     }
                 }
             }
-            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.DESTROY);
+            if (!world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && this.isMobSpawned) {
+                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
+            } else {
+                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.DESTROY);
+            }
             this.discard();
         }
     }
@@ -94,4 +100,8 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     public boolean hasNoGravity() {
         return false;
     }
+
+    public void setMobSpawned(boolean isMobSpawned) { this.isMobSpawned = isMobSpawned; }
+
+    public boolean isMobSpawned() { return this.isMobSpawned; }
 }
