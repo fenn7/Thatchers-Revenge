@@ -2,6 +2,7 @@ package net.fenn7.thatchermod.client.event.forge;
 
 import net.fenn7.thatchermod.client.ThatcherModClient;
 import net.fenn7.thatchermod.client.event.RenderEvents;
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;

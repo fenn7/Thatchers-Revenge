@@ -46,7 +46,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:cooked_pork",
+          "name": "minecraft:cooked_porkchop",
           "count": 2
         }
       ],

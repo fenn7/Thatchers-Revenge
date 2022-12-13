@@ -66,7 +66,7 @@ public class GrenadeEntity extends AbstractGrenadeEntity implements IAnimatable 
         if (!this.world.isClient()) {
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(this.power, this.power, this.power));
             list.stream().forEach(e -> e.damage(DamageSource.thrownProjectile(this, this.getOwner()), 3.0F));
-            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), power, Explosion.DestructionType.NONE);
+            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), power, Explosion.DestructionType.DESTROY);
         }
         this.discard();
     }

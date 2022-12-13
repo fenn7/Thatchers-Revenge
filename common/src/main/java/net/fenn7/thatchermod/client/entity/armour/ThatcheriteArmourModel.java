@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.item.custom.ThatcheriteArmourItem;
 import net.minecraft.util.Identifier;
+import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 @Environment(EnvType.CLIENT)

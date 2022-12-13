@@ -5,12 +5,17 @@
       "item": "minecraft:gunpowder"
     },
     {
-      "item": "minecraft:ink_sac",
-      "count": 3
+      "item": "minecraft:ink_sac"
+    },
+    {
+      "item": "minecraft:ink_sac"
+    },
+    {
+      "item": "minecraft:ink_sac"
     }
   ],
   "result": {
-    "item": "thatchermod:grenade",
+    "item": "thatchermod:grenade_smoke",
     "count": 3
   }
 }

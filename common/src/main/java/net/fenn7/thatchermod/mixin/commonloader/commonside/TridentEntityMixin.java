@@ -1,7 +1,10 @@
 package net.fenn7.thatchermod.mixin.commonloader.commonside;
 
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.enchantments.ModEnchantments;
+import net.fenn7.thatchermod.commonside.entity.projectiles.TrickleDownTridentEntity;
 import net.fenn7.thatchermod.commonside.item.ModItems;
+import net.fenn7.thatchermod.commonside.item.custom.TrickleDownTridentItem;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -60,9 +63,6 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
                 }
             }
         }
-
-        if (this.tridentStack.isOf(ModItems.TRICKLE_DOWN_TRIDENT.get())) {
-            this.dealtDamage = false;
-        }
+        ThatcherMod.LOGGER.warn("mixin");
     }
 }

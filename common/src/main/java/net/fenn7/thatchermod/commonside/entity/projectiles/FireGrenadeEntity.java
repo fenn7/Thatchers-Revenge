@@ -1,8 +1,10 @@
 package net.fenn7.thatchermod.commonside.entity.projectiles;
 
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
 import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.minecraft.block.AbstractFireBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -14,10 +16,12 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 
@@ -104,8 +108,10 @@ public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimata
         posStream.filter(pos -> Math.sqrt(pos.getSquaredDistance(impactPos)) <= power)
                 .filter(pos -> AbstractFireBlock.canPlaceAt(world, pos, this.getMovementDirection()))
                 .forEach(pos -> {
-                    BlockState fireState = AbstractFireBlock.getState(world, pos.offset(this.getMovementDirection()));
-                    world.setBlockState(pos, fireState, 11);
+                    if (shouldSetOnFire(world, pos)) {
+                        BlockState fireState = AbstractFireBlock.getState(world, pos.offset(this.getMovementDirection()));
+                        world.setBlockState(pos, fireState, 11);
+                    }
                 });
 
         if (this.shouldLinger) {
@@ -118,5 +124,19 @@ public class FireGrenadeEntity extends AbstractGrenadeEntity implements IAnimata
         if (this.shouldDiscard) {
             this.discard();
         }
+    }
+
+    public boolean shouldSetOnFire(World world, BlockPos firePos) {
+        for (double x = Math.min(firePos.getX(), this.getX()); x <= Math.max(firePos.getX(), this.getX()); x++) {
+            for (double y = Math.min(firePos.getY(), this.getY()); y <= Math.max(firePos.getY(), this.getY()); y++) {
+                for (double z = Math.min(firePos.getZ(), this.getZ()); z <= Math.max(firePos.getZ(), this.getZ()); z++) {
+                    BlockState between = world.getBlockState(new BlockPos(x, y, z));
+                    if (between != null && between.getMaterial().isSolid() && !between.getMaterial().isBurnable()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

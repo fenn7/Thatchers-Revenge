@@ -71,7 +71,7 @@ public class UnionBusterItem extends AxeItem {
         }
         if (success) {
             CommonMethods.spawnParticleCircle(world, new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(user.getBlockPos())),
-                                                user.getX(), user.getY(), user.getZ(), RANGE / 2);
+                                                user.getX(), user.getY() + 0.5D, user.getZ(), RANGE / 2);
             world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_GRASS_PLACE, SoundCategory.HOSTILE, 15F, 0.33F);
             world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.HOSTILE, 10F, 0.1F);
             user.getItemCooldownManager().set(this, DURATION);
@@ -81,7 +81,7 @@ public class UnionBusterItem extends AxeItem {
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
         CommonMethods.spawnParticleCircle(world, new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.ICE.getDefaultState()),
-                user.getX(), user.getY(), user.getZ(), RANGE);
+                user.getX(), user.getY() + 0.5D, user.getZ(), RANGE);
         return super.finishUsing(stack, world, user);
     }
 
