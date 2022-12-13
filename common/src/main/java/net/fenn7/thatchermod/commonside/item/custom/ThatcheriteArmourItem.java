@@ -1,7 +1,7 @@
 package net.fenn7.thatchermod.commonside.item.custom;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fenn7.thatchermod.commonside.item.ModItems;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -10,29 +10,32 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ThatcheriteArmourItem extends ArmorItem implements IAnimatable {
-    private final AnimationFactory factory = new AnimationFactory(this);
+
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public ThatcheriteArmourItem(ArmorMaterial material, EquipmentSlot slot, Settings settings) {
         super(material, slot, settings);
     }
 
-    @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
+    @ExpectPlatform
+    public static Item create(ArmorMaterial material, EquipmentSlot slot, Settings settings) {
+        throw new AssertionError();
     }
 
     public static boolean hasFullSet(PlayerEntity player) {
@@ -68,7 +71,7 @@ public class ThatcheriteArmourItem extends ArmorItem implements IAnimatable {
 
         // Always loop the animation but later on in this method we'll decide whether or
         // not to actually play it
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", ILoopType.EDefaultLoopTypes.LOOP));
 
         // If the living entity is an armorstand just play the animation nonstop
         if (livingEntity instanceof ArmorStandEntity) {
@@ -85,12 +88,16 @@ public class ThatcheriteArmourItem extends ArmorItem implements IAnimatable {
 
             // elements 2 to 6 are the armor so we take the sublist. Armorlist now only
             // contains the 4 armor slots
-            List<Item> armorList = equipmentList.subList(2, 6);
+            Set<Item> armorItems = new HashSet<>(equipmentList.subList(2, 6));
 
             // Make sure the player is wearing all the armor. If they are, continue playing
             // the animation, otherwise stop
-            boolean isWearingAll = armorList.containsAll(Arrays.asList(ModItems.THATCHERITE_BOOTS.get(),
-                    ModItems.THATCHERITE_GREAVES.get(), ModItems.THATCHERITE_CHESTPLATE.get(), ModItems.THATCHERITE_HELMET.get()));
+            boolean isWearingAll = armorItems.containsAll(Set.of(
+                    ModItems.THATCHERITE_BOOTS.get(),
+                    ModItems.THATCHERITE_GREAVES.get(),
+                    ModItems.THATCHERITE_CHESTPLATE.get(),
+                    ModItems.THATCHERITE_HELMET.get()
+            ));
             return isWearingAll ? PlayState.CONTINUE : PlayState.STOP;
         }
         return PlayState.STOP;
@@ -98,7 +105,7 @@ public class ThatcheriteArmourItem extends ArmorItem implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 20, this::predicate));
+        data.addAnimationController(new AnimationController<>(this, "controller", 20, this::predicate));
     }
 
     @Override

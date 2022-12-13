@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 import net.fenn7.thatchermod.client.entity.RoyalFencerRenderer;
 import net.fenn7.thatchermod.client.entity.RoyalGrenadierRenderer;
 import net.fenn7.thatchermod.client.entity.ThatcherModelRenderer;
-import net.fenn7.thatchermod.client.entity.armour.ThatcheriteArmourRenderer;
 import net.fenn7.thatchermod.client.entity.projectiles.*;
 import net.fenn7.thatchermod.client.event.KeyInputs;
 import net.fenn7.thatchermod.client.network.ModPacketsClient;
@@ -18,10 +17,8 @@ import net.fenn7.thatchermod.client.screen.GrenadeLauncherScreen;
 import net.fenn7.thatchermod.client.screen.ThatcherismAltarScreen;
 import net.fenn7.thatchermod.client.sound.ModSounds;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
-import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.particle.ModParticles;
 import net.fenn7.thatchermod.commonside.screen.ModScreenHandlers;
-import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 @Environment(EnvType.CLIENT)
 public class ThatcherModClient {
@@ -55,15 +52,5 @@ public class ThatcherModClient {
 
         KeyInputs.register();
         ModPacketsClient.registerS2CPackets();
-    }
-
-    public static void registerGeoArmorRenderers() {
-        GeoArmorRenderer.registerArmorRenderer(
-                new ThatcheriteArmourRenderer(),
-                ModItems.THATCHERITE_HELMET.get(),
-                ModItems.THATCHERITE_CHESTPLATE.get(),
-                ModItems.THATCHERITE_GREAVES.get(),
-                ModItems.THATCHERITE_BOOTS.get()
-        );
     }
 }

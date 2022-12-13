@@ -141,7 +141,7 @@ public class ModItems {
 
     public static final RegistrySupplier<Item> THATCHERITE_HELMET = ITEMS.register(
             "thatcherite_helmet",
-            () -> new ThatcheriteArmourItem(
+            () -> ThatcheriteArmourItem.create(
                     ModArmourMaterials.THATCHERITE,
                     EquipmentSlot.HEAD,
                     new Item.Settings()
@@ -154,7 +154,7 @@ public class ModItems {
 
     public static final RegistrySupplier<Item> THATCHERITE_CHESTPLATE = ITEMS.register(
             "thatcherite_chestplate",
-            () -> new ThatcheriteArmourItem(
+            () -> ThatcheriteArmourItem.create(
                     ModArmourMaterials.THATCHERITE,
                     EquipmentSlot.CHEST,
                     new Item.Settings()
@@ -167,7 +167,7 @@ public class ModItems {
 
     public static final RegistrySupplier<Item> THATCHERITE_GREAVES = ITEMS.register(
             "thatcherite_greaves",
-            () -> new ThatcheriteArmourItem(
+            () -> ThatcheriteArmourItem.create(
                     ModArmourMaterials.THATCHERITE,
                     EquipmentSlot.LEGS,
                     new Item.Settings()
@@ -180,7 +180,7 @@ public class ModItems {
 
     public static final RegistrySupplier<Item> THATCHERITE_BOOTS = ITEMS.register(
             "thatcherite_boots",
-            () -> new ThatcheriteArmourItem(
+            () -> ThatcheriteArmourItem.create(
                     ModArmourMaterials.THATCHERITE,
                     EquipmentSlot.FEET,
                     new Item.Settings()
