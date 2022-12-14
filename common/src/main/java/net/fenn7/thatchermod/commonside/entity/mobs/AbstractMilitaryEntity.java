@@ -7,6 +7,8 @@ import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -20,6 +22,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
+import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -51,14 +54,22 @@ public abstract class AbstractMilitaryEntity extends PathAwareEntity implements 
         this.goalSelector.add(0, new SwimGoal(this));
         this.targetSelector.add(1, (new RevengeGoal(this, ThatcherEntity.class, AbstractMilitaryEntity.class)).setGroupRevenge());
         this.goalSelector.add(2, new TrackOwnerTargetGoal(this));
-        this.targetSelector.add(3, new ActiveTargetGoal(this, PlayerEntity.class, 10, true, false,
+        this.targetSelector.add(3, new ActiveTargetGoal(this, PlayerEntity.class, 10, false, false,
                 e -> this.shouldAngerAt((LivingEntity) e)));
-        this.targetSelector.add(3, new ActiveTargetGoal(this, HostileEntity.class, 5, true, false,
+        this.targetSelector.add(3, new ActiveTargetGoal(this, HostileEntity.class, 5, false, false,
                 e -> !(e instanceof ThatcherEntity)));
         this.targetSelector.add(4, new UniversalAngerGoal(this, true));
         this.goalSelector.add(7, new WanderAroundGoal(this, 1.0D, 10));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 1.0F));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 10.0F));
+    }
+
+    @Override
+    public void tick() {
+        if (!this.hasAngerTime() && this.getHealth() < this.getMaxHealth()) {
+            this.heal(0.05F);
+        }
+        super.tick();
     }
 
     @Override

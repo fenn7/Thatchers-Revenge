@@ -5,9 +5,10 @@
   "item.thatchermod.essence_of_thatcher": "Essence of Thatcher",
   "item.thatchermod.union_buster": "Union Buster",
   "item.thatchermod.milk_snatcher": "Milk Snatcher",
-  "item.thatchermod.colliery_closer": "Colliery Closer",
-  "item.thatchermod.command_sceptre": "Imperial Sceptre",
+  "item.thatchermod.trickle_down_trident": "Trickle-Down Trident",
+  "item.thatchermod.command_sceptre_3d": "Imperial Sceptre",
   "item.thatchermod.community_chargebow": "Community Chargebow",
+  "item.thatchermod.colliery_closer": "Colliery Closer",
   "item.thatchermod.thatcherite_helmet": "Thatcherite Helmet",
   "item.thatchermod.thatcherite_chestplate": "Thatcherite Chestplate",
   "item.thatchermod.thatcherite_greaves": "Thatcherite Greaves",
@@ -16,7 +17,9 @@
   "item.thatchermod.grenade_fire": "Incendiary Grenade",
   "item.thatchermod.grenade_smoke": "Smoke Grenade",
   "item.thatchermod.grenade_launcher": "Grenade Launcher",
+
   "item.thatchermod.fencer_spawn_egg": "Royal Fencer Spawn Egg",
+  "item.thatchermod.grenadier_spawn_egg": "Royal Grenadier Spawn Egg",
 
   "effect.thatchermod.calcium_deficiency": "Hypocalcemia",
   "effect.thatchermod.static_buildup": "Static Buildup",
@@ -31,12 +34,15 @@
   "enchantment.thatchermod.jet_assist": "Jet Assist",
   "enchantment.thatchermod.privatisation": "Privatisation",
   "enchantment.thatchermod.amphibious": "Amphibious",
+  "enchantment.thatchermod.hungering_strike": "Hungering Strike",
   "enchantment.thatchermod.cursed_guard": "Cursed Guard",
   "enchantment.thatchermod.discontent": "Discontent",
 
   "block.thatchermod.thatcherism_altar": "Thatcherism Altar",
 
   "entity.thatchermod.thatcher": "MARGARET THATCHER",
+  "entity.thatchermod.royal_fencer": "Royal Fencer",
+  "entity.thatchermod.royal_grenadier": "Royal Grenadier",
   "entity.thatchermod.cursed_meteor": "Cursed Meteor",
   "entity.thatchermod.cursed_missile": "Cursed Missile",
   "entity.thatchermod.smoke_entity": "Rocket Smoke",
@@ -49,5 +55,6 @@
   "key.thatchermod.category": "Thatcher's Revenge",
   "key.thatchermod.launch": "Jet-Assisted Launch",
 
-  "itemGroup.thatchermod.thatcher": "Thatcher's Revenge"
+  "itemGroup.thatchermod.thatcher": "Thatcher's Revenge",
+  "item.thatchermod.command_sceptre": "Imperial Sceptre"
 }

@@ -29,21 +29,6 @@ public class ThatcherModForge {
         ThatcherMod.init();
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
-        ThatcherMod.LOGGER.warn("setting");
-        event.enqueueWork(() -> {
-            SpawnRestriction.register(ModEntities.ROYAL_GRENADIER.get(),
-                    SpawnRestriction.Location.ON_GROUND,
-                    Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-                    MobEntity::canMobSpawn);
-
-            SpawnRestriction.register(ModEntities.ROYAL_FENCER.get(),
-                    SpawnRestriction.Location.ON_GROUND,
-                    Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-                    MobEntity::canMobSpawn);
-        });
-    }
-
     @OnlyIn(Dist.CLIENT)
     private static void clientInit() {
         ThatcherMod.LOGGER.warn("FORGE IT UP");

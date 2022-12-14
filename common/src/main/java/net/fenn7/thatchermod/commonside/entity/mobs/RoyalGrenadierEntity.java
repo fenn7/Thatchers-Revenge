@@ -11,6 +11,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
@@ -75,7 +76,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
         this.attackTicksLeft = 10;
         this.world.sendEntityStatus(this, (byte) 4);
         AbstractGrenadeEntity grenade;
-        if (!this.hasUsedSmoke) {
+        if (!this.hasUsedSmoke && target instanceof PlayerEntity) {
             grenade = new SmokeGrenadeEntity(this.world, this.getX(), this.getBodyY(0.7F), this.getZ());
             this.hasUsedSmoke = true;
         } else {
@@ -110,7 +111,6 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
         super.onDeath(damageSource);
         SmokeGrenadeEntity grenade = new SmokeGrenadeEntity(this.world, this.getX(), this.getBodyY(0.5), this.getZ());
         grenade.setMobSpawned(true);
-        grenade.setPower(grenade.getPower() * 1.5F);
         grenade.setShouldBounce(false);
         this.world.spawnEntity(grenade);
     }

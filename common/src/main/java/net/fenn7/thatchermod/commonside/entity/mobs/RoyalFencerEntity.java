@@ -7,6 +7,9 @@ import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -28,6 +31,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class RoyalFencerEntity extends AbstractMilitaryEntity {
+    private static final TrackedData<Byte> GRENADIER_FLAGS = DataTracker.registerData(RoyalFencerEntity.class, TrackedDataHandlerRegistry.BYTE);;
     private final EntityAttributeModifier DOUBLE_SPEED = new EntityAttributeModifier(
             "SPEED_BOOST", 1.0D, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
 
@@ -50,6 +54,12 @@ public class RoyalFencerEntity extends AbstractMilitaryEntity {
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.3D)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, FOLLOW_RANGE);
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(GRENADIER_FLAGS, (byte)0);
     }
 
     @Override
@@ -80,15 +90,37 @@ public class RoyalFencerEntity extends AbstractMilitaryEntity {
             if (this.getTarget() != null && !speed.hasModifier(DOUBLE_SPEED)) {
                 speed.addTemporaryModifier(DOUBLE_SPEED);
             }
+            if (!this.world.isClient) {
+                this.setClimbingWall(this.horizontalCollision);
+            }
         } else if (speed.hasModifier(DOUBLE_SPEED)) {
             speed.removeModifier(DOUBLE_SPEED);
         }
         super.tickMovement();
     }
 
+    @Override
+    public boolean isClimbing() {
+        return this.isClimbingWall();
+    }
+
+    public boolean isClimbingWall() {
+        return ((Byte)this.dataTracker.get(GRENADIER_FLAGS) & 1) != 0;
+    }
+
+    public void setClimbingWall(boolean climbing) {
+        byte data = (Byte)this.dataTracker.get(GRENADIER_FLAGS);
+
+        if (climbing) data = (byte)(data | 1);
+        else data &= -2;
+
+        this.dataTracker.set(GRENADIER_FLAGS, data);
+    }
+
     public boolean tryAttack(Entity target) {
         if (!super.tryAttack(target)) return false;
         else {
+            this.heal(2);
             this.world.sendEntityStatus(this, (byte) 4);
             return true;
         }
