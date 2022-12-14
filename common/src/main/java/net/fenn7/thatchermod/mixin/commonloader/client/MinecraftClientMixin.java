@@ -21,8 +21,16 @@ public abstract class MinecraftClientMixin {
 
     @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/hit/HitResult;getType()Lnet/minecraft/util/hit/HitResult$Type;"), cancellable = true)
     private void injectedAttackMethod(CallbackInfoReturnable<Boolean> cir) {
+        boolean shouldCancel = false;
+        if (player.getMainHandStack().isOf(ModItems.COMMAND_SCEPTRE.get())) {
+            NetworkManager.sendToServer(ModPackets.CS_C2S_ID, new PacketByteBuf(Unpooled.buffer()));
+            shouldCancel = true;
+        }
         if (player.getMainHandStack().isOf(ModItems.GRENADE_LAUNCHER.get())) {
             NetworkManager.sendToServer(ModPackets.GL_C2S_ID, new PacketByteBuf(Unpooled.buffer()));
+            shouldCancel = true;
+        }
+        if (shouldCancel) {
             cir.cancel();
         }
     }

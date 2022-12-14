@@ -69,10 +69,6 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos,
                               PlayerEntity player, Hand hand, BlockHitResult hit) {
-        RedMagicIndicatorEntity indicator = new RedMagicIndicatorEntity(world, pos.getX(), pos.getY(), pos.getZ() + 1, 3.0D, false);
-        indicator.setMaxAge(180);
-        indicator.setCentrePoint(new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
-        world.spawnEntity(indicator);
         if (!world.isClient && !state.get(IS_CHANNELING)) {
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
             if (screenHandlerFactory != null && player.getMainHandStack().getItem() != (Items.DIAMOND)
@@ -81,6 +77,10 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
             }
         }
         if (state.get(IS_PREPARED) && player.getMainHandStack().getItem() == (Items.DIAMOND) && !world.isClient) {
+            RedMagicIndicatorEntity indicator = new RedMagicIndicatorEntity(world, pos.getX(), pos.getY(), pos.getZ() + 1, 3.0D, false);
+            indicator.setMaxAge(180);
+            indicator.setCentrePoint(new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
+            world.spawnEntity(indicator);
             player.getMainHandStack().decrement(1);
             world.setBlockState(pos, state.with(IS_CHANNELING, true));
             world.playSound(null, pos, new SoundEvent(new Identifier("thatchermod:thatcher_summoning")),

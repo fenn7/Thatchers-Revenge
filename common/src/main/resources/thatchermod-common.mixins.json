@@ -5,7 +5,7 @@
     "compatibilityLevel": "JAVA_17",
     "mixins": [
         "commonside.ElytraItemMixin",
-        "commonside.ModEntityDataSaver",
+      "commonside.ModEntityData",
         "commonside.PersistentProjectileMixin",
         "commonside.PlayerEntityMixin",
         "commonside.TridentEntityMixin",

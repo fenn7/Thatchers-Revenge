@@ -1,6 +1,5 @@
 package net.fenn7.thatchermod.mixin.commonloader.commonside;
 
-import com.eliotlash.mclib.math.functions.classic.Abs;
 import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.effect.LastStandEffect;
 import net.fenn7.thatchermod.commonside.effect.ModEffects;
@@ -9,8 +8,7 @@ import net.fenn7.thatchermod.commonside.entity.projectiles.AbstractGrenadeEntity
 import net.fenn7.thatchermod.commonside.entity.projectiles.GrenadeEntity;
 import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.item.custom.ThatcheriteArmourItem;
-import net.fenn7.thatchermod.commonside.util.CommonMethods;
-import net.fenn7.thatchermod.commonside.util.IEntityDataSaver;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.fenn7.thatchermod.commonside.util.NBTInterface;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
@@ -32,15 +30,11 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -50,7 +44,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -119,7 +112,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     public void injectDropInventoryMethod(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
         if (!player.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
-            IEntityDataSaver playerData = (IEntityDataSaver) player;
+            ThatcherModEntityData playerData = (ThatcherModEntityData) player;
             List<ItemStack> stackList = new ArrayList<>();
             for (int i = 0; i < player.getInventory().size(); i++) {
                 ItemStack stack = player.getInventory().getStack(i);
@@ -170,8 +163,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    public void injectTickEnchantsMethod(CallbackInfo ci) {
+    public void injectTickingMethod(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
+        ThatcherModEntityData playerData = (ThatcherModEntityData) player;
+        int lastStandCDTicks = playerData.getPersistentData().getInt("last.stand.cooldown");
+        if (lastStandCDTicks > 0) {
+            playerData.getPersistentData().putInt("last.stand.cooldown", --lastStandCDTicks);
+            ThatcherMod.LOGGER.warn("" + playerData.getPersistentData().getInt("last.stand.cooldown"));
+        }
         ItemStack chest = player.getEquippedStack(EquipmentSlot.CHEST); // Elytra Enchantments
         if (chest.isOf(Items.ELYTRA) && !world.isClient) {
             int interceptLevel = EnchantmentHelper.getLevel(ModEnchantments.INTERCEPTOR.get(), chest);
@@ -258,7 +257,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Inject(method = "tickMovement", at = @At("HEAD"))
     public void injectTickHeadTiltMethod(CallbackInfo ci) {
         PlayerEntity player = ((PlayerEntity) (Object) this);
-        IEntityDataSaver playerData = (IEntityDataSaver) player;
+        ThatcherModEntityData playerData = (ThatcherModEntityData) player;
 
         if (playerData.getPersistentData().getBoolean("should_recoil") && player.world.isClient()) {
             if (this.recoilTicks == 0) {

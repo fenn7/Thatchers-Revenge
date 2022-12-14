@@ -7,7 +7,7 @@ import net.fenn7.thatchermod.commonside.effect.ModEffects;
 import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.item.custom.ThatcheriteArmourItem;
 import net.fenn7.thatchermod.commonside.item.custom.UnionBusterItem;
-import net.fenn7.thatchermod.commonside.util.IEntityDataSaver;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -22,7 +22,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 
 public enum PlayerEvents implements EntityEvent.LivingDeath, PlayerEvent.PlayerClone {
-
     INSTANCE;
 
     @Override
@@ -31,7 +30,7 @@ public enum PlayerEvents implements EntityEvent.LivingDeath, PlayerEvent.PlayerC
                 oldPlayer.getItemCooldownManager().getCooldownProgress(ModItems.UNION_BUSTER.get(), 0));
         newPlayer.getItemCooldownManager().set(ModItems.UNION_BUSTER.get(), unionBusterCD);
 
-        IEntityDataSaver playerData = ((IEntityDataSaver) oldPlayer);
+        ThatcherModEntityData playerData = ((ThatcherModEntityData) oldPlayer);
         if (playerData.getPersistentData().contains("bailout.items", 9)) {
             NbtList nbtList = playerData.getPersistentData().getList("bailout.items", 10);
             for (int i = 0; i < nbtList.size(); i++) {
@@ -47,11 +46,13 @@ public enum PlayerEvents implements EntityEvent.LivingDeath, PlayerEvent.PlayerC
     @Override
     public EventResult die(LivingEntity entity, DamageSource source) {
         if (entity instanceof PlayerEntity player
+                && ((ThatcherModEntityData) player).getPersistentData().getInt("last.stand.cooldown") == 0
                 && ThatcheriteArmourItem.hasFullSet(player) && !source.isOutOfWorld()
                 && player.getMainHandStack().getItem() != Items.TOTEM_OF_UNDYING
                 && player.getOffHandStack().getItem() != Items.TOTEM_OF_UNDYING) {
             player.playSound(SoundEvents.ENTITY_WITHER_HURT, SoundCategory.HOSTILE, 20F, 0.5F);
             player.setStatusEffect(new StatusEffectInstance(ModEffects.LAST_STAND.get(), 120, 0), null);
+            ((ThatcherModEntityData) player).getPersistentData().putInt("last.stand.cooldown", 600);
             return EventResult.interruptFalse();
         } else {
             return EventResult.pass();

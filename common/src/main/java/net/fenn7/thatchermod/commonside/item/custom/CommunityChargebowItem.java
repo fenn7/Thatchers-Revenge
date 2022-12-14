@@ -1,6 +1,6 @@
 package net.fenn7.thatchermod.commonside.item.custom;
 
-import net.fenn7.thatchermod.commonside.util.IEntityDataSaver;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.fenn7.thatchermod.commonside.util.ModText;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -57,7 +57,7 @@ public class CommunityChargebowItem extends BowItem {
                     if (!world.isClient) {
                         ArrowItem arrowItem = (ArrowItem) (itemStack.getItem() instanceof ArrowItem ? itemStack.getItem() : Items.ARROW);
                         PersistentProjectileEntity arrowEntity = arrowItem.createArrow(world, itemStack, playerEntity);
-                        IEntityDataSaver arrowData = (IEntityDataSaver) arrowEntity;
+                        ThatcherModEntityData arrowData = (ThatcherModEntityData) arrowEntity;
                         arrowData.getPersistentData().putBoolean(LIGHTNING_CHARGE, true);
 
                         float originalF = getPullProgress(this.getMaxUseTime(stack) - remainingUseTicks);

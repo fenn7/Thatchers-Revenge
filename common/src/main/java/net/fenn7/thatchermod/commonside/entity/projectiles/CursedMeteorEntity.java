@@ -24,7 +24,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     private static final int maximumAgeTicks = 300;
     private boolean isFalling = false;
     private boolean isMobSpawned = false;
-    private double lowestNoClipY = 0;
+    private double lowestNoClipY = -64;
 
     public CursedMeteorEntity(EntityType<? extends CursedMeteorEntity> entityType, World world) {
         super(entityType, world);

@@ -1,6 +1,6 @@
 package net.fenn7.thatchermod.mixin.commonloader.commonside;
 
-import net.fenn7.thatchermod.commonside.util.IEntityDataSaver;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class ModEntityDataSaver implements IEntityDataSaver {
+public abstract class ModEntityData implements ThatcherModEntityData {
     private NbtCompound nbtC;
 
     @Override

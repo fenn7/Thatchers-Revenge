@@ -1,7 +1,7 @@
 package net.fenn7.thatchermod.mixin.commonloader.commonside;
 
 import net.fenn7.thatchermod.commonside.effect.ModEffects;
-import net.fenn7.thatchermod.commonside.util.IEntityDataSaver;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -27,9 +27,9 @@ public abstract class PersistentProjectileMixin extends Entity {
     protected void injectEntityHit(EntityHitResult entityHitResult, CallbackInfo ci) {
         Entity entity = entityHitResult.getEntity();
         PersistentProjectileEntity projectile = ((PersistentProjectileEntity) (Object) this);
-        IEntityDataSaver projData = (IEntityDataSaver) projectile;
+        ThatcherModEntityData projData = (ThatcherModEntityData) projectile;
         if (projData.getPersistentData().getBoolean(LIGHTNING_CHARGE) && entity instanceof LivingEntity living) {
-            IEntityDataSaver entityData = (IEntityDataSaver) entity;
+            ThatcherModEntityData entityData = (ThatcherModEntityData) entity;
             int count = entityData.getPersistentData().getInt("times.hit.by.charged");
             if (count < 2) { // 1 less than the number of hits to spawn lightning!
                 entityData.getPersistentData().putInt("times.hit.by.charged", count + 1);

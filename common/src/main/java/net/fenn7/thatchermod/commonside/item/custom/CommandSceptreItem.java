@@ -6,7 +6,9 @@ import net.fenn7.thatchermod.commonside.entity.projectiles.CursedMeteorEntity;
 import net.fenn7.thatchermod.commonside.entity.projectiles.CursedMissileEntity;
 import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.util.CommonMethods;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -17,6 +19,8 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -32,7 +36,10 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -40,7 +47,9 @@ import java.util.List;
 import java.util.Set;
 
 public class CommandSceptreItem extends Item {
-    public static final int METEOR_DURATION = 200;
+    private static final int COOLDOWN = 120;
+    private static final double RANGE = 20;
+    private static String CS_COOLDOWN = "cooldown";
     private int ticks;
 
     public CommandSceptreItem(Settings settings) {
@@ -50,85 +59,93 @@ public class CommandSceptreItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (user.getInventory().containsAny(Set.of(Items.LAPIS_LAZULI))) {
-            ThatcherMod.LOGGER.warn("RRRRRRRRRRRRRRRR WOWOWOWOWOWOI");
-        }
-        if (!world.isClient() && hand == Hand.MAIN_HAND) {
-            user.swingHand(hand, true);
-            if (!user.isSneaking()) {
-                launchMissileEntity(world, user);
-                user.getMainHandStack().damage(1, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
-            } else {
-                CommonMethods.summonDustParticles(world, 1, 0.0F, 0.0F, 0.33F, 3,
-                        user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
-                world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_SKELETON_HORSE_DEATH, SoundCategory.HOSTILE, 8F, 0.75F);
-                summonMeteorEntity(world, user);
-                user.getItemCooldownManager().set(ModItems.COMMAND_SCEPTRE.get(), METEOR_DURATION);
-                user.getMainHandStack().damage(3, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+        if (user.isCreative() || user.getInventory().count(Items.LAPIS_LAZULI) > 4) {
+            if (!world.isClient() && hand == Hand.MAIN_HAND) {
+                if (user.getMainHandStack().getOrCreateNbt().getInt(CS_COOLDOWN) <= 0) {
+                    CommonMethods.summonDustParticles(world, 1, 0.0F, 0.0F, 0.33F, 3,
+                            user.getX(), user.getY() + 2, user.getZ(), 0, 0, 0);
+                    world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_SKELETON_HORSE_DEATH, SoundCategory.HOSTILE, 5F, 0.75F);
+                    summonMeteorEntity(world, user);
+                    user.getMainHandStack().damage(3, user, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+                    user.getMainHandStack().getOrCreateNbt().putInt(CS_COOLDOWN, COOLDOWN);
+                } else {
+                    world.playSound(null, user.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.HOSTILE, 2.5F, 0.5F);
+                }
             }
         }
         return super.use(world, user, hand);
     }
 
-    private void launchMissileEntity(World world, PlayerEntity user) {
+    public void launchMissileEntity(World world, PlayerEntity user) {
         CursedMissileEntity missileEntity = new CursedMissileEntity(ModEntities.CURSED_MISSILE.get(), world);
         missileEntity.setOwner(user);
         missileEntity.setPos(user.getX(), user.getBodyY(0.7D), user.getZ());
         missileEntity.setVelocity(user, user.getPitch(), user.headYaw, 0, 4.0F, 0.25F);
         world.spawnEntity(missileEntity);
+
+        if (!user.isCreative() && !world.isClient) {
+            int lapisSlot = getLapisSlotInv(user.getInventory());
+            if (lapisSlot != -1337) {
+                user.getInventory().getStack(lapisSlot).decrement(1);
+            }
+        }
     }
 
     private void summonMeteorEntity(World world, PlayerEntity user) {
         CursedMeteorEntity meteorEntity = new CursedMeteorEntity(ModEntities.CURSED_METEOR.get(), world);
         meteorEntity.setOwner(user);
         meteorEntity.setFalling(true);
-        meteorEntity.setLowestNoClipY(user.getBodyY(1.0F));
+        BlockPos pos = findPosPlayerLookingAt(user);
+        BlockPos impactPos = pos.offset(Direction.UP);
+        CommonMethods.summonDustParticles(world, 10, 0, 0, 0.33F, 2,
+                impactPos.getX() + 0.5D, impactPos.getY() + 0.5D, impactPos.getZ() + 0.5D, 0, 0, 0);
+        meteorEntity.setLowestNoClipY(pos.getY());
+        meteorEntity.setPos(pos.getX() + 0.5, pos.getY() + 20, pos.getZ() + 0.5);
+        world.spawnEntity(meteorEntity);
 
-        HitResult hitResult = user.raycast(24, 0, true);
-        BlockPos pos;
-        switch (hitResult.getType()) {
-            case ENTITY -> {
-                pos = ((EntityHitResult) hitResult).getEntity().getBlockPos();
-                break;
+        if (!user.isCreative() && !world.isClient) {
+            int lapisSlot = getLapisSlotInv(user.getInventory());
+            if (lapisSlot != -1337) {
+                user.getInventory().getStack(lapisSlot).decrement(4);
             }
+        }
+    }
+
+    private BlockPos findPosPlayerLookingAt(PlayerEntity user) {
+        Vec3d playerPos = user.getPos();
+        Vec3d linearSight = Vec3d.fromPolar(user.getPitch(), user.headYaw);
+
+        Box surroundingBox = new Box(user.getBlockPos()).expand(RANGE);
+        List<Entity> potentialTargets = user.world.getOtherEntities(user, surroundingBox).stream().filter(entity ->
+                        entity.distanceTo(user) <= RANGE && entity instanceof LivingEntity && user.canSee(entity))
+                .toList();
+        for (Entity entity : potentialTargets) {
+            Vec3d vecDiff = entity.getPos().subtract(playerPos);
+            double ratioX = vecDiff.x / linearSight.x;
+            double ratioZ = vecDiff.z / linearSight.z;
+            double ratioDiff = Math.abs(ratioX - ratioZ);
+            if (ratioDiff <= 1.0) {
+                return entity.getBlockPos();
+            }
+        }
+        HitResult hitResult = user.raycast(RANGE, 0, true);
+        switch (hitResult.getType()) {
             case BLOCK -> {
-                pos = ((BlockHitResult) hitResult).getBlockPos();
-                break;
+                return ((BlockHitResult) hitResult).getBlockPos();
             }
             default -> {
-                pos = new BlockPos(hitResult.getPos());
-                break;
+                return new BlockPos(hitResult.getPos());
             }
         }
-
-        BlockPos impactPos = CommonMethods.findFirstNonAirBlockDown(world, pos);
-        CommonMethods.summonDustParticles(world, 10, 0, 0, 0.33F, 2,
-                impactPos.getX() + 0.5D, impactPos.getY() + 1.5D, impactPos.getZ() + 0.5D, 0, 0, 0);
-
-        boolean blockFound = false;
-        for (int i = 0; i < 16; i++) {
-            pos = impactPos.offset(Direction.UP, i + 1);
-            if (!world.getBlockState(pos).isAir()) { // stop on the first NON-AIR block
-                if (pos.getY() % 2 == 1) { // correction needed for odd Y values otherwise meteor will spawn in block
-                    pos = pos.offset(Direction.DOWN, 1);
-                }
-                blockFound = true;
-                break;
-            }
-            i++;
-        }
-
-        if (blockFound) {
-            meteorEntity.setPos(pos.getX() + 0.5, pos.getY() - 1, pos.getZ() + 0.5);
-        } else {
-            meteorEntity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-        }
-        meteorEntity.setVelocity(0, -64, 0, 0F, 0.0F);
-        world.spawnEntity(meteorEntity);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+        int currentCD = nbt.getInt(CS_COOLDOWN);
+        if (!world.isClient() && currentCD > 0) {
+            nbt.putInt(CS_COOLDOWN, --currentCD);
+        }
         if (entity instanceof PlayerEntity player && player.getOffHandStack().getItem() == this) {
             List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(player, 6, 3, 6, -6, -3, -6, world);
             for (Entity mobs : nearbyEntities) {
@@ -137,8 +154,8 @@ public class CommandSceptreItem extends Item {
                     ticks++;
                     if (ticks % 10 == 0) {
                         ticks = 0;
-                        world.addParticle(ParticleTypes.SOUL, passive.getX(), passive.getY() + passive.getHeight(),
-                                passive.getZ(), 0, 1, 0);
+                        world.addParticle(ParticleTypes.SOUL, passive.getX(), passive.getBodyY(1.0),
+                                passive.getZ(), 0, 0.1, 0);
                     }
                 }
             }
@@ -184,6 +201,17 @@ public class CommandSceptreItem extends Item {
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
         stack.damage(5, miner, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
         return true;
+    }
+
+    public static int getLapisSlotInv(PlayerInventory inventory) {
+        Set<Item> items = Set.of(Items.LAPIS_LAZULI);
+        for (int i = 0; i < inventory.size(); ++i) {
+            ItemStack itemStack = inventory.getStack(i);
+            if (items.contains(itemStack.getItem()) && itemStack.getCount() > 0) {
+                return i;
+            }
+        }
+        return -1337;
     }
 
     public static boolean getTicksDivisibleBy(ItemStack stack, int divisor) {

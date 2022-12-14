@@ -1,6 +1,6 @@
 package net.fenn7.thatchermod.commonside.effect;
 
-import net.fenn7.thatchermod.commonside.util.IEntityDataSaver;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.fenn7.thatchermod.commonside.util.ModText;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -99,7 +99,7 @@ public class LastStandEffect extends StatusEffect {
         this.fightMsg = generateMessage();
 
         if (entity instanceof PlayerEntity player) {
-            IEntityDataSaver entityData = ((IEntityDataSaver) player);
+            ThatcherModEntityData entityData = ((ThatcherModEntityData) player);
         }
         super.onApplied(entity, attributes, amplifier);
     }
@@ -128,12 +128,12 @@ public class LastStandEffect extends StatusEffect {
     }
 
     public static boolean shouldLiveOnRemove(Entity entity) {
-        IEntityDataSaver entityData = ((IEntityDataSaver) entity);
+        ThatcherModEntityData entityData = ((ThatcherModEntityData) entity);
         return entityData.getPersistentData().getBoolean("should_live_post_stand");
     }
 
     public static void setStatusOnRemove(Entity entity, boolean shouldLive) {
-        IEntityDataSaver entityData = ((IEntityDataSaver) entity);
+        ThatcherModEntityData entityData = ((ThatcherModEntityData) entity);
         entityData.getPersistentData().putBoolean("should_live_post_stand", shouldLive);
     }
 }

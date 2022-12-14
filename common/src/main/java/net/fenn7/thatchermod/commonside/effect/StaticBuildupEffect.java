@@ -1,6 +1,6 @@
 package net.fenn7.thatchermod.commonside.effect;
 
-import net.fenn7.thatchermod.commonside.util.IEntityDataSaver;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
@@ -54,7 +54,7 @@ public class StaticBuildupEffect extends StatusEffect {
     }
 
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        IEntityDataSaver data = (IEntityDataSaver) entity;
+        ThatcherModEntityData data = (ThatcherModEntityData) entity;
         if (data.getPersistentData().getBoolean(SHOULD_STRIKE) && !entity.world.isClient) {
             for (int i = 0; i <= (amplifier); i++) {
                 entity.world.playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.BLOCKS, 8F, 0.75F);

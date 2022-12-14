@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.item.custom.UnionBusterItem;
-import net.fenn7.thatchermod.commonside.util.IEntityDataSaver;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.fenn7.thatchermod.commonside.util.ModText;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -20,7 +20,7 @@ public class GetCooldownCommand implements Command<ServerCommandSource> {
 
     @Override
     public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        IEntityDataSaver player = (IEntityDataSaver) context.getSource().getPlayer();
+        ThatcherModEntityData player = (ThatcherModEntityData) context.getSource().getPlayer();
         int unionBusterCD = (int) (UnionBusterItem.DURATION * context.getSource().getPlayer().getItemCooldownManager().
                 getCooldownProgress(ModItems.UNION_BUSTER.get(), 0));
 

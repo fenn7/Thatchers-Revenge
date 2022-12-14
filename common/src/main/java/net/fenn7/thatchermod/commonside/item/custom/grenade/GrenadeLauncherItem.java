@@ -2,7 +2,7 @@ package net.fenn7.thatchermod.commonside.item.custom.grenade;
 
 import net.fenn7.thatchermod.commonside.entity.projectiles.AbstractGrenadeEntity;
 import net.fenn7.thatchermod.commonside.screen.GrenadeLauncherScreenHandler;
-import net.fenn7.thatchermod.commonside.util.IEntityDataSaver;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.fenn7.thatchermod.commonside.util.ModText;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -51,7 +51,7 @@ public class GrenadeLauncherItem extends Item {
                 openScreen(user, user.getStackInHand(hand), this.grenadeInv);
             }
             if (shouldrecoil) {
-                IEntityDataSaver data = (IEntityDataSaver) user;
+                ThatcherModEntityData data = (ThatcherModEntityData) user;
                 data.getPersistentData().putBoolean("should_recoil", true);
             }
         }
