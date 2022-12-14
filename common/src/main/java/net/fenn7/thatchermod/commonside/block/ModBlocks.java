@@ -16,7 +16,7 @@ public class ModBlocks {
     public static final RegistrySupplier<Block> THATCHERISM_ALTAR = BLOCKS.register(
             "thatcherism_altar",
             () -> new ThatcherismAltarBlock(AbstractBlock.Settings.of(Material.STONE)
-                    .strength(42.0F, 1337.0F).requiresTool()
+                    .strength(21.0F, 69.0F).requiresTool()
                     .luminance(
                             (state) -> (state.get(ThatcherismAltarBlock.IS_CHANNELING) || state.get(ThatcherismAltarBlock.IS_PREPARED)) ? 15 : 0
                     ))

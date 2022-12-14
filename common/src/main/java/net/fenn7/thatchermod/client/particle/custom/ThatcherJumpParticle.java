@@ -17,7 +17,7 @@ public class ThatcherJumpParticle extends SpriteBillboardParticle {
         this.y = yd;
         this.z = zd;
         this.scale *= 0.75F;
-        this.maxAge = 20;
+        this.maxAge = 200;
         this.setSpriteForAge(spriteSet);
 
         this.red = 1f;
@@ -28,6 +28,14 @@ public class ThatcherJumpParticle extends SpriteBillboardParticle {
     @Override
     public void tick() {
         super.tick();
+        double radius = 2; // adjust this value to control the size of the circle
+        double angle = 0.1; // adjust this value to control the speed of the particle
+
+        double x = radius * Math.cos(angle);
+        double y = radius * Math.sin(angle);
+
+        // set the position of the particle to the calculated x and y values
+        this.setPos(x, y, this.z);
         fadeOut();
     }
 

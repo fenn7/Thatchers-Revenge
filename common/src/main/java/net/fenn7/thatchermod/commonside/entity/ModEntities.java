@@ -63,6 +63,15 @@ public class ModEntities {
                     .build("smoke_entity")
     );
 
+    public static final RegistrySupplier<EntityType<RedMagicIndicatorEntity>> RED_MAGIC_ENTITY = ENTITY_TYPES.register(
+            "red_magic_entity",
+            () -> EntityType.Builder.<RedMagicIndicatorEntity>create(RedMagicIndicatorEntity::new, SpawnGroup.MISC)
+                    .setDimensions(0.001F, 0.001F)
+                    .maxTrackingRange(blocksToChunks(16))
+                    .trackingTickInterval(10)
+                    .build("red_magic_entity")
+    );
+
     public static final RegistrySupplier<EntityType<GrenadeEntity>> GRENADE_ENTITY = ENTITY_TYPES.register(
             "grenade_entity",
             () -> EntityType.Builder.<GrenadeEntity>create(GrenadeEntity::new, SpawnGroup.MISC)

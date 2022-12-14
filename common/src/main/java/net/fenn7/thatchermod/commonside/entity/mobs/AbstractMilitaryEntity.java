@@ -66,8 +66,8 @@ public abstract class AbstractMilitaryEntity extends PathAwareEntity implements 
 
     @Override
     public void tick() {
-        if (!this.hasAngerTime() && this.getHealth() < this.getMaxHealth()) {
-            this.heal(0.05F);
+        if (!this.hasAngerTime() && this.age - this.getLastAttackedTime() > 100 && this.getHealth() < this.getMaxHealth()) {
+            this.heal(0.1F);
         }
         super.tick();
     }

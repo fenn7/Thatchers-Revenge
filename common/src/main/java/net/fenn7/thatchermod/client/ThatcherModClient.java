@@ -45,6 +45,7 @@ public class ThatcherModClient {
         EntityRendererRegistry.register(ModEntities.CURSED_METEOR, CursedMeteorRenderer::new);
         EntityRendererRegistry.register(ModEntities.CURSED_MISSILE, CursedMissileRenderer::new);
         EntityRendererRegistry.register(ModEntities.SMOKE_ENTITY, SmokeRenderer::new);
+        EntityRendererRegistry.register(ModEntities.RED_MAGIC_ENTITY, RedMagicIndicatorRenderer::new);
         EntityRendererRegistry.register(ModEntities.GRENADE_ENTITY, GrenadeRenderer::new);
         EntityRendererRegistry.register(ModEntities.FIRE_GRENADE_ENTITY, FireGrenadeRenderer::new);
         EntityRendererRegistry.register(ModEntities.SMOKE_GRENADE_ENTITY, SmokeGrenadeRenderer::new);
