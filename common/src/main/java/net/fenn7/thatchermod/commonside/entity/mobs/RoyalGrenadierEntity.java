@@ -159,6 +159,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
 
     private <E extends IAnimatable> PlayState attackPred(AnimationEvent<E> event) {
         if (this.isAttacking() && this.getAttackTicksLeft() > 0) {
+            event.getController().markNeedsReload();
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grenadier.attack", false));
             this.handSwinging = false;
         }

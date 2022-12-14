@@ -4,6 +4,7 @@ import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.block.ModBlockEntities;
 import net.fenn7.thatchermod.commonside.block.custom.ThatcherismAltarBlock;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
+import net.fenn7.thatchermod.commonside.entity.projectiles.RedMagicIndicatorEntity;
 import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.item.inventory.ImplementedInventory;
 import net.fenn7.thatchermod.commonside.screen.ThatcherismAltarScreenHandler;
@@ -135,13 +136,14 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
             if (entity.channelingProgress < entity.maxChannelingProgress) {
                 if (entity.channelingProgress % 20 == 0 && entity.channelingProgress <= 140) {
                     if (!world.isClient() && entity.positions != null && !entity.positions.isEmpty()) { // at 20TPS this will occur every second
+                        for (int i = 0; i < entity.channelingProgress/20; i++) {
+                            world.addParticle(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 1.0D + (0.25D * i), pos.getZ() + 0.5D, 0, 0, 0);
+                        }
                         BlockPos strikePos = entity.positions.get(entity.channelingProgress / 20);
-                        world.addParticle(ParticleTypes.LARGE_SMOKE, strikePos.getX(), strikePos.getY(), strikePos.getZ(), 0, 2, 0);
                         EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null,
                                 strikePos, SpawnReason.TRIGGERED, true, true);
-                        extinguishFire(strikePos, world);
+                        extinguishFire(strikePos.offset(Direction.UP), world);
                     }
-                    world.addParticle(ParticleTypes.SOUL, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 5, 0);
                     world.addParticle(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
                 }
                 if (entity.channelingProgress == 170) { //should do this on the final major beat of the song

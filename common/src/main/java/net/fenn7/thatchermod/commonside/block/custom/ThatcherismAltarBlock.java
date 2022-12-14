@@ -2,6 +2,7 @@ package net.fenn7.thatchermod.commonside.block.custom;
 
 import net.fenn7.thatchermod.commonside.block.ModBlockEntities;
 import net.fenn7.thatchermod.commonside.block.blockentity.ThatcherismAltarBlockEntity;
+import net.fenn7.thatchermod.commonside.entity.projectiles.RedMagicIndicatorEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -76,8 +77,16 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
                 player.openHandledScreen(screenHandlerFactory);
             }
         }
+        if (state.get(IS_PREPARED) && player.getMainHandStack().getItem() == (Items.DIAMOND) && !world.isClient) {
+            RedMagicIndicatorEntity indicator = new RedMagicIndicatorEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 1.5D, true);
+            indicator.setMaxAge(180);
+            indicator.setCentrePoint(new BlockPos(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D));
+            world.spawnEntity(indicator);
+            RedMagicIndicatorEntity indicator2 = new RedMagicIndicatorEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() - 0.5D, false);
+            indicator2.setMaxAge(180);
+            indicator2.setCentrePoint(new BlockPos(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D));
+            world.spawnEntity(indicator2);
 
-        if (state.get(IS_PREPARED) && player.getMainHandStack().getItem() == (Items.DIAMOND)) {
             player.getMainHandStack().decrement(1);
             world.setBlockState(pos, state.with(IS_CHANNELING, true));
             world.playSound(null, pos, new SoundEvent(new Identifier("thatchermod:thatcher_summoning")),
@@ -85,7 +94,6 @@ public class ThatcherismAltarBlock extends BlockWithEntity implements BlockEntit
             world.playSound(null, pos, SoundEvents.BLOCK_END_PORTAL_SPAWN,
                     SoundCategory.BLOCKS, 5F, 0.5F);
         }
-
         return ActionResult.SUCCESS;
     }
 

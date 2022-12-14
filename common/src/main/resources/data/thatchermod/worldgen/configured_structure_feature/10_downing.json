@@ -24,10 +24,16 @@
       "bounding_box": "piece",
       "spawns": [
         {
-          "type": "minecraft:parrot",
+          "type": "thatchermod:royal_fencer",
           "weight": 1,
           "minCount": 1,
-          "maxCount": 4
+          "maxCount": 2
+        },
+        {
+          "type": "thatchermod:royal_grenadier",
+          "weight": 1,
+          "minCount": 1,
+          "maxCount": 1
         }
       ]
     }
