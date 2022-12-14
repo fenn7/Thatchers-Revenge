@@ -136,14 +136,12 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
             if (entity.channelingProgress < entity.maxChannelingProgress) {
                 if (entity.channelingProgress % 20 == 0 && entity.channelingProgress <= 140) {
                     if (!world.isClient() && entity.positions != null && !entity.positions.isEmpty()) { // at 20TPS this will occur every second
-                        for (int i = 0; i < entity.channelingProgress/20; i++) {
-                            world.addParticle(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 1.0D + (0.25D * i), pos.getZ() + 0.5D, 0, 0, 0);
-                        }
                         BlockPos strikePos = entity.positions.get(entity.channelingProgress / 20);
                         EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, null,
                                 strikePos, SpawnReason.TRIGGERED, true, true);
                         extinguishFire(strikePos.offset(Direction.UP), world);
                     }
+                    world.addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, pos.getX() + 0.5D, pos.getY() + 0.5D + (0.25 * entity.channelingProgress/20), pos.getZ() + 0.5D, 0, 0, 0);
                     world.addParticle(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
                 }
                 if (entity.channelingProgress == 170) { //should do this on the final major beat of the song

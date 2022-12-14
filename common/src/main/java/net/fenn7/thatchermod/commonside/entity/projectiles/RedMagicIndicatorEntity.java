@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 public class RedMagicIndicatorEntity extends ExplosiveProjectileEntity {
     private int degrees = 0;
     private int maxAge = -1;
+    private double heightDelta = 0;
     private boolean shouldInvertRadius = false;
     private BlockPos startPoint = null;
     private BlockPos centrePoint = null;
@@ -29,10 +30,11 @@ public class RedMagicIndicatorEntity extends ExplosiveProjectileEntity {
         super(entityType, world);
     }
 
-    public RedMagicIndicatorEntity(World world, double x, double y, double z, boolean reverseRadius) {
+    public RedMagicIndicatorEntity(World world, double x, double y, double z, double heightDelta, boolean reverseRadius) {
         super(ModEntities.RED_MAGIC_ENTITY.get(), x, y, z, 0, 0, 0, world);
         this.shouldInvertRadius = reverseRadius;
         this.startPoint = new BlockPos(x, y, z);
+        this.heightDelta = heightDelta;
     }
 
     public void setCentrePoint(BlockPos centrePos) {
@@ -44,27 +46,25 @@ public class RedMagicIndicatorEntity extends ExplosiveProjectileEntity {
     }
 
     public void tick() {
-        if (this.age != -1 && this.age >= this.maxAge) {
+        if (this.maxAge != -1 && this.age >= this.maxAge) {
             this.discard();
         }
-        if (this.centrePoint != null) {
-            double radius = 2 * Math.sqrt(this.centrePoint.getSquaredDistance(this.startPoint)); // adjust this value to control the size of the circle
+        if (this.centrePoint != null && this.startPoint != null) {
+            double radius = 1.5 * Math.sqrt(this.centrePoint.getSquaredDistance(this.startPoint)); // adjust this value to control the size of the circle
             if (this.shouldInvertRadius) radius *= -1;
-            double x = radius * Math.cos(Math.toRadians(degrees));
-            double z = radius * Math.sin(Math.toRadians(degrees));
+            double angularX = radius * Math.cos(Math.toRadians(this.degrees));
+            double angularZ = radius * Math.sin(Math.toRadians(this.degrees));
 
-            // set the position of the particle to the calculated x and y values
-            this.setPos(this.startPoint.getX() + x, this.getY(), this.startPoint.getZ() + z); // add a fixed position on top of this
-
+            this.setPos(this.startPoint.getX() + angularX + 0.5D,
+                    this.getY() + (this.heightDelta / this.maxAge),
+                    this.startPoint.getZ() + angularZ - 0.5D);
             this.degrees += 12;
             if (this.degrees == 360) {
                 this.degrees = 12;
             }
         }
-        if (this.age % 5 == 0) {
-            DustParticleEffect redDust = new DustParticleEffect(new Vec3f(1, 0, 0), 10);
-            this.world.addParticle(redDust, this.getX(), this.getY(), this.getZ(), 0, 0, 0);
-        }
+        DustParticleEffect redDust = new DustParticleEffect(new Vec3f(1, 0, 0), 10);
+        this.world.addParticle(redDust, this.getX(), this.getY(), this.getZ(), 0, 0, 0);
         super.tick();
     }
 
@@ -92,7 +92,7 @@ public class RedMagicIndicatorEntity extends ExplosiveProjectileEntity {
     }
 
     protected ParticleEffect getParticleType() {
-        return ParticleTypes.LARGE_SMOKE;
+        return ParticleTypes.ENCHANT;
     }
 
     public boolean collides() {
