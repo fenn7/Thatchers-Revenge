@@ -129,14 +129,10 @@ public class CommandSceptreItem extends Item {
             }
         }
         HitResult hitResult = user.raycast(RANGE, 0, true);
-        switch (hitResult.getType()) {
-            case BLOCK -> {
-                return ((BlockHitResult) hitResult).getBlockPos();
-            }
-            default -> {
-                return new BlockPos(hitResult.getPos());
-            }
+        if (hitResult.getType() == HitResult.Type.BLOCK) {
+            return ((BlockHitResult) hitResult).getBlockPos();
         }
+        return new BlockPos(hitResult.getPos());
     }
 
     @Override

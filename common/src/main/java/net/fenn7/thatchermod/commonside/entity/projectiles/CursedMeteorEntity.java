@@ -35,7 +35,9 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     }
 
     protected void onCollision(HitResult hitResult) {
-        super.onCollision(hitResult);
+        if (this.getY() > this.lowestNoClipY) {
+            return;
+        }
         if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult) hitResult).getEntity())) {
             if (!this.world.isClient) {
                 List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(2.0D, 2.0D, 2.0D));
@@ -54,6 +56,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
             }
             this.discard();
         }
+        super.onCollision(hitResult);
     }
 
     @Override
