@@ -34,6 +34,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -44,6 +45,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -172,7 +174,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, false,
                 (entity) -> entity instanceof MobEntity && !(entity instanceof AbstractMilitaryEntity) && !(((MobEntity) entity).isUndead())));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.add(8, new WanderAroundGoal(this, 0.6D));
+        this.goalSelector.add(8, new WanderAroundGoal(this, 0.75D));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
     }
@@ -183,26 +185,14 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     public void tickMovement() {
-        super.tickMovement();
         if (this.attackTicksLeft > 0) {
             --this.attackTicksLeft;
         }
+        super.tickMovement();
     }
 
     @Override
     protected void mobTick() {
-        if (this.world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && this.age % 20 == 0) {
-            Box surroundings = new Box(this.getX() - 2, this.getY() - 1, this.getZ() - 2, this.getX() + 2, this.getY() + 1, this.getZ() + 2);
-            List<BlockPos> surroundingStream = BlockPos.stream(surroundings)
-                    .filter(pos -> pos.getY() >= this.getBlockY()
-                            && world.getBlockState(pos).getBlock().getHardness() >= 0
-                    && world.getBlockState(pos).getBlock().getHardness() <= 50.0).toList();
-            //ThatcherMod.LOGGER.warn(surroundings.toString());
-            //ThatcherMod.LOGGER.warn(surroundingStream.toString());
-            for (BlockPos pos : surroundingStream) {
-                this.world.breakBlock(pos, true, this);
-            }
-        }
         float healthRatio = this.getHealth() / this.getMaxHealth();
         this.bossBar.setPercent(healthRatio);
         if (!this.hasSetStartPos) {
@@ -391,7 +381,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     public void onDeath(DamageSource damageSource) {
         world.playSound(null, this.getBlockPos(), new SoundEvent(new Identifier("thatchermod:thatcher_possession")), SoundCategory.BLOCKS, 5F, 0.75F);
-        if (!this.hasReturnedStartPos) {
+        /*if (!this.hasReturnedStartPos) {
             BlockPos pos = new BlockPos(this.serverX, this.serverY, this.serverZ);
             this.setPosition(Vec3d.ofCenter(pos));
             BlockState blockState = world.getBlockState(pos);
@@ -402,7 +392,14 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
                 this.getTarget().setPosition(Vec3d.ofCenter(pos));
             }
             this.hasReturnedStartPos = true;
-        }
+        }*/
+        Box impactBox = new Box(this.getBlockPos()).expand(4);
+        BlockPos.stream(impactBox).filter(pos -> Math.sqrt(pos.getSquaredDistance(this.getBlockPos())) <= 4)
+                .forEach(pos -> {
+                    if (this.world.getBlockState(pos).isIn(BlockTags.FIRE)) {
+                        world.removeBlock(pos, false);
+                    }
+                });
         super.onDeath(damageSource);
     }
 
@@ -455,20 +452,28 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     // animations and sounds
+    private <E extends IAnimatable> PlayState attackPred(AnimationEvent<E> event) {
+        if (this.handSwinging && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
+            event.getController().markNeedsReload();
+            if (this.getHealth() / this.getMaxHealth() <= 0.25) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.attack_1", false));
+            } else {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.attack_2", false));
+            }
+            this.handSwinging = false;
+        }
+        return PlayState.CONTINUE;
+    }
+
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.isAlive()) {
-            if (this.isAttacking() && this.getAttackTicksLeft() > 0) {
-                if (this.getHealth() / this.getMaxHealth() <= 0.25) {
-                    event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.attack_1", false));
-                } else {
-                    event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.attack_2", false));
-                }
-            } else if (event.isMoving()) {
+            if (event.isMoving()) {
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.move", true));
             } else {
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.idle", true));
             }
-        } else {
+        }
+        if (this.dead || this.isDead() || this.getHealth() <= 0.01D) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.thatcher.post_death", false));
         }
         return PlayState.CONTINUE;
@@ -476,6 +481,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+        animationData.addAnimationController(new AnimationController(this, "attacking", 0, this::attackPred));
     }
 
     public AnimationFactory getFactory() {
