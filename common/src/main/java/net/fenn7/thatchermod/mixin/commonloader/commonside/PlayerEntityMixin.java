@@ -174,7 +174,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Tha
         int lastStandCDTicks = thatchersRevenge$getPersistentData().getInt("last.stand.cooldown");
         if (lastStandCDTicks > 0) {
             thatchersRevenge$getPersistentData().putInt("last.stand.cooldown", --lastStandCDTicks);
-        } else if (ThatcheriteArmourItem.hasFullSet(thisPlayer) && thatchersRevenge$getPersistentData().getInt("last.stand.cooldown") == 0) {
+        } else if (ThatcheriteArmourItem.hasFullSet(thisPlayer) && lastStandCDTicks <= 0) {
             world.addParticle(ParticleTypes.PORTAL, getX(), getY(), getZ(), 0, 0.5D, 0);
         }
         ItemStack chest = getEquippedStack(EquipmentSlot.CHEST); // Elytra Enchantments

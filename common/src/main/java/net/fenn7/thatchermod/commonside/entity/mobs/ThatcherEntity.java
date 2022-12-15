@@ -7,6 +7,7 @@ import net.fenn7.thatchermod.commonside.entity.projectiles.CursedMissileEntity;
 import net.fenn7.thatchermod.commonside.util.ModText;
 import net.fenn7.thatchermod.mixin.commonloader.commonside.PlayerEntityMixin;
 import net.minecraft.block.AbstractFireBlock;
+import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -69,7 +70,6 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     private boolean hasSummonedSquad;
     private int ticksSinceTracked;
     private int ticksSinceDeath;
-    private int attackTicksLeft;
 
     public ThatcherEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -184,13 +184,6 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         super.endCombat();
     }
 
-    public void tickMovement() {
-        if (this.attackTicksLeft > 0) {
-            --this.attackTicksLeft;
-        }
-        super.tickMovement();
-    }
-
     @Override
     protected void mobTick() {
         float healthRatio = this.getHealth() / this.getMaxHealth();
@@ -203,7 +196,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         }
         LivingEntity target = this.getTarget();
         if (this.isAlive() && target != null && target.isAttackable()) {
-            // implements one of 6 special attacks that occurs every 5 seconds on 20TPS against current targets.
+            // implements one of 4 special attacks that occurs every 5 seconds on 20TPS against current targets.
             if (this.ticksSinceTracked < 100) {
                 this.ticksSinceTracked++;
                 if (this.ticksSinceTracked == 100) {
@@ -311,10 +304,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     private void activateDeathSquad() {
         if (!this.hasSummonedSquad) {
-            Box potentialSpawnBox = new Box(this.getBlockPos()).expand(5,1, 5);
-            List<BlockPos> spawnPositions = BlockPos.stream(potentialSpawnBox).filter(
-                    pos -> world.getBlockState(pos).getBlock().canMobSpawnInside() &&
-                            world.getBlockState(pos.offset(Direction.UP, 1)).getBlock().canMobSpawnInside()).toList();
+            List<BlockPos> spawnPositions = getSpawnableBlocksInRange(5, 2, 5);
             for (int i = 0; i < 3; i++) {
                 AbstractMilitaryEntity soldier;
                 if (i == 2) {
@@ -348,6 +338,13 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
         this.world.sendEntityStatus(this, (byte) 63);
     }
 
+    private List<BlockPos> getSpawnableBlocksInRange(float rangeX, float rangeY, float rangeZ) {
+        Box potentialSpawnBox = new Box(this.getBlockPos()).expand(rangeX,rangeY, rangeZ);
+        return BlockPos.stream(potentialSpawnBox).filter(
+                pos -> world.getBlockState(pos).getBlock().canMobSpawnInside() &&
+                        world.getBlockState(pos.offset(Direction.UP, 1)).getBlock().canMobSpawnInside()).toList();
+    }
+
     public boolean damage(DamageSource source, float amount) {
         this.playSound(SoundEvents.ENTITY_FOX_SCREECH, 5.0F, 0.1F);
         float healthRatio = this.getHealth() / this.getMaxHealth();
@@ -364,10 +361,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     public void handleStatus(byte status) { // required to handle particles
-        if (status == 4) {
-            this.attackTicksLeft = 10;
-            this.playSound(SoundEvents.ENTITY_FOX_SCREECH, 5.0F, 0.1F);
-        } else if (status == 63) {
+        if (status == 63) {
             this.world.addParticle(ParticleTypes.LAVA,
                     this.getX(), this.getBodyY(0.5D), this.getZ(), 0.0D, 2.5D, 0.0D);
             this.world.addParticle(ParticleTypes.LARGE_SMOKE,
@@ -411,7 +405,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             }
             if (this.ticksSinceDeath == 100) {
                 this.world.sendEntityStatus(this, (byte) 60);
-                this.world.addParticle(ParticleTypes.LAVA, this.getX(), this.getY() + 2.0D, this.getZ(), 0.0D, 1.0D, 0.0D);
+                this.world.addParticle(ParticleTypes.DRAGON_BREATH, this.getX(), this.getBodyY(0.33D), this.getZ(), 0.0D, 0.2D, 0.0D);
                 this.emitGameEvent(GameEvent.ENTITY_KILLED);
                 this.remove(RemovalReason.KILLED);
                 this.ticksSinceDeath = 0;
@@ -433,8 +427,6 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     public boolean tryAttack(Entity target) {
         if (!super.tryAttack(target)) return false;
         else {
-            this.attackTicksLeft = 10;
-            this.world.sendEntityStatus(this, (byte) 4);
             float healthRatio = this.getHealth() / this.getMaxHealth();
             if (!target.getWorld().isClient() && healthRatio <= 0.25) {
                 double x = (target.getX() - this.getX()) / 2;
@@ -445,10 +437,6 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
             }
         }
         return true;
-    }
-
-    public int getAttackTicksLeft() {
-        return this.attackTicksLeft;
     }
 
     // animations and sounds

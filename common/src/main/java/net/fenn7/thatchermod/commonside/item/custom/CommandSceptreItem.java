@@ -28,6 +28,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.stat.Stat;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -99,7 +100,7 @@ public class CommandSceptreItem extends Item {
         BlockPos impactPos = pos.offset(Direction.UP);
         CommonMethods.summonDustParticles(world, 10, 0, 0, 0.33F, 2,
                 impactPos.getX() + 0.5D, impactPos.getY() + 0.5D, impactPos.getZ() + 0.5D, 0, 0, 0);
-        meteorEntity.setLowestNoClipY(impactPos.getY());
+        meteorEntity.setLowestNoClipY(impactPos.getY() + 0.5D);
         meteorEntity.setPos(pos.getX() + 0.5, pos.getY() + 20, pos.getZ() + 0.5);
         world.spawnEntity(meteorEntity);
 
@@ -125,6 +126,9 @@ public class CommandSceptreItem extends Item {
             double ratioZ = vecDiff.z / linearSight.z;
             double ratioDiff = Math.abs(ratioX - ratioZ);
             if (ratioDiff <= 1.0) {
+                if (entity instanceof LivingEntity alive) {
+                    alive.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 1), user);
+                }
                 return entity.getBlockPos();
             }
         }

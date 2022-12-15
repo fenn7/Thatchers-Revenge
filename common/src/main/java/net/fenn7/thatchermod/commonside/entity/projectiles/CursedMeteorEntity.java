@@ -2,6 +2,7 @@ package net.fenn7.thatchermod.commonside.entity.projectiles;
 
 import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -52,7 +53,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
             if (!world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && this.isMobSpawned) {
                 this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
             } else {
-                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.DESTROY);
+                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, true, Explosion.DestructionType.DESTROY);
             }
             this.discard();
         }
@@ -61,7 +62,9 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        entityHitResult.getEntity().damage(DamageSource.magic(this, this.getOwner()), 7.5F);
+        Entity hit = entityHitResult.getEntity();
+        hit.damage(DamageSource.magic(this, this.getOwner()), 7.5F);
+        if (hit.isGlowing()) hit.setGlowing(false);
         super.onEntityHit(entityHitResult);
     }
 

@@ -1,6 +1,7 @@
 package net.fenn7.thatchermod.mixin.commonloader.commonside;
 
 import net.fenn7.thatchermod.commonside.enchantments.ModEnchantments;
+import net.fenn7.thatchermod.commonside.entity.projectiles.TrickleDownTridentEntity;
 import net.fenn7.thatchermod.mixin.commonloader.commonside.accessor.TridentAccessor;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -15,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import org.checkerframework.checker.units.qual.A;
+import org.checkerframework.common.reflection.qual.Invoke;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,6 +32,16 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
 
     protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> type, World world) {
         super(type, world);
+    }
+
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/TridentEntity;setNoClip(Z)V"), cancellable = true)
+    private void thatchersRevenge$overwriteLoyaltyReturn(CallbackInfo ci) {
+        TridentEntity trident = (TridentEntity) (Object) this;
+        if (trident instanceof TrickleDownTridentEntity trickle && trickle.shouldCollide()) {
+            trident.setNoClip(false);
+            super.tick();
+            ci.cancel();
+        }
     }
 
     @Inject(method = "onEntityHit", at = @At("TAIL"))

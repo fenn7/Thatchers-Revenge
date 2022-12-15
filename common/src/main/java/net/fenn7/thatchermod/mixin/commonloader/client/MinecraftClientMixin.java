@@ -26,8 +26,11 @@ public abstract class MinecraftClientMixin {
     private void thatchersRevenge$injectedAttackMethod(CallbackInfoReturnable<Boolean> cir) {
         if (player != null) {
             ItemStack mainHand = player.getMainHandStack();
-            if (mainHand.isOf(ModItems.COMMAND_SCEPTRE.get()) || mainHand.isOf(ModItems.GRENADE_LAUNCHER.get())) {
+            if (mainHand.isOf(ModItems.COMMAND_SCEPTRE.get())) {
                 NetworkManager.sendToServer(ModPackets.CS_C2S_ID, new PacketByteBuf(Unpooled.buffer()));
+                cir.cancel();
+            } else if (mainHand.isOf(ModItems.GRENADE_LAUNCHER.get())) {
+                NetworkManager.sendToServer(ModPackets.GL_C2S_ID, new PacketByteBuf(Unpooled.buffer()));
                 cir.cancel();
             }
         }

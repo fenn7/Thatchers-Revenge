@@ -64,8 +64,8 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
                         ParticleEffect smoke2 = ParticleTypes.CAMPFIRE_SIGNAL_SMOKE;
                         double x = ThreadLocalRandom.current().nextDouble(-0.5D, 0.5D);
                         double z = ThreadLocalRandom.current().nextDouble(-0.5D, 0.5D);
-                        this.world.addParticle(smoke1, pos.getX() - x, pos.getY() + 0.4, pos.getZ() - z, 0, 0.02, 0);
-                        this.world.addParticle(smoke2, pos.getX() + x, pos.getY() - 0.4, pos.getZ() + z, 0, 0.02, 0);
+                        this.world.addParticle(smoke1, pos.getX() - x, pos.getY() + 0.4, pos.getZ() - z, 0, 0.0075, 0);
+                        this.world.addParticle(smoke2, pos.getX() + x, pos.getY() - 0.4, pos.getZ() + z, 0, 0.0075, 0);
                     });
 
             List<LivingEntity> list = world.getNonSpectatingEntities(LivingEntity.class, smokeBox);
@@ -89,7 +89,7 @@ public class SmokeGrenadeEntity extends AbstractGrenadeEntity implements IAnimat
     public void tick() {
         if (this.shouldSmoke) {
             this.setVelocity(Vec3d.ZERO);
-            if (this.smokeTicks >= 0 && this.smokeTicks % 10 == 0) {
+            if (this.smokeTicks >= 0 && this.smokeTicks % 5 == 0) {
                 this.world.sendEntityStatus(this, (byte) 33);
             }
             this.smokeTicks++;

@@ -72,6 +72,10 @@ public class TrickleDownTridentEntity extends TridentEntity implements IAnimatab
         }
     }
 
+    public boolean shouldCollide() {
+        return this.shouldCollide;
+    }
+
     @Nullable
     protected EntityHitResult getEntityCollision(Vec3d currentPosition, Vec3d nextPosition) {
         return this.shouldCollide ? ProjectileUtil.getEntityCollision(this.world, this, currentPosition, nextPosition, this.getBoundingBox().stretch(this.getVelocity()).expand(1.0D), this::canHit) : null;
