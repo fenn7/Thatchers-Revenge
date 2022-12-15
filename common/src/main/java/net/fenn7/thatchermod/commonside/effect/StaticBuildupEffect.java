@@ -55,7 +55,7 @@ public class StaticBuildupEffect extends StatusEffect {
 
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         ThatcherModEntityData data = (ThatcherModEntityData) entity;
-        if (data.getPersistentData().getBoolean(SHOULD_STRIKE) && !entity.world.isClient) {
+        if (data.thatchersRevenge$getPersistentData().getBoolean(SHOULD_STRIKE) && !entity.world.isClient) {
             for (int i = 0; i <= (amplifier); i++) {
                 entity.world.playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.BLOCKS, 8F, 0.75F);
                 LightningEntity lightning = new LightningEntity(EntityType.LIGHTNING_BOLT, entity.world);

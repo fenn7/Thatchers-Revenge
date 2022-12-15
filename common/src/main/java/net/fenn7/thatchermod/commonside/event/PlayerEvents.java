@@ -32,30 +32,30 @@ public enum PlayerEvents implements EntityEvent.LivingDeath, PlayerEvent.PlayerC
         newPlayer.getItemCooldownManager().set(ModItems.UNION_BUSTER.get(), unionBusterCD);
 
         ThatcherModEntityData playerData = ((ThatcherModEntityData) oldPlayer);
-        int lastStandCD = playerData.getPersistentData().getInt("last.stand.cooldown");
-        if (playerData.getPersistentData().contains("bailout.items", 9)) {
-            NbtList nbtList = playerData.getPersistentData().getList("bailout.items", 10);
+        int lastStandCD = playerData.thatchersRevenge$getPersistentData().getInt("last.stand.cooldown");
+        if (playerData.thatchersRevenge$getPersistentData().contains("bailout.items", 9)) {
+            NbtList nbtList = playerData.thatchersRevenge$getPersistentData().getList("bailout.items", 10);
             for (int i = 0; i < nbtList.size(); i++) {
                 NbtCompound nbtCompound = nbtList.getCompound(i);
                 ItemStack stack = ItemStack.fromNbt(nbtCompound);
                 newPlayer.world.spawnEntity(new ItemEntity(newPlayer.world, newPlayer.getX(), newPlayer.getY(), newPlayer.getZ(), stack));
             }
             nbtList.clear();
-            playerData.getPersistentData().put("bailout.items", nbtList);
+            playerData.thatchersRevenge$getPersistentData().put("bailout.items", nbtList);
         }
-        ((ThatcherModEntityData) newPlayer).getPersistentData().putInt("last.stand.cooldown", lastStandCD);
+        ((ThatcherModEntityData) newPlayer).thatchersRevenge$getPersistentData().putInt("last.stand.cooldown", lastStandCD);
     }
 
     @Override
     public EventResult die(LivingEntity entity, DamageSource source) {
         if (entity instanceof PlayerEntity player
-                && ((ThatcherModEntityData) player).getPersistentData().getInt("last.stand.cooldown") == 0
+                && ((ThatcherModEntityData) player).thatchersRevenge$getPersistentData().getInt("last.stand.cooldown") == 0
                 && ThatcheriteArmourItem.hasFullSet(player) && !source.isOutOfWorld()
                 && player.getMainHandStack().getItem() != Items.TOTEM_OF_UNDYING
                 && player.getOffHandStack().getItem() != Items.TOTEM_OF_UNDYING) {
             player.playSound(SoundEvents.ENTITY_WITHER_HURT, SoundCategory.HOSTILE, 20F, 0.5F);
             player.setStatusEffect(new StatusEffectInstance(ModEffects.LAST_STAND.get(), 120, 0), null);
-            ((ThatcherModEntityData) player).getPersistentData().putInt("last.stand.cooldown", LAST_STAND_CD);
+            ((ThatcherModEntityData) player).thatchersRevenge$getPersistentData().putInt("last.stand.cooldown", LAST_STAND_CD);
             return EventResult.interruptFalse();
         } else {
             return EventResult.pass();

@@ -19,26 +19,27 @@ import static net.fenn7.thatchermod.commonside.item.custom.CommunityChargebowIte
 
 @Mixin(PersistentProjectileEntity.class)
 public abstract class PersistentProjectileMixin extends Entity {
+
     public PersistentProjectileMixin(EntityType<?> type, World world) {
         super(type, world);
     }
 
     @Inject(method = "onEntityHit", at = @At("HEAD"))
-    protected void injectEntityHit(EntityHitResult entityHitResult, CallbackInfo ci) {
+    private void thatchersRevenge$injectEntityHit(EntityHitResult entityHitResult, CallbackInfo ci) {
         Entity entity = entityHitResult.getEntity();
         PersistentProjectileEntity projectile = ((PersistentProjectileEntity) (Object) this);
         ThatcherModEntityData projData = (ThatcherModEntityData) projectile;
-        if (projData.getPersistentData().getBoolean(LIGHTNING_CHARGE) && entity instanceof LivingEntity living) {
+        if (projData.thatchersRevenge$getPersistentData().getBoolean(LIGHTNING_CHARGE) && entity instanceof LivingEntity living) {
             ThatcherModEntityData entityData = (ThatcherModEntityData) entity;
-            int count = entityData.getPersistentData().getInt("times.hit.by.charged");
+            int count = entityData.thatchersRevenge$getPersistentData().getInt("times.hit.by.charged");
             if (count < 2) { // 1 less than the number of hits to spawn lightning!
-                entityData.getPersistentData().putInt("times.hit.by.charged", count + 1);
+                entityData.thatchersRevenge$getPersistentData().putInt("times.hit.by.charged", count + 1);
                 living.addStatusEffect(new StatusEffectInstance(ModEffects.STATIC_BUILDUP.get(), 1200, count, false, false));
             } else {
-                entityData.getPersistentData().putInt("times.hit.by.charged", 0);
-                entityData.getPersistentData().putBoolean(SHOULD_STRIKE, true);
+                entityData.thatchersRevenge$getPersistentData().putInt("times.hit.by.charged", 0);
+                entityData.thatchersRevenge$getPersistentData().putBoolean(SHOULD_STRIKE, true);
                 living.removeStatusEffect(ModEffects.STATIC_BUILDUP.get());
-                entityData.getPersistentData().putBoolean(SHOULD_STRIKE, false);
+                entityData.thatchersRevenge$getPersistentData().putBoolean(SHOULD_STRIKE, false);
             }
         }
 

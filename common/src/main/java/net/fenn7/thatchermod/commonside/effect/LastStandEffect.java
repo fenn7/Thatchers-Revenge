@@ -129,11 +129,11 @@ public class LastStandEffect extends StatusEffect {
 
     public static boolean shouldLiveOnRemove(Entity entity) {
         ThatcherModEntityData entityData = ((ThatcherModEntityData) entity);
-        return entityData.getPersistentData().getBoolean("should_live_post_stand");
+        return entityData.thatchersRevenge$getPersistentData().getBoolean("should_live_post_stand");
     }
 
     public static void setStatusOnRemove(Entity entity, boolean shouldLive) {
         ThatcherModEntityData entityData = ((ThatcherModEntityData) entity);
-        entityData.getPersistentData().putBoolean("should_live_post_stand", shouldLive);
+        entityData.thatchersRevenge$getPersistentData().putBoolean("should_live_post_stand", shouldLive);
     }
 }

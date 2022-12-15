@@ -11,6 +11,6 @@ public class GLauncherS2CPacket {
 
     public static void receive(PacketByteBuf buf, NetworkManager.PacketContext context) {
         ThatcherModEntityData data = (ThatcherModEntityData) context.getPlayer();
-        data.getPersistentData().putBoolean("should_recoil", true);
+        data.thatchersRevenge$getPersistentData().putBoolean("should_recoil", true);
     }
 }

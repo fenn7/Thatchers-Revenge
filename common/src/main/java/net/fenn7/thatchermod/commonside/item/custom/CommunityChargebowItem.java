@@ -57,7 +57,7 @@ public class CommunityChargebowItem extends BowItem {
                         ArrowItem arrowItem = (ArrowItem) (itemStack.getItem() instanceof ArrowItem ? itemStack.getItem() : Items.ARROW);
                         PersistentProjectileEntity arrowEntity = arrowItem.createArrow(world, itemStack, playerEntity);
                         ThatcherModEntityData arrowData = (ThatcherModEntityData) arrowEntity;
-                        arrowData.getPersistentData().putBoolean(LIGHTNING_CHARGE, true);
+                        arrowData.thatchersRevenge$getPersistentData().putBoolean(LIGHTNING_CHARGE, true);
 
                         float originalF = getPullProgress(this.getMaxUseTime(stack) - remainingUseTicks);
                         if (isRapidFiring(stack)) {
