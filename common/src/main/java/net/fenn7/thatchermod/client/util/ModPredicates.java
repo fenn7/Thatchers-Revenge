@@ -1,11 +1,14 @@
 package net.fenn7.thatchermod.client.util;
 
 import dev.architectury.registry.item.ItemPropertiesRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.item.custom.CollieryCloserItem;
 import net.fenn7.thatchermod.commonside.item.custom.CommunityChargebowItem;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class ModPredicates {
 
     public static void registerAllPredicates() {

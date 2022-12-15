@@ -1,10 +1,7 @@
 package net.fenn7.thatchermod.mixin.commonloader.commonside;
 
-import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.enchantments.ModEnchantments;
-import net.fenn7.thatchermod.commonside.entity.projectiles.TrickleDownTridentEntity;
-import net.fenn7.thatchermod.commonside.item.ModItems;
-import net.fenn7.thatchermod.commonside.item.custom.TrickleDownTridentItem;
+import net.fenn7.thatchermod.mixin.commonloader.commonside.accessor.TridentAccessor;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -25,18 +22,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TridentEntity.class)
-public abstract class TridentEntityMixin extends PersistentProjectileEntity implements TridentInterface {
+public abstract class TridentEntityMixin extends PersistentProjectileEntity implements TridentAccessor {
+
     @Shadow
     private ItemStack tridentStack;
-    @Shadow
-    private boolean dealtDamage;
 
     protected TridentEntityMixin(EntityType<? extends PersistentProjectileEntity> type, World world) {
         super(type, world);
     }
 
     @Inject(method = "onEntityHit", at = @At("TAIL"))
-    public void injectOnHit(EntityHitResult entityHitResult, CallbackInfo ci) {
+    private void thatchersRevenge$injectOnHit(EntityHitResult entityHitResult, CallbackInfo ci) {
         TridentEntity trident = (TridentEntity) (Object) this;
         Entity thrower = trident.getOwner();
         Entity target = entityHitResult.getEntity();
@@ -63,6 +59,5 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity impl
                 }
             }
         }
-        ThatcherMod.LOGGER.warn("mixin");
     }
 }

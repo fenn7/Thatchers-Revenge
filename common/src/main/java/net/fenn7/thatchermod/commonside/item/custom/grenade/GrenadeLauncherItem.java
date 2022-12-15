@@ -52,7 +52,7 @@ public class GrenadeLauncherItem extends Item {
             }
             if (shouldrecoil) {
                 ThatcherModEntityData data = (ThatcherModEntityData) user;
-                data.getPersistentData().putBoolean("should_recoil", true);
+                data.thatchersRevenge$getPersistentData().putBoolean("should_recoil", true);
             }
         }
 
