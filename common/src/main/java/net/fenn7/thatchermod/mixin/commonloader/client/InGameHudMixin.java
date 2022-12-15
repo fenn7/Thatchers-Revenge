@@ -16,22 +16,21 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
-    private static final Identifier LAST_STAND_OVERLAY = new Identifier(ThatcherMod.MOD_ID, "textures/misc/last_stand.png");
 
-    @Shadow
-    protected abstract void renderOverlay(Identifier texture, float opacity);
+    private static final Identifier THATCHERS_REVENGE$LAST_STAND_OVERLAY = new Identifier(ThatcherMod.MOD_ID, "textures/misc/last_stand.png");
 
     @Shadow
     @Final
     private MinecraftClient client;
 
+    @Shadow
+    protected abstract void renderOverlay(Identifier texture, float opacity);
+
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getLastFrameDuration()F", shift = At.Shift.AFTER))
-    private void injectLastStandEffectRender(CallbackInfo ci) {
-        ThatcherMod.LOGGER.warn("i am injektin");
-        if (this.client.player.hasStatusEffect(ModEffects.LAST_STAND.get())) {
+    private void thatchersRevenge$injectLastStandEffectRender(CallbackInfo ci) {
+        if (client.player != null && client.player.hasStatusEffect(ModEffects.LAST_STAND.get())) {
             float f = ThreadLocalRandom.current().nextFloat(0.525F, 0.575F);
-            ThatcherMod.LOGGER.warn("" + f);
-            this.renderOverlay(LAST_STAND_OVERLAY, f);
+            renderOverlay(THATCHERS_REVENGE$LAST_STAND_OVERLAY, f);
         }
     }
 }

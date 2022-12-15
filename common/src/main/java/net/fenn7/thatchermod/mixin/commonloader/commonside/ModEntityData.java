@@ -14,7 +14,7 @@ public abstract class ModEntityData implements ThatcherModEntityData {
     private NbtCompound nbtC;
 
     @Override
-    public NbtCompound getPersistentData() {
+    public NbtCompound thatchersRevenge$getPersistentData() {
         if (this.nbtC == null) {
             this.nbtC = new NbtCompound();
         }
@@ -22,14 +22,14 @@ public abstract class ModEntityData implements ThatcherModEntityData {
     }
 
     @Inject(method = "writeNbt", at = @At("HEAD"))
-    protected void injectWriteMethod(NbtCompound nbt, CallbackInfoReturnable info) {
+    private void thatchersRevenge$injectWriteMethod(NbtCompound nbt, CallbackInfoReturnable<NbtCompound> cir) {
         if (nbtC != null) {
             nbt.put("ModData", nbtC);
         }
     }
 
     @Inject(method = "readNbt", at = @At("HEAD"))
-    protected void injectReadMethod(NbtCompound nbt, CallbackInfo info) {
+    private void thatchersRevenge$injectReadMethod(NbtCompound nbt, CallbackInfo info) {
         if (nbt.contains("ModData", 10)) {
             nbtC = nbt.getCompound("ModData");
         }

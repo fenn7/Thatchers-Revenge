@@ -19,7 +19,7 @@ public class SetCooldownCommand implements Command<ServerCommandSource> {
     @Override
     public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ThatcherModEntityData player = (ThatcherModEntityData) context.getSource().getPlayer();
-        int unionBusterCD = player.getPersistentData().getInt("union.buster.cd");
+        int unionBusterCD = player.thatchersRevenge$getPersistentData().getInt("union.buster.cd");
 
         context.getSource().getPlayer().getItemCooldownManager().set(ModItems.UNION_BUSTER.get(), unionBusterCD);
 

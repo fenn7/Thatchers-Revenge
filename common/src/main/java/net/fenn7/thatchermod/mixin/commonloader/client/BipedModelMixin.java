@@ -16,38 +16,39 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BipedEntityModel.class)
 public abstract class BipedModelMixin<T extends LivingEntity> {
+
+    @Shadow
+    @Final
+    public ModelPart head;
     @Shadow
     @Final
     public ModelPart rightArm;
     @Shadow
     @Final
     public ModelPart leftArm;
-    @Shadow
-    @Final
-    public ModelPart head;
 
     @Inject(method = "positionRightArm", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/ModelPart;pitch:F",
             ordinal = 2), cancellable = true)
-    private void injectRightArmMethod(T entity, CallbackInfo info) {
+    private void thatchersRevenge$injectRightArmMethod(T entity, CallbackInfo info) {
         MinecraftClient client = MinecraftClient.getInstance();
         ItemStack rightStack = client.options.mainArm == Arm.RIGHT ? entity.getMainHandStack() : entity.getOffHandStack();
 
         if (rightStack.getItem() instanceof GrenadeLauncherItem) {
-            this.rightArm.pitch = -1.4F + this.head.pitch;
-            this.rightArm.yaw += this.head.yaw;
+            rightArm.pitch = -1.4F + head.pitch;
+            rightArm.yaw += this.head.yaw;
             info.cancel();
         }
     }
 
     @Inject(method = "positionLeftArm", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/ModelPart;pitch:F",
             ordinal = 2), cancellable = true)
-    private void injectLeftArmMethod(T entity, CallbackInfo info) {
+    private void thatchersRevenge$injectLeftArmMethod(T entity, CallbackInfo info) {
         MinecraftClient client = MinecraftClient.getInstance();
         ItemStack leftStack = client.options.mainArm == Arm.RIGHT ? entity.getOffHandStack() : entity.getMainHandStack();
 
         if (leftStack.getItem() instanceof GrenadeLauncherItem) {
-            this.leftArm.pitch = -1.4F + this.head.pitch;
-            this.leftArm.yaw += this.head.yaw;
+            leftArm.pitch = -1.4F + head.pitch;
+            leftArm.yaw += head.yaw;
             info.cancel();
         }
     }

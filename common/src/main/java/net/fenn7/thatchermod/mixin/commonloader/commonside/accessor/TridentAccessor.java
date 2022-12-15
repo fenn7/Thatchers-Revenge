@@ -1,4 +1,4 @@
-package net.fenn7.thatchermod.mixin.commonloader.commonside;
+package net.fenn7.thatchermod.mixin.commonloader.commonside.accessor;
 
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
@@ -7,19 +7,20 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(TridentEntity.class)
-public interface TridentInterface {
+public interface TridentAccessor {
+
     @Invoker("asItemStack")
-    ItemStack callAsItemStack();
+    ItemStack thatchersRevenge$callAsItemStack();
 
     @Accessor("tridentStack")
-    ItemStack getTridentStack();
+    ItemStack thatchersRevenge$getTridentStack();
 
     @Accessor("tridentStack")
-    void setTridentStack(ItemStack stack);
+    void thatchersRevenge$setTridentStack(ItemStack stack);
 
     @Accessor("dealtDamage")
-    boolean hasDealtDamage();
+    boolean thatchersRevenge$hasDealtDamage();
 
     @Accessor("dealtDamage")
-    void setDealtDamage(boolean dealt);
+    void thatchersRevenge$setDealtDamage(boolean dealt);
 }

@@ -24,7 +24,7 @@ public class GetCooldownCommand implements Command<ServerCommandSource> {
         int unionBusterCD = (int) (UnionBusterItem.DURATION * context.getSource().getPlayer().getItemCooldownManager().
                 getCooldownProgress(ModItems.UNION_BUSTER.get(), 0));
 
-        player.getPersistentData().putInt("union.buster.cd", unionBusterCD);
+        player.thatchersRevenge$getPersistentData().putInt("union.buster.cd", unionBusterCD);
 
         // this is for testing only.
         context.getSource().sendFeedback(ModText.literal("All Cooldowns Recorded!"), true);
