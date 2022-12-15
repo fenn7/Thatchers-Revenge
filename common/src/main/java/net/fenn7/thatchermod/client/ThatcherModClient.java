@@ -19,6 +19,7 @@ import net.fenn7.thatchermod.client.sound.ModSounds;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
 import net.fenn7.thatchermod.commonside.particle.ModParticles;
 import net.fenn7.thatchermod.commonside.screen.ModScreenHandlers;
+import net.fenn7.thatchermod.client.util.ModPredicates;
 
 @Environment(EnvType.CLIENT)
 public class ThatcherModClient {
@@ -53,5 +54,6 @@ public class ThatcherModClient {
 
         KeyInputs.register();
         ModPacketsClient.registerS2CPackets();
+        ModPredicates.registerAllPredicates();
     }
 }

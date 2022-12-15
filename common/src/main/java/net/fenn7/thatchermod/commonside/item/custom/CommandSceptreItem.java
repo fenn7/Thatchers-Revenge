@@ -99,7 +99,7 @@ public class CommandSceptreItem extends Item {
         BlockPos impactPos = pos.offset(Direction.UP);
         CommonMethods.summonDustParticles(world, 10, 0, 0, 0.33F, 2,
                 impactPos.getX() + 0.5D, impactPos.getY() + 0.5D, impactPos.getZ() + 0.5D, 0, 0, 0);
-        meteorEntity.setLowestNoClipY(pos.getY());
+        meteorEntity.setLowestNoClipY(impactPos.getY());
         meteorEntity.setPos(pos.getX() + 0.5, pos.getY() + 20, pos.getZ() + 0.5);
         world.spawnEntity(meteorEntity);
 

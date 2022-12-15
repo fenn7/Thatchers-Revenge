@@ -1,4 +1,4 @@
-package net.fenn7.thatchermod.commonside.util;
+package net.fenn7.thatchermod.client.util;
 
 import dev.architectury.registry.item.ItemPropertiesRegistry;
 import net.fenn7.thatchermod.commonside.item.ModItems;

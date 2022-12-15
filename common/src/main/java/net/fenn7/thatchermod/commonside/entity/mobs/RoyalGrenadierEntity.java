@@ -38,6 +38,7 @@ public class RoyalGrenadierEntity extends AbstractMilitaryEntity {
 
     public RoyalGrenadierEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
+        this.initEquipment(world.getLocalDifficulty(this.getBlockPos()));
     }
 
     @Override

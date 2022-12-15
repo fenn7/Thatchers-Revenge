@@ -141,7 +141,7 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
                                 strikePos, SpawnReason.TRIGGERED, true, true);
                         extinguishFire(strikePos.offset(Direction.UP), world);
                     }
-                    world.addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, pos.getX() + 0.5D, pos.getY() + 0.5D + (0.25 * entity.channelingProgress/20), pos.getZ() + 0.5D, 0, 0, 0);
+                    world.addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D + (0.25 * entity.channelingProgress/20), pos.getZ() + 0.5D, 0, 0, 0);
                     world.addParticle(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0, 0, 0);
                 }
                 if (entity.channelingProgress == 170) { //should do this on the final major beat of the song

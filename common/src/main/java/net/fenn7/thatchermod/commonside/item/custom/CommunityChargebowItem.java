@@ -28,7 +28,6 @@ import java.util.List;
 public class CommunityChargebowItem extends BowItem {
     // note most of the arrow effects are handled in PersistentProjectileMixin
     public static final String LIGHTNING_CHARGE = "isLCharged";
-    public static final int DURATION = 900;
 
     public CommunityChargebowItem(Settings settings) {
         super(settings);

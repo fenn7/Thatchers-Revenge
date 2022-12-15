@@ -10,7 +10,6 @@ import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.network.ModPackets;
 import net.fenn7.thatchermod.commonside.particle.ModParticles;
 import net.fenn7.thatchermod.commonside.screen.ModScreenHandlers;
-import net.fenn7.thatchermod.commonside.util.ModPredicates;
 import net.fenn7.thatchermod.commonside.util.ModRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ public class ThatcherMod {
         ModEntities.registerModEntities();
         ModItems.registerModItems();
         ModEffects.registerModEffects();
-        ModPredicates.registerAllPredicates();
 
         ModParticles.registerParticles();
         ModEnchantments.registerModEnchantments();

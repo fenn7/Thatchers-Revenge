@@ -37,6 +37,7 @@ public class RoyalFencerEntity extends AbstractMilitaryEntity {
 
     public RoyalFencerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
+        this.initEquipment(world.getLocalDifficulty(this.getBlockPos()));
     }
 
     @Override

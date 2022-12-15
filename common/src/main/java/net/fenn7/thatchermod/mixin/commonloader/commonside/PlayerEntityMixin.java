@@ -26,6 +26,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -36,6 +38,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -55,6 +58,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Shadow public abstract void playSound(SoundEvent event, SoundCategory category, float volume, float pitch);
 
+    @Shadow @Final public PlayerScreenHandler playerScreenHandler;
     private int recoilTicks = 0;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
@@ -169,7 +173,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         int lastStandCDTicks = playerData.getPersistentData().getInt("last.stand.cooldown");
         if (lastStandCDTicks > 0) {
             playerData.getPersistentData().putInt("last.stand.cooldown", --lastStandCDTicks);
-            ThatcherMod.LOGGER.warn("" + playerData.getPersistentData().getInt("last.stand.cooldown"));
+        } else if (ThatcheriteArmourItem.hasFullSet(player) && playerData.getPersistentData().getInt("last.stand.cooldown") == 0) {
+            world.addParticle(ParticleTypes.PORTAL, player.getX(), player.getY(), player.getZ(), 0, 0.5D, 0);
         }
         ItemStack chest = player.getEquippedStack(EquipmentSlot.CHEST); // Elytra Enchantments
         if (chest.isOf(Items.ELYTRA) && !world.isClient) {

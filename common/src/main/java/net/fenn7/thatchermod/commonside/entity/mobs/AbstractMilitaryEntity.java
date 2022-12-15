@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.commonside.entity.mobs;
 
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -68,6 +69,10 @@ public abstract class AbstractMilitaryEntity extends PathAwareEntity implements 
     public void tick() {
         if (!this.hasAngerTime() && this.age - this.getLastAttackedTime() > 100 && this.getHealth() < this.getMaxHealth()) {
             this.heal(0.1F);
+        }
+        if (this.owner != null && this.owner.getTarget() != null && this.age % 20 == 0) {
+            this.setTarget(this.owner.getTarget());
+            this.setAngryAt(this.owner.getTarget().getUuid());
         }
         super.tick();
     }
@@ -189,11 +194,13 @@ public abstract class AbstractMilitaryEntity extends PathAwareEntity implements 
         }
 
         public boolean canStart() {
-            return owner != null && owner.getTarget() != null && this.canTrack(owner.getTarget(), this.targetPredicate);
+            return owner != null && owner.getTarget() != null;
         }
 
         public void start() {
+            ThatcherMod.LOGGER.warn("CHABOLET");
             AbstractMilitaryEntity.this.setTarget(owner.getTarget());
+            AbstractMilitaryEntity.this.setAngryAt(owner.getTarget().getUuid());
             super.start();
         }
     }
