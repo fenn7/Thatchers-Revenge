@@ -53,7 +53,8 @@ public abstract class AbstractMilitaryEntity extends PathAwareEntity implements 
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.targetSelector.add(1, (new RevengeGoal(this, ThatcherEntity.class, AbstractMilitaryEntity.class)).setGroupRevenge());
+        this.targetSelector.add(1, (new RevengeGoal(this,
+                ThatcherEntity.class, RoyalFencerEntity.class, RoyalGrenadierEntity.class)).setGroupRevenge());
         this.goalSelector.add(2, new TrackOwnerTargetGoal(this));
         this.targetSelector.add(3, new ActiveTargetGoal(this, PlayerEntity.class, 10, false, false,
                 e -> this.shouldAngerAt((LivingEntity) e)));

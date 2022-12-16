@@ -191,27 +191,15 @@ public class ThatcherismAltarBlockEntity extends BlockEntity implements NamedScr
         Direction direction = player.getMovementDirection();
         List<BlockPos> posList;
         switch (direction) {
-            default -> {
-                posList = Arrays.asList(N, NE, E, SE, S, SW, W, NW);
-                break;
-            }
-            case EAST -> {
-                posList = Arrays.asList(E, SE, S, SW, W, NW, N, NE);
-                break;
-            }
-            case SOUTH -> {
-                posList = Arrays.asList(S, SW, W, NW, N, NE, E, SE);
-                break;
-            }
-            case WEST -> {
-                posList = Arrays.asList(W, NW, N, NE, E, SE, S, SW);
-                break;
-            }
+            default -> posList = Arrays.asList(N, NE, E, SE, S, SW, W, NW);
+            case EAST -> posList = Arrays.asList(E, SE, S, SW, W, NW, N, NE);
+            case SOUTH -> posList = Arrays.asList(S, SW, W, NW, N, NE, E, SE);
+            case WEST -> posList = Arrays.asList(W, NW, N, NE, E, SE, S, SW);
         }
 
         if (player.world != null) {
             for (int i = 0; i < posList.size(); i++) {
-                posList.set(i, CommonMethods.findFirstNonAirBlockDown(player.world, posList.get(i)).offset(Direction.UP, 1));
+                posList.set(i, CommonMethods.findFirstNonAirBlockDown(player.world, new BlockPos(posList.get(i).getX(), world.getHeight(), posList.get(i).getZ())));
             }
         }
         return posList;

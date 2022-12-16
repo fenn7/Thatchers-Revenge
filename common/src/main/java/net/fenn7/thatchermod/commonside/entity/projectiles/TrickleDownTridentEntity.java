@@ -99,10 +99,9 @@ public class TrickleDownTridentEntity extends TridentEntity implements IAnimatab
     private <E extends IAnimatable> PlayState spinAnimation(AnimationEvent<E> event) {
         if (!this.inGround) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.trickle_down_trident.spin", true));
-        } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.trickle_down_trident.stuck", true));
+            return PlayState.CONTINUE;
         }
-        return PlayState.CONTINUE;
+        return PlayState.STOP;
     }
 
     @Override

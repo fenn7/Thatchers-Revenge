@@ -107,7 +107,7 @@ public class CommandSceptreItem extends Item {
         BlockPos impactPos = pos.offset(Direction.UP);
         CommonMethods.summonDustParticles(world, 10, 0, 0, 0.33F, 2,
                 impactPos.getX() + 0.5D, impactPos.getY() + 0.5D, impactPos.getZ() + 0.5D, 0, 0, 0);
-        meteorEntity.setLowestNoClipY(impactPos.getY() + 1.5D);
+        meteorEntity.setLowestNoClipY(impactPos.getY() + 1.0D);
         meteorEntity.setPos(pos.getX() + 0.5, pos.getY() + 20, pos.getZ() + 0.5);
         world.spawnEntity(meteorEntity);
 
@@ -132,7 +132,7 @@ public class CommandSceptreItem extends Item {
             double ratioX = vecDiff.x / linearSight.x;
             double ratioZ = vecDiff.z / linearSight.z;
             double ratioDiff = Math.abs(ratioX - ratioZ);
-            if (ratioDiff <= 1.0) {
+            if (ratioDiff <= 1.5) {
                 if (entity instanceof LivingEntity alive) {
                     alive.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 1), user);
                 }
@@ -164,7 +164,7 @@ public class CommandSceptreItem extends Item {
                 }
                 int enigmaLevel = Math.max(EnchantmentHelper.getLevel(ModEnchantments.ENIGMATIC.get(), player.getMainHandStack()),
                         EnchantmentHelper.getLevel(ModEnchantments.ENIGMATIC.get(), player.getOffHandStack()));
-                if (enigmaLevel > 0 && ThreadLocalRandom.current().nextInt(0, 1000 + 1) == 777) {
+                if (enigmaLevel > 0 && ThreadLocalRandom.current().nextInt(0, 1000 + 1) == 777 && !world.isClient) {
                     player.addStatusEffect(new StatusEffectInstance(
                             BENEFICIAL_EFFS.get(ThreadLocalRandom.current().nextInt(0, BENEFICIAL_EFFS.size() - 1)),
                             140));

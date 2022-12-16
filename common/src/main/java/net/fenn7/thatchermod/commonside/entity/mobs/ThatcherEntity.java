@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.commonside.entity.mobs;
 
+import com.eliotlash.mclib.math.functions.classic.Abs;
 import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
 import net.fenn7.thatchermod.commonside.entity.projectiles.CursedMeteorEntity;
@@ -55,6 +56,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
@@ -169,7 +171,7 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
 
     protected void initGoals() { // right now has basic melee AI
         this.goalSelector.add(0, new SwimGoal(this));
-        this.targetSelector.add(1, (new RevengeGoal(this)).setGroupRevenge());
+        this.targetSelector.add(1, (new RevengeGoal(this, this.getClass(), RoyalFencerEntity.class, RoyalGrenadierEntity.class)).setGroupRevenge());
         this.targetSelector.add(2, new ActiveTargetGoal(this, PlayerEntity.class, false));
         this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, false,
                 (entity) -> entity instanceof MobEntity && !(entity instanceof AbstractMilitaryEntity) && !(((MobEntity) entity).isUndead())));
@@ -249,15 +251,18 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     private void rapidFireAttack(Entity target) {
-        for (int i = 0; i < 6; i++) {
-            double d = this.squaredDistanceTo(target);
-            double e = target.getX() - this.getX();
-            double f = target.getBodyY(0.5) - this.getBodyY(0.5);
-            double g = target.getZ() - this.getZ();
-            double h = Math.sqrt(Math.sqrt(d)) * 0.5;
+        if (target instanceof LivingEntity alive) {
+            alive.move(MovementType.SELF, this.getPos().subtract(alive.getPos()));
+        }
+        float radius = 1.0F;
+        BlockPos centrePos = this.getBlockPos();
+        for (int i = 0; i < 360; i += 20) {
+            double angularX = radius * Math.cos(Math.toRadians(i));
+            double angularZ = radius * Math.sin(Math.toRadians(i));
 
-            CursedMissileEntity fireBall = new CursedMissileEntity(this.world, this, e + this.getRandom().nextGaussian() * h, f, g + this.getRandom().nextGaussian() * h);
-            fireBall.setPosition(fireBall.getX() + ThreadLocalRandom.current().nextDouble(-1, 1 + 1), this.getBodyY(0.5D) + 0.5D, fireBall.getZ() + ThreadLocalRandom.current().nextDouble(-1, 1 + 1));
+            CursedMissileEntity fireBall = new CursedMissileEntity(this.world, this, 0, 0, 0);
+            fireBall.setPosition(centrePos.getX() + angularX, this.getBodyY(0.5D), centrePos.getZ() + angularZ);
+            fireBall.setVelocity(new Vec3d(fireBall.getX() - centrePos.getX(), 0,fireBall.getZ() - centrePos.getZ()).normalize().multiply(radius * 4));
             fireBall.setMobSpawned(true);
             this.world.spawnEntity(fireBall);
         }
@@ -339,10 +344,18 @@ public class ThatcherEntity extends HostileEntity implements IAnimatable {
     }
 
     private List<BlockPos> getSpawnableBlocksInRange(float rangeX, float rangeY, float rangeZ) {
-        Box potentialSpawnBox = new Box(this.getBlockPos()).expand(rangeX,rangeY, rangeZ);
-        return BlockPos.stream(potentialSpawnBox).filter(
-                pos -> world.getBlockState(pos).getBlock().canMobSpawnInside() &&
-                        world.getBlockState(pos.offset(Direction.UP, 1)).getBlock().canMobSpawnInside()).toList();
+        List<BlockPos> places = new ArrayList<>();
+        Box potentialSpawnBox = new Box(this.getBlockPos()).expand(rangeX, rangeY, rangeZ);
+        BlockPos.stream(potentialSpawnBox).forEach(
+                pos -> {
+                    ThatcherMod.LOGGER.warn(pos.toString());
+                    if (world.getBlockState(pos).getBlock().canMobSpawnInside() &&
+                        world.getBlockState(pos.offset(Direction.UP, 1)).getBlock().canMobSpawnInside()) {
+                        places.add(pos.toImmutable());
+                        ThatcherMod.LOGGER.warn(places.toString());
+                        ThatcherMod.LOGGER.warn(world.getBlockState(pos).toString());
+                    }});
+        return places;
     }
 
     public boolean damage(DamageSource source, float amount) {
