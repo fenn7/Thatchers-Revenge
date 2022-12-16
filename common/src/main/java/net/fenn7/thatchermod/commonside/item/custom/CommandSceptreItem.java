@@ -1,19 +1,24 @@
 package net.fenn7.thatchermod.commonside.item.custom;
 
 import net.fenn7.thatchermod.commonside.ThatcherMod;
+import net.fenn7.thatchermod.commonside.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
 import net.fenn7.thatchermod.commonside.entity.projectiles.CursedMeteorEntity;
 import net.fenn7.thatchermod.commonside.entity.projectiles.CursedMissileEntity;
 import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.util.CommonMethods;
+import net.fenn7.thatchermod.commonside.util.ThatcherModEntityData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.Path;
+import net.minecraft.entity.damage.DamageRecord;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -46,8 +51,10 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CommandSceptreItem extends Item {
+    private static List<StatusEffect> BENEFICIAL_EFFS;
     private static final int COOLDOWN = 120;
     private static final double RANGE = 20;
     private static String CS_COOLDOWN = "cooldown";
@@ -60,7 +67,7 @@ public class CommandSceptreItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (user.isCreative() || user.getInventory().count(Items.LAPIS_LAZULI) > 4) {
+        if (user.isCreative() || user.getInventory().count(Items.LAPIS_LAZULI) >= 4) {
             if (!world.isClient() && hand == Hand.MAIN_HAND) {
                 if (user.getMainHandStack().getOrCreateNbt().getInt(CS_COOLDOWN) <= 0) {
                     CommonMethods.summonDustParticles(world, 1, 0.0F, 0.0F, 0.33F, 3,
@@ -100,7 +107,7 @@ public class CommandSceptreItem extends Item {
         BlockPos impactPos = pos.offset(Direction.UP);
         CommonMethods.summonDustParticles(world, 10, 0, 0, 0.33F, 2,
                 impactPos.getX() + 0.5D, impactPos.getY() + 0.5D, impactPos.getZ() + 0.5D, 0, 0, 0);
-        meteorEntity.setLowestNoClipY(impactPos.getY() + 0.5D);
+        meteorEntity.setLowestNoClipY(impactPos.getY() + 1.5D);
         meteorEntity.setPos(pos.getX() + 0.5, pos.getY() + 20, pos.getZ() + 0.5);
         world.spawnEntity(meteorEntity);
 
@@ -141,23 +148,44 @@ public class CommandSceptreItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        NbtCompound nbt = stack.getOrCreateNbt();
-        int currentCD = nbt.getInt(CS_COOLDOWN);
-        if (!world.isClient() && currentCD > 0) {
-            nbt.putInt(CS_COOLDOWN, --currentCD);
-        }
-        if (entity instanceof PlayerEntity player && player.getOffHandStack().getItem() == this) {
-            List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(player, 6, 3, 6, -6, -3, -6, world);
-            for (Entity mobs : nearbyEntities) {
-                if (mobs instanceof PassiveEntity passive) {
-                    lurePassiveEntity(passive, player);
-                    ticks++;
-                    if (ticks % 10 == 0) {
-                        ticks = 0;
-                        world.addParticle(ParticleTypes.SOUL, passive.getX(), passive.getBodyY(1.0),
-                                passive.getZ(), 0, 0.1, 0);
+        if (entity instanceof PlayerEntity player) {
+            NbtCompound nbt = stack.getOrCreateNbt();
+            int currentCD = nbt.getInt(CS_COOLDOWN);
+            if (!world.isClient() && currentCD > 0) {
+                nbt.putInt(CS_COOLDOWN, --currentCD);
+            }
+            ThatcherModEntityData playerData = (ThatcherModEntityData) player;
+            if (player.isHolding(this)) {
+                int metLevel = Math.max(EnchantmentHelper.getLevel(ModEnchantments.METALLION.get(), player.getMainHandStack()),
+                        EnchantmentHelper.getLevel(ModEnchantments.METALLION.get(), player.getOffHandStack()));
+                if (metLevel > 0 && playerData.thatchersRevenge$getPersistentData().getInt("metallion.cooldown") <= 0 &&
+                        playerData.thatchersRevenge$getPersistentData().getFloat("metallion.active") <= 0) {
+                    playerData.thatchersRevenge$getPersistentData().putFloat("metallion.active", 4 + (metLevel - 1) * 2);
+                }
+                int enigmaLevel = Math.max(EnchantmentHelper.getLevel(ModEnchantments.ENIGMATIC.get(), player.getMainHandStack()),
+                        EnchantmentHelper.getLevel(ModEnchantments.ENIGMATIC.get(), player.getOffHandStack()));
+                if (enigmaLevel > 0 && ThreadLocalRandom.current().nextInt(0, 1000 + 1) == 777) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            BENEFICIAL_EFFS.get(ThreadLocalRandom.current().nextInt(0, BENEFICIAL_EFFS.size() - 1)),
+                            140));
+                }
+                if (player.getOffHandStack().isOf(this)) {
+                    List<Entity> nearbyEntities = CommonMethods.getEntitiesNearEntity(player, 6, 3, 6, -6, -3, -6, world);
+                    for (Entity mobs : nearbyEntities) {
+                        if (mobs instanceof PassiveEntity passive) {
+                            lurePassiveEntity(passive, player);
+                            ticks++;
+                            if (ticks % 10 == 0) {
+                                ticks = 0;
+                                world.addParticle(ParticleTypes.SOUL, passive.getX(), passive.getBodyY(1.0),
+                                        passive.getZ(), 0, 0.1, 0);
+                            }
+                        }
                     }
                 }
+            } else {
+                playerData.thatchersRevenge$getPersistentData().putFloat("metallion.active", 0.0F);
+                playerData.thatchersRevenge$getPersistentData().putInt("etherial.active", 0);
             }
         }
     }
@@ -224,7 +252,11 @@ public class CommandSceptreItem extends Item {
         nbtCompound.putInt("ticks", ticks);
     }
 
-    @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    static {
+        BENEFICIAL_EFFS = List.of(StatusEffects.RESISTANCE, StatusEffects.HASTE, StatusEffects.FIRE_RESISTANCE, StatusEffects.DOLPHINS_GRACE,
+                StatusEffects.HERO_OF_THE_VILLAGE, StatusEffects.ABSORPTION, StatusEffects.CONDUIT_POWER, StatusEffects.HEALTH_BOOST,
+                StatusEffects.INSTANT_HEALTH, StatusEffects.JUMP_BOOST, StatusEffects.LUCK, StatusEffects.SPEED, StatusEffects.STRENGTH,
+                StatusEffects.REGENERATION, StatusEffects.WATER_BREATHING, StatusEffects.NIGHT_VISION, StatusEffects.INVISIBILITY,
+                StatusEffects.SATURATION, StatusEffects.SLOW_FALLING);
     }
 }

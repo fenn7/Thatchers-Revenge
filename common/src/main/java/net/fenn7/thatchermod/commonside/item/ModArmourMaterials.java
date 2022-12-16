@@ -11,7 +11,7 @@ import net.minecraft.util.Lazy;
 import java.util.function.Supplier;
 
 public enum ModArmourMaterials implements ArmorMaterial {
-    THATCHERITE("thatcherite", 45, new int[]{4, 7, 10, 4}, 25,
+    THATCHERITE("thatcherite", 45, new int[]{4, 7, 8, 4}, 25,
             SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 4.0f, 0.15f, () -> Ingredient.ofItems(Items.AIR));
 
     private static final int[] BASE_DURABILITY;

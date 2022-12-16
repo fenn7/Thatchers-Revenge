@@ -24,7 +24,7 @@ public class CSceptreC2SPacket {
         PlayerEntity player = context.getPlayer();
         ItemStack mainStack = player.getMainHandStack();
         if (mainStack.isOf(ModItems.COMMAND_SCEPTRE.get()) &&
-                (player.isCreative() || player.getInventory().count(Items.LAPIS_LAZULI) > 1)) {
+                (player.isCreative() || player.getInventory().count(Items.LAPIS_LAZULI) >= 1)) {
             CommandSceptreItem sceptreItem = (CommandSceptreItem) mainStack.getItem();
             mainStack.damage(1, player, (e) -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             sceptreItem.launchMissileEntity(player.world, player);

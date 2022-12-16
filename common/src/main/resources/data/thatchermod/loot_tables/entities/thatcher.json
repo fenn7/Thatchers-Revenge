@@ -2,7 +2,7 @@
   "type": "minecraft:entity",
   "pools": [
     {
-      "rolls": 1,
+      "rolls": 2,
       "entries": [
         {
           "type": "minecraft:item",
@@ -20,7 +20,7 @@
       ]
     },
     {
-      "rolls": 1,
+      "rolls": 2,
       "entries": [
         {
           "type": "minecraft:item",
@@ -73,8 +73,8 @@
             {
               "count": {
                 "type": "minecraft:uniform",
-                "max": 3.0,
-                "min": 1.0
+                "max": 4.0,
+                "min": 2.0
               },
               "function": "minecraft:looting_enchant"
             }

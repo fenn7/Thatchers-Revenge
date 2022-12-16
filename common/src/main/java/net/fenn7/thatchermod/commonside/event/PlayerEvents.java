@@ -3,6 +3,7 @@ package net.fenn7.thatchermod.commonside.event;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.PlayerEvent;
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.effect.ModEffects;
 import net.fenn7.thatchermod.commonside.item.ModItems;
 import net.fenn7.thatchermod.commonside.item.custom.ThatcheriteArmourItem;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.world.explosion.Explosion;
 
 public enum PlayerEvents implements EntityEvent.LivingDeath, PlayerEvent.PlayerClone {
     INSTANCE;
@@ -55,6 +57,8 @@ public enum PlayerEvents implements EntityEvent.LivingDeath, PlayerEvent.PlayerC
                 && player.getOffHandStack().getItem() != Items.TOTEM_OF_UNDYING) {
             player.playSound(SoundEvents.ENTITY_WITHER_HURT, SoundCategory.HOSTILE, 20F, 0.5F);
             player.setStatusEffect(new StatusEffectInstance(ModEffects.LAST_STAND.get(), 120, 0), null);
+            player.world.createExplosion(player, DamageSource.player(player), null, player.getX(), player.getY(), player.getZ(),
+                    4.0F, false, Explosion.DestructionType.NONE);
             ((ThatcherModEntityData) player).thatchersRevenge$getPersistentData().putInt("last.stand.cooldown", LAST_STAND_CD);
             return EventResult.interruptFalse();
         } else {

@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.mixin.commonloader.commonside;
 
+import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.effect.LastStandEffect;
 import net.fenn7.thatchermod.commonside.effect.ModEffects;
 import net.fenn7.thatchermod.commonside.enchantments.ModEnchantments;
@@ -15,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageRecord;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -69,6 +71,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Tha
     @Shadow
     public abstract boolean giveItemStack(ItemStack stack);
 
+
     private int thatchersRevenge$recoilTicks = 0;
 
     // Thatcherite Armour effects are handled here.
@@ -80,7 +83,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Tha
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     private void thatchersRevenge$injectDamageMethod(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         float preMitigationDmg = amount;
-        if (hasStatusEffect(ModEffects.LAST_STAND.get())) {
+        if (hasStatusEffect(ModEffects.LAST_STAND.get()) && !source.isOutOfWorld()) {
             amount -= amount;
             cir.cancel();
         }
@@ -109,6 +112,38 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Tha
         }
     }
 
+    @ModifyVariable(method = "applyDamage", at = @At("STORE"), ordinal = 0)
+    private float thatchersRevenge$applyMetallionEffect(float f) {
+        PlayerEntity thisPlayer = ((PlayerEntity) (Object) this);
+        ThatcherModEntityData playerData = (ThatcherModEntityData) thisPlayer;
+        float metallionShield = playerData.thatchersRevenge$getPersistentData().getFloat("metallion.active");
+        int metallionLevel = Math.max(EnchantmentHelper.getLevel(ModEnchantments.METALLION.get(), thisPlayer.getMainHandStack()),
+                EnchantmentHelper.getLevel(ModEnchantments.METALLION.get(), thisPlayer.getOffHandStack()));
+        if (metallionLevel > 0 && metallionShield > 0.0F && !world.isClient) {
+            float modifiedF = Math.max(f - metallionShield, 0.0F);
+            if (modifiedF == 0.0F) {
+                playerData.thatchersRevenge$getPersistentData().putFloat("metallion.active", metallionShield - f);
+            } else {
+                playerData.thatchersRevenge$getPersistentData().putFloat("metallion.active", 0.0F);
+            }
+            playerData.thatchersRevenge$getPersistentData().putInt("metallion.cooldown", 1200);
+            thisPlayer.world.playSound(null, thisPlayer.getBlockPos(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.HOSTILE,
+                    1.0F, 0.1F);
+            return modifiedF;
+        }
+        return f;
+    }
+
+    @Inject(method = "jump", at = @At("TAIL"))
+    private void thatchersRevenge$applyEtherialEffect(CallbackInfo ci) {
+        PlayerEntity thisPlayer = ((PlayerEntity) (Object) this);
+        int ethLevel = Math.max(EnchantmentHelper.getLevel(ModEnchantments.ETHERIALNESS.get(), thisPlayer.getMainHandStack()),
+                EnchantmentHelper.getLevel(ModEnchantments.ETHERIALNESS.get(), thisPlayer.getOffHandStack()));
+        if (ethLevel > 0) {
+            thisPlayer.addVelocity(0, 0.25D * ethLevel, 0);
+        }
+    }
+
     @ModifyVariable(method = "addExperience", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private int thatchersRevenge$multiplyExperience(int experience) {
         PlayerEntity thisPlayer = ((PlayerEntity) (Object) this);
@@ -125,7 +160,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Tha
             for (int i = 0; i < getInventory().size(); i++) {
                 ItemStack stack = getInventory().getStack(i);
                 if (EnchantmentHelper.getLevel(ModEnchantments.BAILOUT.get(), stack) != 0) {
-                    stack.setDamage((int) Math.ceil(stack.getDamage() / 2.0F));
+                    stack.setDamage(1 + (stack.getMaxDamage() - (int) ((stack.getMaxDamage() - stack.getDamage()) / 2.0F)));
                     stackList.add(stack);
                     getInventory().removeStack(i);
                 }
@@ -140,8 +175,8 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Tha
         }
     }
 
-    @Override
-    protected void thatchersRevenge$setLastStandEffect(ServerWorld world, LivingEntity other, CallbackInfo ci) {
+    @Inject(method = "onKilledOther", at = @At("HEAD"))
+    protected void thatchersRevenge$removeLastStandEffect(ServerWorld world, LivingEntity other, CallbackInfo ci) {
         if (hasStatusEffect(ModEffects.LAST_STAND.get())) {
             PlayerEntity thisPlayer = ((PlayerEntity) (Object) this);
             LastStandEffect.setStatusOnRemove(thisPlayer, true);
@@ -168,15 +203,25 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Tha
         }
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(method = "tick", at = @At("TAIL"))
     private void thatchersRevenge$injectTickingMethod(CallbackInfo ci) {
         PlayerEntity thisPlayer = ((PlayerEntity) (Object) this);
-        int lastStandCDTicks = thatchersRevenge$getPersistentData().getInt("last.stand.cooldown");
+        ThatcherModEntityData playerData = (ThatcherModEntityData) thisPlayer;
+        int lastStandCDTicks = playerData.thatchersRevenge$getPersistentData().getInt("last.stand.cooldown");
         if (lastStandCDTicks > 0) {
-            thatchersRevenge$getPersistentData().putInt("last.stand.cooldown", --lastStandCDTicks);
-        } else if (ThatcheriteArmourItem.hasFullSet(thisPlayer) && lastStandCDTicks <= 0) {
+            playerData.thatchersRevenge$getPersistentData().putInt("last.stand.cooldown", --lastStandCDTicks);
+        } else if (ThatcheriteArmourItem.hasFullSet(thisPlayer) && !world.isClient) {
             world.addParticle(ParticleTypes.PORTAL, getX(), getY(), getZ(), 0, 0.5D, 0);
         }
+        int metallionCDTicks = playerData.thatchersRevenge$getPersistentData().getInt("metallion.cooldown");
+        if (metallionCDTicks > 0) {
+            playerData.thatchersRevenge$getPersistentData().putInt("metallion.cooldown", --metallionCDTicks);
+        }
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void thatchersRevenge$injectTickEnchantMethod(CallbackInfo ci) {
+        PlayerEntity thisPlayer = ((PlayerEntity) (Object) this);
         ItemStack chest = getEquippedStack(EquipmentSlot.CHEST); // Elytra Enchantments
         if (chest.isOf(Items.ELYTRA) && !world.isClient) {
             int interceptLevel = EnchantmentHelper.getLevel(ModEnchantments.INTERCEPTOR.get(), chest);
@@ -204,7 +249,7 @@ public abstract class PlayerEntityMixin extends LivingEntityMixin implements Tha
                         double velY = attacker.getBodyY(0.5D) - arrow.getY();
                         double velZ = attacker.getZ() - getZ();
                         double g = Math.sqrt(Math.pow(velX, 2) + Math.pow(velZ, 2));
-                        arrow.setVelocity(velX, velY + g * 0.2D, velZ, 1.6F, 2.0F);
+                        arrow.setVelocity(velX, velY + g * 0.2D, velZ, 2.0F, 2.0F);
                         world.spawnEntity(arrow);
                         if (!isCreative()) {
                             getInventory().getStack(arrowSlot).decrement(1);

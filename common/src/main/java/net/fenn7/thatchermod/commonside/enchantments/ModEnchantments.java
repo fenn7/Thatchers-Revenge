@@ -111,6 +111,33 @@ public class ModEnchantments {
             )
     );
 
+    public static RegistrySupplier<Enchantment> METALLION = ENCHANTMENTS.register(
+            "metallion",
+            () -> new MetallionEnchantment(
+                    Enchantment.Rarity.RARE,
+                    EnchantmentTarget.WEAPON,
+                    new EquipmentSlot[]{EquipmentSlot.MAINHAND}
+            )
+    );
+
+    public static RegistrySupplier<Enchantment> ETHERIALNESS = ENCHANTMENTS.register(
+            "etherialness",
+            () -> new EtherialnessEnchantment(
+                    Enchantment.Rarity.RARE,
+                    EnchantmentTarget.WEAPON,
+                    new EquipmentSlot[]{EquipmentSlot.MAINHAND}
+            )
+    );
+
+    public static RegistrySupplier<Enchantment> ENIGMATIC = ENCHANTMENTS.register(
+            "enigmatic",
+            () -> new EnigmaticEnchantment(
+                    Enchantment.Rarity.VERY_RARE,
+                    EnchantmentTarget.WEAPON,
+                    new EquipmentSlot[]{EquipmentSlot.MAINHAND}
+            )
+    );
+
     public static void registerModEnchantments() {
         System.out.println("Registering Enchantments for " + ThatcherMod.MOD_ID);
         ENCHANTMENTS.register();
