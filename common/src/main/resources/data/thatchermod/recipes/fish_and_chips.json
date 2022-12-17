@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "F": {
+      "item": "minecraft:cod"
+    },
+    "C": {
+      "item": "minecraft:potato"
+    }
+  },
+  "pattern": [
+    " CF",
+    "PCC",
+    "PP "
+  ],
+  "result": {
+    "item": "thatchermod:fish_and_chips"
+  }
+}

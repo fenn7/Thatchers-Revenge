@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": {
+      "item": "minecraft:egg"
+    },
+    "C": {
+      "item": "minecraft:cod"
+    },
+    "S": {
+      "item": "minecraft:salmon"
+    },
+    "W": {
+      "item": "minecraft:wheat"
+    }
+  },
+  "pattern": [
+    "C S",
+    "WEW",
+    " W "
+  ],
+  "result": {
+    "item": "thatchermod:stargazy_pie"
+  }
+}

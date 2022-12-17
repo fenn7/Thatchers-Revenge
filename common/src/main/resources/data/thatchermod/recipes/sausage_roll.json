@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:porkchop"
+    },
+    "W": {
+      "item": "minecraft:wheat"
+    },
+    "E": {
+      "item": "minecraft:egg"
+    }
+  },
+  "pattern": [
+    " W ",
+    "WPW",
+    "EW "
+  ],
+  "result": {
+    "item": "thatchermod:sausage_roll"
+  }
+}

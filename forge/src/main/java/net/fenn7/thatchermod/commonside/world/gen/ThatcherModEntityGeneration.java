@@ -12,9 +12,9 @@ import java.util.List;
 public class ThatcherModEntityGeneration {
     public static void onEntitySpawn(final BiomeLoadingEvent event) {
         addEntityToAllOverworldBiomes(event, ModEntities.ROYAL_GRENADIER.get(),
-                20, 2, 4);
+                2, 2, 4);
         addEntityToAllOverworldBiomes(event, ModEntities.ROYAL_FENCER.get(),
-                20, 2, 3);
+                2, 2, 3);
     }
 
     private static void addEntityToAllBiomesExceptThese(BiomeLoadingEvent event, EntityType<?> type,

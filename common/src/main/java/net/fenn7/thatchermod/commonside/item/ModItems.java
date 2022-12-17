@@ -256,6 +256,52 @@ public class ModItems {
             )
     );
 
+    // food
+    public static final RegistrySupplier<Item> STARGAZY_PIE = ITEMS.register(
+            "stargazy_pie",
+            () -> new Item(new Item.Settings()
+                    .group(ModItemGroup.THATCHER)
+                    .rarity(Rarity.COMMON)
+                    .food(ModFoodComponents.STARGAZY_PIE)
+            )
+    );
+
+    public static final RegistrySupplier<Item> FISH_AND_CHIPS = ITEMS.register(
+            "fish_and_chips",
+            () -> new Item(new Item.Settings()
+                    .group(ModItemGroup.THATCHER)
+                    .rarity(Rarity.COMMON)
+                    .food(ModFoodComponents.FISH_AND_CHIPS)
+            )
+    );
+
+    public static final RegistrySupplier<Item> CHIP_BUTTY = ITEMS.register(
+            "chip_butty",
+            () -> new Item(new Item.Settings()
+                    .group(ModItemGroup.THATCHER)
+                    .rarity(Rarity.COMMON)
+                    .food(ModFoodComponents.CHIP_BUTTY)
+            )
+    );
+
+    public static final RegistrySupplier<Item> STEAK_BAKE = ITEMS.register(
+            "steak_bake",
+            () -> new Item(new Item.Settings()
+                    .group(ModItemGroup.THATCHER)
+                    .rarity(Rarity.UNCOMMON)
+                    .food(ModFoodComponents.STEAK_BAKE)
+            )
+    );
+
+    public static final RegistrySupplier<Item> SAUSAGE_ROLL = ITEMS.register(
+            "sausage_roll",
+            () -> new Item(new Item.Settings()
+                    .group(ModItemGroup.THATCHER)
+                    .rarity(Rarity.UNCOMMON)
+                    .food(ModFoodComponents.SAUSAGE_ROLL)
+            )
+    );
+
     public static void registerModItems() {
         ThatcherMod.LOGGER.debug("Registering Items for " + ThatcherMod.MOD_ID + " ...");
         ITEMS.register();
