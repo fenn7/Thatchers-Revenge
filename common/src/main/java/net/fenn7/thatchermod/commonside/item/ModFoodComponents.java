@@ -34,7 +34,6 @@ public class ModFoodComponents {
 
     public static final FoodComponent FISH_AND_CHIPS =
             new FoodComponent.Builder().hunger(14).saturationModifier(22f)
-                    .statusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 600), 0.5F)
                     .statusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 200), 0.25F)
                     .build();
 
@@ -46,13 +45,11 @@ public class ModFoodComponents {
 
     public static final FoodComponent STEAK_BAKE =
             new FoodComponent.Builder().hunger(12).saturationModifier(15f).snack()
-                    .statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 40), 0.1F)
-                    .statusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 300), 0.5F)
+                    .statusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 300), 0.2F)
                     .build();
 
     public static final FoodComponent SAUSAGE_ROLL =
             new FoodComponent.Builder().hunger(10).saturationModifier(14f).snack()
-                    .statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 40), 0.1F)
-                    .statusEffect(new StatusEffectInstance(StatusEffects.HASTE, 300), 0.5F)
+                    .statusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 300), 0.2F)
                     .build();
 }
