@@ -3,9 +3,7 @@ package net.fenn7.thatchermod.commonside.entity;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.fenn7.thatchermod.commonside.ThatcherMod;
-import net.fenn7.thatchermod.commonside.entity.mobs.RoyalFencerEntity;
-import net.fenn7.thatchermod.commonside.entity.mobs.RoyalGrenadierEntity;
-import net.fenn7.thatchermod.commonside.entity.mobs.ThatcherEntity;
+import net.fenn7.thatchermod.commonside.entity.mobs.*;
 import net.fenn7.thatchermod.commonside.entity.projectiles.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -102,10 +100,37 @@ public class ModEntities {
     public static final RegistrySupplier<EntityType<TrickleDownTridentEntity>> TRICKLE_DOWN_TRIDENT_ENTITY = ENTITY_TYPES.register(
             "trickle_down_trident_entity",
             () -> EntityType.Builder.<TrickleDownTridentEntity>create(TrickleDownTridentEntity::new, SpawnGroup.MISC)
-                    .setDimensions(0.25F, 0.25F)
+                    .setDimensions(0.5F, 0.5F)
                     .maxTrackingRange(blocksToChunks(96))
                     .trackingTickInterval(10)
                     .build("trickle_down_trident_entity")
+    );
+
+    public static final RegistrySupplier<EntityType<FirstSpectreEntity>> FIRST_SPECTRE_ENTITY = ENTITY_TYPES.register(
+            "first_spectre_entity",
+            () -> EntityType.Builder.<FirstSpectreEntity>create(FirstSpectreEntity::new, SpawnGroup.MONSTER)
+                    .setDimensions(0.85F, 3.8F)
+                    .maxTrackingRange(blocksToChunks(96))
+                    .trackingTickInterval(10)
+                    .build("first_spectre_entity")
+    );
+
+    public static final RegistrySupplier<EntityType<SecondSpectreEntity>> SECOND_SPECTRE_ENTITY = ENTITY_TYPES.register(
+            "second_spectre_entity",
+            () -> EntityType.Builder.<SecondSpectreEntity>create(SecondSpectreEntity::new, SpawnGroup.MONSTER)
+                    .setDimensions(1.7F, 2.8F)
+                    .maxTrackingRange(blocksToChunks(96))
+                    .trackingTickInterval(10)
+                    .build("second_spectre_entity")
+    );
+
+    public static final RegistrySupplier<EntityType<ThirdSpectreEntity>> THIRD_SPECTRE_ENTITY = ENTITY_TYPES.register(
+            "third_spectre_entity",
+            () -> EntityType.Builder.<ThirdSpectreEntity>create(ThirdSpectreEntity::new, SpawnGroup.MONSTER)
+                    .setDimensions(0.95F, 2.0F)
+                    .maxTrackingRange(blocksToChunks(96))
+                    .trackingTickInterval(10)
+                    .build("third_spectre_entity")
     );
 
     public static void registerModEntities() {

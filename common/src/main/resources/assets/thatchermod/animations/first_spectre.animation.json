@@ -39,7 +39,6 @@
 				"LeftUpperGear": {
 					"rotation": {
 						"0.0": [0, 0, 0],
-						"1.0": [12.91844, 281.0505, -13.15408],
 						"2.0": [0, 360, 0]
 					}
 				},
@@ -71,6 +70,48 @@
 					"rotation": {
 						"0.0": [0, 0, 0],
 						"2.0": [0, 360, 0]
+					}
+				}
+			}
+		},
+		"animation.model.gears_fast": {
+			"loop": true,
+			"animation_length": 0.6667,
+			"bones": {
+				"LeftUpperGear": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.6667": [0, 360, 0]
+					}
+				},
+				"LeftLowerGear": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.6667": [0, 360, 0]
+					}
+				},
+				"RightUpperGear": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.6667": [0, -360, 0]
+					}
+				},
+				"RightLowerGear": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.6667": [0, -360, 0]
+					}
+				},
+				"LeftLegGear": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.6667": [0, 360, 0]
+					}
+				},
+				"RightLegGear": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.6667": [0, 360, 0]
 					}
 				}
 			}

@@ -1,44 +1,6 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.model.gears_slow": {
-			"loop": true,
-			"animation_length": 2,
-			"bones": {
-				"Gear2": {
-					"rotation": {
-						"0.0": [0, 0, 0],
-						"2.0": [360, 0, 0]
-					}
-				},
-				"Gear": {
-					"rotation": {
-						"0.0": [0, 0, 0],
-						"2.0": [360, 0, 0]
-					}
-				}
-			}
-		},
-		"animation.model.blinking": {
-			"loop": true,
-			"animation_length": 1.25,
-			"bones": {
-				"Eyes1": {
-					"scale": {
-						"0.3333": [1, 1, 1],
-						"0.4167": [0.05, 1, 1],
-						"0.5": [1, 1, 1]
-					}
-				},
-				"Eyes2": {
-					"scale": {
-						"1.0833": [1, 1, 1],
-						"1.1667": [0.05, 1, 1],
-						"1.25": [1, 1, 1]
-					}
-				}
-			}
-		},
 		"animation.model.gnashing": {
 			"loop": true,
 			"animation_length": 0.83333,
@@ -94,6 +56,62 @@
 						"0.4167": [0, 0, 0],
 						"0.625": [0, -60, 0],
 						"0.8333": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.model.gears_slow": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"Gear2": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"2.0": [360, 0, 0]
+					}
+				},
+				"Gear": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"2.0": [360, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.model.gears_fast": {
+			"loop": true,
+			"animation_length": 0.66667,
+			"bones": {
+				"Gear2": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.6667": [360, 0, 0]
+					}
+				},
+				"Gear": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.6667": [360, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.model.blinking": {
+			"loop": true,
+			"animation_length": 1.25,
+			"bones": {
+				"Eyes1": {
+					"scale": {
+						"0.3333": [1, 1, 1],
+						"0.4167": [0.05, 1, 1],
+						"0.5": [1, 1, 1]
+					}
+				},
+				"Eyes2": {
+					"scale": {
+						"1.0833": [1, 1, 1],
+						"1.1667": [0.05, 1, 1],
+						"1.25": [1, 1, 1]
 					}
 				}
 			}

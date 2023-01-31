@@ -5,9 +5,7 @@ import dev.architectury.registry.client.particle.ParticleProviderRegistry;
 import dev.architectury.registry.menu.MenuRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fenn7.thatchermod.client.entity.RoyalFencerRenderer;
-import net.fenn7.thatchermod.client.entity.RoyalGrenadierRenderer;
-import net.fenn7.thatchermod.client.entity.ThatcherModelRenderer;
+import net.fenn7.thatchermod.client.entity.*;
 import net.fenn7.thatchermod.client.entity.projectiles.*;
 import net.fenn7.thatchermod.client.event.KeyInputs;
 import net.fenn7.thatchermod.client.network.ModPacketsClient;
@@ -42,6 +40,9 @@ public class ThatcherModClient {
         EntityRendererRegistry.register(ModEntities.THATCHER, ThatcherModelRenderer::new);
         EntityRendererRegistry.register(ModEntities.ROYAL_FENCER, RoyalFencerRenderer::new);
         EntityRendererRegistry.register(ModEntities.ROYAL_GRENADIER, RoyalGrenadierRenderer::new);
+        EntityRendererRegistry.register(ModEntities.FIRST_SPECTRE_ENTITY, FirstSpectreRenderer::new);
+        EntityRendererRegistry.register(ModEntities.SECOND_SPECTRE_ENTITY, SecondSpectreRenderer::new);
+        EntityRendererRegistry.register(ModEntities.THIRD_SPECTRE_ENTITY, ThirdSpectreRenderer::new);
 
         EntityRendererRegistry.register(ModEntities.CURSED_METEOR, CursedMeteorRenderer::new);
         EntityRendererRegistry.register(ModEntities.CURSED_MISSILE, CursedMissileRenderer::new);
