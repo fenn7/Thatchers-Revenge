@@ -19,6 +19,7 @@ import java.util.Set;
 public abstract class AbstractSpectreEntity extends HostileEntity implements IAnimatable {
     protected final AnimationFactory factory = new AnimationFactory(this);
     protected final Set<DamageSource> weaknesses;
+    protected int incorporealTicks = 0;
 
     protected AbstractSpectreEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -28,7 +29,6 @@ public abstract class AbstractSpectreEntity extends HostileEntity implements IAn
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new WanderAroundGoal(this, 1.0D, 100));
     }
 
     @Override
@@ -42,18 +42,33 @@ public abstract class AbstractSpectreEntity extends HostileEntity implements IAn
         this.noClip = true;
         super.tick();
         this.noClip = false;
-        if (this.age % 20 == 0) {
-            this.applyRotation(BlockRotation.CLOCKWISE_90);
-            this.setRotation(this.bodyYaw + 0.3F, this.getPitch() + 0.3F);
+
+        this.incorporealTicks--;
+        if (this.incorporealTicks == 0) {
+            this.setInvulnerable(false);
+            this.setInvisible(false);
         }
     }
 
     @Override
     public boolean damage(DamageSource source, float amount) {
         return this.weaknesses.contains(source) &&
-                source == DamageSource.GENERIC ? super.damage(source, amount * 0.75F) : super.damage(source, amount * 1.25F);
+                source == DamageSource.GENERIC ? super.damage(source, amount * 0.8F) : super.damage(source, amount * 1.2F);
     }
 
+    protected void turnIncorporealFor(int incorporealTicks) {
+        this.world.sendEntityStatus(this, (byte) 60);
+        this.world.sendEntityStatus(this, (byte) 46);
+        this.incorporealTicks = incorporealTicks;
+        this.setInvisible(true);
+        this.setInvulnerable(true);
+    }
+
+    public int getIncorporealTicks() {
+        return this.incorporealTicks;
+    }
+
+    // animations
     private <E extends IAnimatable> PlayState gearPred(AnimationEvent<E> event) {
         var gearSpeed = this.isAttacking() ? "animation.model.gears_fast" : "animation.model.gears_slow";
         event.getController().setAnimation(new AnimationBuilder().addAnimation(gearSpeed, true));

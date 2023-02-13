@@ -1,5 +1,6 @@
 package net.fenn7.thatchermod.commonside.item.custom;
 
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.fenn7.thatchermod.commonside.ThatcherMod;
 import net.fenn7.thatchermod.commonside.enchantments.ModEnchantments;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
@@ -121,7 +122,13 @@ public class CommandSceptreItem extends Item {
 
     private BlockPos findPosPlayerLookingAt(PlayerEntity user) {
         Vec3d playerPos = user.getPos();
-        Vec3d linearSight = Vec3d.fromPolar(user.getPitch(), user.headYaw);
+
+        // sight detection experiment
+        Vec3d eyes = user.getEyePos();
+        Vec3d linearSight = user.getRotationVector().normalize();
+        var result = ProjectileUtil.getEntityCollision(user.world, user, eyes, linearSight.multiply(20D),
+                user.getBoundingBox().expand(20D), a -> true);
+        user.sendMessage(Text.of(result == null ? "AAAAAAA" : result.toString()), false);
 
         Box surroundingBox = new Box(user.getBlockPos()).expand(RANGE);
         List<Entity> potentialTargets = user.world.getOtherEntities(user, surroundingBox).stream().filter(entity ->

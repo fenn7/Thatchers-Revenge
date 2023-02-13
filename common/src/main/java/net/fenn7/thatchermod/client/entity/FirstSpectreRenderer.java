@@ -22,17 +22,20 @@ public class FirstSpectreRenderer extends GeoEntityRenderer<FirstSpectreEntity> 
     }
 
     @Override
-    public Identifier getTextureLocation(FirstSpectreEntity instance) {
-        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/spectre/first_spectre.png");
-    }
-
-    @Override
     public Identifier getTexture(FirstSpectreEntity instance) {
+        if (instance != null && instance.age % 40 >= 20) {
+            return new Identifier(ThatcherMod.MOD_ID, "textures/entity/spectre/second_spectre.png");
+        }
         return new Identifier(ThatcherMod.MOD_ID, "textures/entity/spectre/first_spectre.png");
     }
 
     @Override
     public RenderLayer getRenderType(FirstSpectreEntity animatable, float partialTick, MatrixStack poseStack, @Nullable VertexConsumerProvider bufferSource, @Nullable VertexConsumer buffer, int packedLight, Identifier texture) {
-        return RenderLayer.getEntityTranslucent(texture);
+        return RenderLayer.getEntityTranslucent(getTexture(animatable));
+    }
+
+    @Override
+    public void render(FirstSpectreEntity animatable, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
+        super.render(animatable, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 }
