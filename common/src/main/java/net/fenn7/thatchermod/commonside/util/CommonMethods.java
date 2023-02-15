@@ -6,13 +6,14 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public interface CommonMethods {
 
@@ -37,14 +38,18 @@ public interface CommonMethods {
             double radians = Math.toRadians(angle);
             double particleX = Math.round(x + radius * Math.cos(radians));
             double particleY = Math.round(y + radius * Math.sin(radians));
-            ((ServerWorld) world).spawnParticles(particle, particleX, particleY, z, 1,0, 0.1, 0, 0);
+            if (world.isClient) {
+                world.addParticle(particle, particleX, particleY, z, 0, 0, 0);
+            } else {
+                ((ServerWorld) world).spawnParticles(particle, particleX, particleY, z, 1, 0, 0, 0, 0);
+            }
         }
     }
 
     static BlockPos findFirstNonAirBlockDown(World world, BlockPos pos) {
         BlockPos returnPos = pos;
         boolean found = false;
-        while (world.getBlockState(returnPos).isAir() && returnPos.getY() >= -64 && !found) {
+        while (world.getBlockState(returnPos).isAir() && returnPos.getY() >= world.getBottomY() && !found) {
             returnPos = returnPos.offset(Direction.DOWN, 1);
             if (!world.getBlockState(returnPos).isAir()) {
                 found = true;
@@ -54,7 +59,18 @@ public interface CommonMethods {
         return returnPos;
     }
 
-    static void findFirstNonAirBlockUp() {
+    static List<Entity> getAllEntityCollisions(World world, Entity entity, Vec3d min, Vec3d max, Box box, Predicate<Entity> predicate, double bonusRange) {
+        double d = Double.MAX_VALUE;
+        List<Entity> entities = new ArrayList<>();
 
+        for(Entity entity3 : world.getOtherEntities(entity, box, predicate)) {
+            Box box2 = entity3.getBoundingBox().expand(bonusRange);
+            Optional<Vec3d> optional = box2.raycast(min, max);
+            if (optional.isPresent()) {
+                entities.add(entity3);
+            }
+        }
+
+        return entities;
     }
 }
