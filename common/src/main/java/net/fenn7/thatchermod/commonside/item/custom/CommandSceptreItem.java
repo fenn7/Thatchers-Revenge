@@ -63,7 +63,6 @@ public class CommandSceptreItem extends Item {
 
     public CommandSceptreItem(Settings settings) {
         super(settings);
-        this.ticks = 0;
     }
 
     @Override
@@ -104,12 +103,11 @@ public class CommandSceptreItem extends Item {
         CursedMeteorEntity meteorEntity = new CursedMeteorEntity(ModEntities.CURSED_METEOR.get(), world);
         meteorEntity.setOwner(user);
         meteorEntity.setFalling(true);
-        BlockPos pos = findPosPlayerLookingAt(user);
-        BlockPos impactPos = pos.offset(Direction.UP);
+        BlockPos impactPos = findPosPlayerLookingAt(user).offset(Direction.UP);
         CommonMethods.summonDustParticles(world, 10, 0, 0, 0.33F, 2,
                 impactPos.getX() + 0.5D, impactPos.getY() + 0.5D, impactPos.getZ() + 0.5D, 0, 0, 0);
-        meteorEntity.setLowestNoClipY(impactPos.getY() + 1.0D);
-        meteorEntity.setPos(pos.getX() + 0.5, pos.getY() + 20, pos.getZ() + 0.5);
+        meteorEntity.setLowestNoClipY(1.0 + impactPos.getY());
+        meteorEntity.setPos(impactPos.getX() + 0.5, impactPos.getY() + 17, impactPos.getZ() + 0.5);
         world.spawnEntity(meteorEntity);
 
         if (!user.isCreative() && !world.isClient) {
@@ -121,36 +119,12 @@ public class CommandSceptreItem extends Item {
     }
 
     private BlockPos findPosPlayerLookingAt(PlayerEntity user) {
-        Vec3d playerPos = user.getPos();
-
-        // sight detection experiment
+        // sight detection
         Vec3d eyes = user.getEyePos();
-        Vec3d linearSight = user.getRotationVec(1.0F).normalize();
-        var result = ProjectileUtil.getEntityCollision(user.world, user, eyes, eyes.add(linearSight.multiply(20)),
-                new Box(user.getBlockPos()).expand(20), a -> true);
-        user.sendMessage(Text.of(result == null ? "AAAAAAA" : result.toString()), false);
-
-        Box surroundingBox = new Box(user.getBlockPos()).expand(RANGE);
-        List<Entity> potentialTargets = user.world.getOtherEntities(user, surroundingBox).stream().filter(entity ->
-                        entity.distanceTo(user) <= RANGE && entity instanceof LivingEntity && user.canSee(entity))
-                .toList();
-        for (Entity entity : potentialTargets) {
-            Vec3d vecDiff = entity.getPos().subtract(playerPos);
-            double ratioX = vecDiff.x / linearSight.x;
-            double ratioZ = vecDiff.z / linearSight.z;
-            double ratioDiff = Math.abs(ratioX - ratioZ);
-            if (ratioDiff <= 1.5) {
-                if (entity instanceof LivingEntity alive) {
-                    alive.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 1), user);
-                }
-                return entity.getBlockPos();
-            }
-        }
-        HitResult hitResult = user.raycast(RANGE, 0, true);
-        if (hitResult.getType() == HitResult.Type.BLOCK) {
-            return ((BlockHitResult) hitResult).getBlockPos();
-        }
-        return new BlockPos(hitResult.getPos());
+        Vec3d linearSight = user.getRotationVec(1.0F).normalize().multiply(20);
+        var result = ProjectileUtil.getEntityCollision(user.world, user, eyes, eyes.add(linearSight),
+                new Box(user.getBlockPos()).expand(20), a -> true, 0.5F);
+        return result != null ? result.getEntity().getBlockPos() : new BlockPos(user.raycast(RANGE, 0, true).getPos());
     }
 
     @Override

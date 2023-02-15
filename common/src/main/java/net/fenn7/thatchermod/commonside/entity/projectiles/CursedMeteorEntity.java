@@ -25,7 +25,7 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
     private static final int maximumAgeTicks = 300;
     private boolean isFalling = false;
     private boolean isMobSpawned = false;
-    private double lowestNoClipY = -64;
+    private double lowestNoClipY = this.world.getBottomY();
 
     public CursedMeteorEntity(EntityType<? extends CursedMeteorEntity> entityType, World world) {
         super(entityType, world);
@@ -35,44 +35,47 @@ public class CursedMeteorEntity extends ExplosiveProjectileEntity {
         super(ModEntities.CURSED_METEOR.get(), owner, directionX, directionY, directionZ, world);
     }
 
+    @Override
     protected void onCollision(HitResult hitResult) {
         if (this.getY() > this.lowestNoClipY) {
             return;
-        }
-        if (hitResult.getType() != HitResult.Type.ENTITY || !this.isOwner(((EntityHitResult) hitResult).getEntity())) {
-            if (!this.world.isClient) {
-                List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(2.0D, 2.0D, 2.0D));
-                if (!list.isEmpty()) {
-                    Iterator var5 = list.iterator();
-                    while (var5.hasNext()) {
-                        LivingEntity livingEntity = (LivingEntity) var5.next();
-                        livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 100, 2));
-                    }
-                }
-            }
-            if (!world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && this.isMobSpawned) {
-                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
-            } else {
-                this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, true, Explosion.DestructionType.DESTROY);
-            }
-            this.discard();
         }
         super.onCollision(hitResult);
     }
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        Entity hit = entityHitResult.getEntity();
-        hit.damage(DamageSource.magic(this, this.getOwner()), 7.5F);
-        if (hit.isGlowing()) hit.setGlowing(false);
-        super.onEntityHit(entityHitResult);
+        entityHitResult.getEntity().damage(DamageSource.magic(this, this.getOwner()), 2.5F);
+    }
+
+    private void explode() {
+        if (!this.world.isClient) {
+            List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(1.5D, 1.5D, 1.5D));
+            if (!list.isEmpty()) {
+                Iterator<LivingEntity> var5 = list.iterator();
+                while (var5.hasNext()) {
+                    LivingEntity livingEntity = var5.next();
+                    livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 100, 2));
+                    livingEntity.damage(DamageSource.magic(this, this.getOwner()), 7.5F);
+                }
+            }
+        }
+        if (!world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) && this.isMobSpawned) {
+            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, Explosion.DestructionType.NONE);
+        } else {
+            this.world.createExplosion(null, this.getX(), this.getY(), this.getZ(), explosionPower, true, Explosion.DestructionType.DESTROY);
+        }
+        this.discard();
     }
 
     @Override
     public void tick() {
         this.noClip = this.getY() > this.lowestNoClipY;
-        if (this.isFalling && this.powerY >= -0.5) {
-            this.powerY -= 0.025;
+        if (!this.noClip) {
+            this.explode();
+        }
+        if (this.isFalling && this.powerY >= -0.4) {
+            this.powerY -= 0.02;
         }
         if (this.age >= maximumAgeTicks) {
             this.discard();
