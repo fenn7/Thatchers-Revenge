@@ -20,7 +20,7 @@ public class FirstSpectreModel extends AnimatedGeoModel<FirstSpectreEntity> {
 
     @Override
     public Identifier getTextureLocation(FirstSpectreEntity object) {
-        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/spectre/first_spectre.png");
+        return new Identifier(ThatcherMod.MOD_ID, "textures/entity/spectre/first_spectre_0.png");
     }
 
     @Override

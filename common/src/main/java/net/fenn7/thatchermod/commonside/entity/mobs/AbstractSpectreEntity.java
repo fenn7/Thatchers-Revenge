@@ -43,10 +43,11 @@ public abstract class AbstractSpectreEntity extends HostileEntity implements IAn
         super.tick();
         this.noClip = false;
 
-        this.incorporealTicks--;
-        if (this.incorporealTicks == 0) {
-            this.setInvulnerable(false);
-            this.setInvisible(false);
+        if (this.incorporealTicks > 0) {
+            this.incorporealTicks--;
+            if (this.incorporealTicks == 0) {
+                this.setInvulnerable(false);
+            }
         }
     }
 
@@ -60,7 +61,6 @@ public abstract class AbstractSpectreEntity extends HostileEntity implements IAn
         this.world.sendEntityStatus(this, (byte) 60);
         this.world.sendEntityStatus(this, (byte) 46);
         this.incorporealTicks = incorporealTicks;
-        this.setInvisible(true);
         this.setInvulnerable(true);
     }
 

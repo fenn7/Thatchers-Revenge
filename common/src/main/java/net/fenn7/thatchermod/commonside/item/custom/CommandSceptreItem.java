@@ -125,9 +125,9 @@ public class CommandSceptreItem extends Item {
 
         // sight detection experiment
         Vec3d eyes = user.getEyePos();
-        Vec3d linearSight = user.getRotationVector().normalize();
-        var result = ProjectileUtil.getEntityCollision(user.world, user, eyes, linearSight.multiply(20D),
-                user.getBoundingBox().expand(20D), a -> true);
+        Vec3d linearSight = user.getRotationVec(1.0F).normalize();
+        var result = ProjectileUtil.getEntityCollision(user.world, user, eyes, eyes.add(linearSight.multiply(20)),
+                new Box(user.getBlockPos()).expand(20), a -> true);
         user.sendMessage(Text.of(result == null ? "AAAAAAA" : result.toString()), false);
 
         Box surroundingBox = new Box(user.getBlockPos()).expand(RANGE);

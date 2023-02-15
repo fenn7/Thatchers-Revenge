@@ -15,9 +15,12 @@ import net.fenn7.thatchermod.client.screen.GrenadeLauncherScreen;
 import net.fenn7.thatchermod.client.screen.ThatcherismAltarScreen;
 import net.fenn7.thatchermod.client.sound.ModSounds;
 import net.fenn7.thatchermod.commonside.entity.ModEntities;
+import net.fenn7.thatchermod.commonside.entity.mobs.FirstSpectreEntity;
 import net.fenn7.thatchermod.commonside.particle.ModParticles;
 import net.fenn7.thatchermod.commonside.screen.ModScreenHandlers;
 import net.fenn7.thatchermod.client.util.ModPredicates;
+
+import java.io.IOException;
 
 @Environment(EnvType.CLIENT)
 public class ThatcherModClient {
