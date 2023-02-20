@@ -8,6 +8,12 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.world.World;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class FirstSpectreEntity extends AbstractSpectreEntity {
     public FirstSpectreEntity(EntityType<? extends HostileEntity> entityType, World world) {
@@ -32,5 +38,16 @@ public class FirstSpectreEntity extends AbstractSpectreEntity {
             return false;
         }
         return super.damage(source, amount);
+    }
+
+    private <E extends IAnimatable> PlayState swingPred(AnimationEvent<E> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.attack_special", true));
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public void registerControllers(AnimationData animationData) {
+        super.registerControllers(animationData);
+        animationData.addAnimationController(new AnimationController(this, "swinging", 0, this::swingPred));
     }
 }

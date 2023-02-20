@@ -9,6 +9,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,11 +60,11 @@ public interface CommonMethods {
         return returnPos;
     }
 
-    static List<Entity> getAllEntityCollisions(World world, Entity entity, Vec3d min, Vec3d max, Box box, Predicate<Entity> predicate, double bonusRange) {
+    static List<Entity> getAllEntityCollisions(@Nullable Entity entity, Vec3d min, Vec3d max, Box box, Predicate<Entity> predicate, double bonusRange) {
         double d = Double.MAX_VALUE;
         List<Entity> entities = new ArrayList<>();
 
-        for(Entity entity3 : world.getOtherEntities(entity, box, predicate)) {
+        for(Entity entity3 : entity.world.getOtherEntities(entity, box, predicate)) {
             Box box2 = entity3.getBoundingBox().expand(bonusRange);
             Optional<Vec3d> optional = box2.raycast(min, max);
             if (optional.isPresent()) {

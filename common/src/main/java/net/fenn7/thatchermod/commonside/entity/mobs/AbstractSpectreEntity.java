@@ -28,10 +28,6 @@ public abstract class AbstractSpectreEntity extends HostileEntity implements IAn
     }
 
     @Override
-    protected void initGoals() {
-    }
-
-    @Override
     public boolean hasNoDrag() { return true; }
 
     @Override

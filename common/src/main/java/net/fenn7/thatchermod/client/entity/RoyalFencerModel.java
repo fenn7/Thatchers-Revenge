@@ -10,6 +10,8 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
+import java.util.List;
+
 @Environment(EnvType.CLIENT)
 public class RoyalFencerModel extends AnimatedGeoModel<RoyalFencerEntity> {
     @Override
@@ -27,12 +29,13 @@ public class RoyalFencerModel extends AnimatedGeoModel<RoyalFencerEntity> {
         return new Identifier(ThatcherMod.MOD_ID, "animations/royal_fencer.animation.json");
     }
 
-    @Override
-    public void setLivingAnimations(RoyalFencerEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
-        IBone head = this.getAnimationProcessor().getBone("head");
 
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+    @Override
+    public void setCustomAnimations(RoyalFencerEntity animatable, int instanceId, AnimationEvent animationEvent) {
+        super.setCustomAnimations(animatable, instanceId, animationEvent);
+        IBone head = this.getAnimationProcessor().getBone("Head");
+
+        EntityModelData extraData = (EntityModelData) animationEvent.getExtraDataOfType(EntityModelData.class).get(0);
         if (head != null) {
             head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));

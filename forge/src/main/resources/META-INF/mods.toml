@@ -6,7 +6,7 @@ license = "CC0-1.0"
 [[mods]]
     modId = "thatchermod"
     version = "${version}"
-    displayName = "Thatcher Mod"
+    displayName = "Thatcher's Revenge"
     displayURL = "https://github.com/fenn7/Thatchers-Revenge"
     authors = "fenn7"
     credits = "fenn7, ShaksterNano"
