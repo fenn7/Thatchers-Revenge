@@ -6,6 +6,15 @@ loom {
     accessWidenerPath = file("src/main/resources/thatchermod.accesswidener")
 }
 
+repositories {
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
@@ -14,6 +23,7 @@ dependencies {
     modApi "dev.architectury:architectury:${rootProject.architectury_api_version}"
 
     modImplementation "software.bernie.geckolib:geckolib-fabric-${rootProject.geckolib_fabric_version}"
+    modImplementation "curse.maven:smartbrainlib-661293:4264032-sources-4264033"
 }
 
 publishing {

@@ -19,6 +19,15 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
+repositories {
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
@@ -30,6 +39,7 @@ dependencies {
 
     modImplementation("com.terraformersmc:modmenu:${rootProject.modmenu_version}")
     modImplementation "software.bernie.geckolib:geckolib-fabric-${rootProject.geckolib_fabric_version}"
+    modImplementation "curse.maven:smartbrainlib-661293:4264032-sources-4264033"
 }
 
 processResources {

@@ -42,3 +42,10 @@ license = "CC0-1.0"
     versionRange = "[3.0.0,)"
     ordering = "AFTER"
     side = "BOTH"
+
+[[dependencies.thatchermod]]
+    modId = "smartbrainlib"
+    mandatory = true
+    versionRange = "[1.7,)"
+    ordering = "NONE"
+    side = "SERVER"
