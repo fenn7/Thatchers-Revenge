@@ -45,9 +45,7 @@ public class FirstSpectreModel extends AnimatedGeoModel<FirstSpectreEntity> {
                     .rotateY(RArm.getRotationY())
                     .rotateZ(RArm.getRotationZ());
 
-            /*ThatcherMod.LOGGER.warn("BELOW HAS X ROTATION OF: " + RArm.getRotationX() +
-                    " YAW: " + animatable.getYaw() * (-Math.PI / 180.0));*/
-            ThatcherMod.LOGGER.warn("POS: " + basePos + "AGE: " + animatable.age);
+            /*ThatcherMod.LOGGER.warn("POS: " + basePos + "AGE: " + animatable.age);
             ThatcherMod.LOGGER.warn("HAND GEO POSSY: " + ((GeoBone) RTip).getWorldPosition().x
                     + ", " + ((GeoBone) RTip).getWorldPosition().y
                     + ", " + ((GeoBone) RTip).getWorldPosition().z
@@ -55,12 +53,15 @@ public class FirstSpectreModel extends AnimatedGeoModel<FirstSpectreEntity> {
             ThatcherMod.LOGGER.warn("ARM GEO POSSY: " + ((GeoBone) RArm).getWorldPosition().x
                     + ", " + ((GeoBone) RArm).getWorldPosition().y
                     + ", " + ((GeoBone) RArm).getWorldPosition().z
-            );
+            );*/
         }
     }
 
     @Override
     public void codeAnimations(FirstSpectreEntity entity, Integer uniqueID, AnimationEvent<?> customPredicate) {
         super.codeAnimations(entity, uniqueID, customPredicate);
+        if (entity.getModel() == null) {
+            entity.setModel(this);
+        }
     }
 }

@@ -45,7 +45,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     modImplementation "software.bernie.geckolib:geckolib-forge-${rootProject.geckolib_forge_version}"
-    modImplementation ("curse.maven:smartbrainlib-661293:4264032-sources-4264033")
+    modImplementation "curse.maven:smartbrainlib-661293:4317035"
 }
 
 processResources {

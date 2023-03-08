@@ -1,6 +1,19 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
+		"animation.model.fading": {
+			"loop": true,
+			"animation_length": 0.08333,
+			"bones": {
+				"spectre": {
+					"rotation": {
+						"0.0": [0, -5, 0],
+						"0.0417": [0, 5, 0],
+						"0.0833": [0, -5, 0]
+					}
+				}
+			}
+		},
 		"animation.model.gnashing": {
 			"loop": true,
 			"animation_length": 0.83333,
@@ -96,6 +109,44 @@
 				}
 			}
 		},
+		"animation.model.targeting_upper": {
+			"loop": true,
+			"animation_length": 0.04167,
+			"bones": {
+				"LeftArm": {
+					"rotation": {
+						"0.0": [-40, 0, 0],
+						"0.0417": [-41, 0, 0]
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": [-40, 0, 0],
+						"0.0417": [-39, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.model.targeting_lower": {
+			"loop": true,
+			"animation_length": 0.75,
+			"bones": {
+				"LeftLeg": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.375": [35, 0, 0],
+						"0.75": [0, 0, 0]
+					}
+				},
+				"RightLeg": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.375": [-35, 0, 0],
+						"0.75": [0, 0, 0]
+					}
+				}
+			}
+		},
 		"animation.model.blinking": {
 			"loop": true,
 			"animation_length": 1.25,
@@ -112,6 +163,119 @@
 						"1.0833": [1, 1, 1],
 						"1.1667": [0.05, 1, 1],
 						"1.25": [1, 1, 1]
+					}
+				}
+			}
+		},
+		"animation.model.attack_main": {
+			"animation_length": 1,
+			"bones": {
+				"LeftArm": {
+					"rotation": {
+						"0.0": [-40, 0, 0],
+						"0.4583": [-160, 0, 0],
+						"0.5417": [-160, 0, 0],
+						"1.0": [-40, 0, 0]
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": [-40, 0, 0],
+						"0.4583": [-160, 0, 0],
+						"0.5417": [-160, 0, 0],
+						"1.0": [-40, 0, 0]
+					}
+				},
+				"UpperBody": {
+					"rotation": {
+						"0.4583": [0, 0, 0],
+						"0.5417": [100, 0, 0],
+						"1.0": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.model.attack_grab": {
+			"animation_length": 0.54167,
+			"bones": {
+				"LeftArm": {
+					"rotation": {
+						"0.0": [-40, 0, 0],
+						"0.4583": [-10, -37.5, -70],
+						"0.5417": [-50, 10, 15]
+					},
+					"scale": {
+						"0.0": [1, 1, 1],
+						"0.4583": [1, 1.3, 1]
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": [-40, 0, 0],
+						"0.4583": [-10, 37.5, 70],
+						"0.5417": [-50, -10, -15]
+					},
+					"scale": {
+						"0.0": [1, 1, 1],
+						"0.4583": [1, 1.3, 1]
+					}
+				},
+				"UpperBody": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.4583": [-30, 0, 0],
+						"0.5417": [20, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.model.attack_grab_release": {
+			"animation_length": 0.45833,
+			"bones": {
+				"LeftArm": {
+					"rotation": {
+						"0.0": [-50, 10, 15],
+						"0.4583": [-40, 0, 0]
+					},
+					"scale": {
+						"0.0": [1, 1.3, 1],
+						"0.4583": [1, 1, 1]
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": [-50, -10, -15],
+						"0.4583": [-40, 0, 0]
+					},
+					"scale": {
+						"0.0": [1, 1.3, 1],
+						"0.4583": [1, 1, 1]
+					}
+				},
+				"UpperBody": {
+					"rotation": {
+						"0.0": [20, 0, 0],
+						"0.4583": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.model.grabbing_upper": {
+			"loop": true,
+			"animation_length": 0.04167,
+			"bones": {
+				"LeftArm": {
+					"rotation": [-50, 10, 15],
+					"scale": [1, 1.3, 1]
+				},
+				"RightArm": {
+					"rotation": [-50, -10, -15],
+					"scale": [1, 1.3, 1]
+				},
+				"UpperBody": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.0417": [-15, 0, 0]
 					}
 				}
 			}

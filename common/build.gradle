@@ -23,7 +23,7 @@ dependencies {
     modApi "dev.architectury:architectury:${rootProject.architectury_api_version}"
 
     modImplementation "software.bernie.geckolib:geckolib-fabric-${rootProject.geckolib_fabric_version}"
-    modImplementation "curse.maven:smartbrainlib-661293:4264032-sources-4264033"
+    modImplementation "curse.maven:smartbrainlib-661293:4317035"
 }
 
 publishing {
